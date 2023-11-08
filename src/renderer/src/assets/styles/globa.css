@@ -1,8 +1,56 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  scroll-behavior: smooth;
+}
 body {
   font-family: 'Roboto', sans-serif;
+}
+
+@layer components {
+  .critch-overflow-hidden-scroll::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer components {
+  .critch-active-channel {
+    @apply text-default-txt 
+    sticky 
+    m-2 flex
+    cursor-pointer 
+    items-center
+    rounded-md
+    bg-hard-white
+    p-2 
+    text-sm;
+  }
+  .critch-active-channel::before {
+    content: '';
+    @apply absolute
+    -left-2
+    m-2
+    h-9
+    w-1
+    -translate-x-2.5
+    rounded-md
+    bg-soft-purble/75;
+  }
+}
+
+@layer components {
+  .critch-inactive-channel {
+    @apply text-default-txt 
+    m-2 
+    flex cursor-pointer 
+    items-center 
+    rounded-md
+    bg-hard-white/25 
+    p-2 
+    text-sm 
+    duration-150
+    hover:bg-hard-white;
+  }
 }
