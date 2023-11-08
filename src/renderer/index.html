@@ -6,12 +6,21 @@
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' fonts.googleapis.com fonts.gstatic.com; font-src 'self' fonts.googleapis.com fonts.gstatic.com; connect-src 'self' http://localhost:3000 ws://localhost:3000 ws://localhost:8080 ;"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+      rel="stylesheet"
     />
   </head>
 
-  <body>
-    <div id="root"></div>
+  <body
+    class="h-[calc(100vh-1rem)] w-[calc(100vw-1rem)] bg-gradient-to-r from-soft-purble to-hard-purble"
+  >
+    <div id="root" class="h-full w-full"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
