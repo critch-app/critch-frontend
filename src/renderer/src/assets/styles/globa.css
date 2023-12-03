@@ -17,15 +17,15 @@ body {
 
 @layer components {
   .critch-active-channel {
-    @apply text-default-txt 
-    sticky 
-    m-2 flex
-    cursor-pointer 
-    items-center
+    @apply sticky 
+    m-2 
+    flex cursor-pointer
+    items-center 
     rounded-md
     bg-hard-white
-    p-2 
-    text-sm;
+    p-2
+    text-sm 
+    text-default-txt;
   }
   .critch-active-channel::before {
     content: '';
@@ -42,15 +42,64 @@ body {
 
 @layer components {
   .critch-inactive-channel {
-    @apply text-default-txt 
-    m-2 
-    flex cursor-pointer 
-    items-center 
-    rounded-md
-    bg-hard-white/25 
+    @apply m-2 
+    flex 
+    cursor-pointer items-center 
+    rounded-md 
+    bg-hard-white/25
     p-2 
     text-sm 
+    text-default-txt 
     duration-150
     hover:bg-hard-white;
+  }
+}
+
+@layer components {
+  .error-message {
+    @apply fixed right-[calc(-90%)] top-[calc(-20%)] m-2 flex h-12 w-80 items-center justify-center rounded-md bg-soft-white p-2 text-sm font-semibold text-default-txt;
+  }
+
+  .error-message::after {
+    content: '';
+    position: absolute;
+    height: 5px;
+    bottom: 0;
+    animation: decreaseWidth 2000ms linear 1;
+  }
+
+  .error-message-animated {
+    animation-duration: 2000;
+    animation-name: hideAfterDelay;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes decreaseWidth {
+    from {
+      width: 100%;
+      @apply rounded-md bg-active-green;
+    }
+
+    to {
+      width: 0%;
+      background-color: red;
+    }
+  }
+  @keyframes hideAafterDelay {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+}
+
+@layer components {
+  .form-input {
+    @apply rounded-md border-2 border-solid border-hard-white border-opacity-70 px-3 py-2 text-sm focus:outline-1 focus:outline-secondry-gray;
   }
 }

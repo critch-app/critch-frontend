@@ -3,4 +3,4 @@ semi: false
 printWidth: 100
 trailingComma: none
 plugins:
-  - prettier-plugin-tailwindcss
+    - prettier-plugin-tailwindcss

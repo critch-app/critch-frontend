@@ -6,7 +6,7 @@
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' fonts.googleapis.com fonts.gstatic.com; font-src 'self' fonts.googleapis.com fonts.gstatic.com; connect-src 'self' http://localhost:3000 ws://localhost:3000 ws://localhost:8080 ;"
+      content="default-src *; script-src * 'unsafe-inline'; style-src * 'unsafe-inline'; font-src *; connect-src *; img-src *;"
     />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
