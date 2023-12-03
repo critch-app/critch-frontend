@@ -14,7 +14,6 @@ function createWindow(): void {
     show: false,
     autoHideMenuBar: true,
     icon: icon,
-    title: 'Application',
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
@@ -24,7 +23,7 @@ function createWindow(): void {
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
-    mainWindow.setTitle('Application')
+    mainWindow.setTitle('Critch')
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
