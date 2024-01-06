@@ -1,44 +1,92 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ServerTitle from './SubComponents/ServerTitle'
 import ServerCover from '@renderer/assets/images/server-cover-test.svg'
 import Member from './SubComponents/Member'
-import UserAvatarTest from '@renderer/assets/images/user-icon-test.svg'
-import React from 'react'
-
-// dump data
-const members = [
-  { id: '1', userName: 'Abdullah Muhammed', avatar: UserAvatarTest },
-  { id: '2', userName: 'Abdullah Muhammed', avatar: UserAvatarTest },
-  { id: '3', userName: 'Abdullah Muhammed', avatar: UserAvatarTest },
-  { id: '4', userName: 'Abdullah Muhammed', avatar: UserAvatarTest },
-  { id: '5', userName: 'Abdullah Muhammed', avatar: UserAvatarTest },
-  { id: '6', userName: 'Abdullah Muhammed', avatar: UserAvatarTest },
-  { id: '7', userName: 'Abdullah Muhammed', avatar: UserAvatarTest },
-  { id: '8', userName: 'Abdullah Muhammed', avatar: UserAvatarTest }
-]
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { RootState } from '@renderer/app/store'
+import { getServerByIDQuery, getServerMembersQuery } from '@renderer/api/query/server'
+import Loading from '@renderer/components/Loading/Loading'
+import Error from '@renderer/components/Error/Error'
 
 /**
- * @property none
- * @returns {MembersBar} @type React.JSX.Element
- * @description TThe server members bar component
+ * Members bar componetn
+ * @returns {React.JSX.Element} renderer component.
  */
 export default function MembersBar(): React.JSX.Element {
+  const activeServer = useSelector((state: RootState) => state.serverBar.activeServerID)
+  const query = getServerMembersQuery(activeServer, 0, 50)
+  const serverQuery = getServerByIDQuery(activeServer)
+  const [apiError, setApiError] = useState('')
+  const [serverName, setServerName] = useState('')
+  const [members, setMembers] = useState<any[]>([])
+
+  useEffect(() => {
+    ;(async (): Promise<void> => {
+      try {
+        if (activeServer) {
+          await query
+          await serverQuery
+          query.data.pages.forEach((page) => {
+            setMembers(page.data)
+          })
+          setServerName(serverQuery.data.data.name)
+        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        if (error.response && error.response.data && error.response.data.message) {
+          setApiError(error.response.data.message)
+        } else {
+          setApiError('An unexpected error occurred')
+        }
+      }
+    })()
+  }, [members, query.status, query.fetchStatus])
+
+  // Handle error state
+  if (query.status === 'error') {
+    return <Error error={apiError} />
+  }
+
+  // Handle loading state
+  if (query.status === 'pending' || query.isStale || query.fetchStatus == 'fetching') {
+    return (
+      <div>
+        <Loading size={170} />
+      </div>
+    )
+  }
+  if (!query.isLoading && !query.isError && query.data) {
+    return (
+      <>
+        <div className={`mx-1 my-auto h-[calc(100vh-2rem)] w-[calc(100vw/5.5)] rounded-lg`}>
+          <ServerTitle name={serverName} cover={ServerCover} />
+          <span className={`mt-10 p-2 text-lg`}>Members</span>
+
+          <div className={`critch-overflow-hidden-scroll h-[calc(68%)] overflow-y-scroll`}>
+            {members.map((member) => {
+              return (
+                <Member
+                  key={member.id}
+                  id={member.id}
+                  userName={member.first_name + ' ' + member.last_name}
+                  avatar={member.photo}
+                />
+              )
+            })}
+          </div>
+        </div>
+      </>
+    )
+  }
   return (
     <>
-      <div className=" mx-1 my-auto h-[calc(100vh-2rem)] w-[calc(100vw/5.5)] rounded-lg">
-        <ServerTitle name={'Critch Server'} cover={ServerCover} />
-        <span className="mt-10 p-2 text-lg">Members</span>
+      <div className={`mx-1 my-auto h-[calc(100vh-2rem)] w-[calc(100vw/5.5)] rounded-lg`}>
+        <ServerTitle name={serverName} cover={ServerCover} />
+        <span className={`mt-10 p-2 text-lg`}>Members</span>
 
-        <div className="critch-overflow-hidden-scroll h-[calc(68%)] overflow-y-scroll">
-          {members.map((member) => {
-            return (
-              <Member
-                key={member.id}
-                id={member.id}
-                userName={member.userName}
-                avatar={member.avatar}
-              />
-            )
-          })}
+        <div className={`critch-overflow-hidden-scroll h-[calc(68%)] overflow-y-scroll`}>
+          <Member key={' '} id={' '} userName={' '} avatar={' '} />)
         </div>
       </div>
     </>
