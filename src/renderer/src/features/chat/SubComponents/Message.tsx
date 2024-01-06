@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /**
- * @property { senderAvatar} @type any
- * @property {senderUsername} @type any
- * @property {content} @type any
- * @property {mine} @type any
- * @property {sentAt} @type any
- * @returns {Message} @type React.JSX.Element
- * @description The message component
- * @todo types didn't specified yet
+ * Reusable message component
+ * @property {any} senderAvatar
+ * @property {any} senderUsername
+ * @property {any} content
+ * @property {any} mine
+ * @property {any} sentAt
+ * @returns {React.JSX.Element} renderer component.
  */
 export default function Message({
   senderAvatar,
@@ -40,7 +39,7 @@ export default function Message({
       </div>
 
       {mine ? (
-        <img src={senderAvatar} alt={`${senderUsername} Avatar`} className="mx-2 h-7 w-7" />
+        <img src={senderAvatar} alt={`${senderUsername} Avatar`} className={`mx-2 h-7 w-7`} />
       ) : null}
     </div>
   )

@@ -1,16 +1,14 @@
+import { RegisterStepOneValues } from '@renderer/env'
 import { ErrorMessage, Field, useFormikContext } from 'formik'
 import { useState } from 'react'
-import { StepOneValues } from '../RegisterForm.d'
 
 /**
- * Component representing the first step of the registration form.
- * @component
- * @returns {React.JSX.Element} The rendered component.
+ * Register form step one/three component
+ * @returns {React.JSX.Element} renderer component.
  */
 export default function StepOne(): React.JSX.Element {
-  const { errors, touched, handleBlur, validateField } = useFormikContext<StepOneValues>()
+  const { errors, touched, handleBlur, validateField } = useFormikContext<RegisterStepOneValues>()
 
-  // State to track field errors and apply delayed clearing
   const [fieldErrors, setFieldErrors] = useState({
     first_name: false,
     last_name: false,
@@ -20,16 +18,15 @@ export default function StepOne(): React.JSX.Element {
   })
 
   /**
-   * Handles the blur event for form fields.
-   * @param {Event} e - The blur event.
-   * @param {string} fieldName - The name of the field being blurred.
-   * @returns {void}
+   * Override default formik onBlur Behaviour
+   * @param {Event} e
+   * @param {string} fieldName
+   * @returns {any}
    */
   const handleFieldBlur = (e: Event, fieldName: string): void => {
     handleBlur(e)
     validateField(fieldName)
 
-    // Set the field error to true and clear it after a dela
     setFieldErrors((prevFieldErrors) => ({ ...prevFieldErrors, [fieldName]: true }))
     setTimeout(() => {
       setFieldErrors((prevFieldErrors) => ({ ...prevFieldErrors, [fieldName]: false }))
@@ -37,9 +34,9 @@ export default function StepOne(): React.JSX.Element {
   }
 
   return (
-    <div className="w-[calc(30vw)] text-default-txt">
-      <h1 className="p-4 text-center text-default-txt">Start Your Journey With Critch!</h1>
-      <div className="m-1 flex w-[calc(100%)] justify-between">
+    <div className={`w-[calc(30vw)] text-default-txt`}>
+      <h1 className={`p-4 text-center text-default-txt`}>Start Your Journey With Critch!</h1>
+      <div className={`m-1 flex w-[calc(100%)] justify-between`}>
         <Field
           type="text"
           placeholder="First Name"
@@ -48,10 +45,10 @@ export default function StepOne(): React.JSX.Element {
           onBlur={(e: Event): void => {
             handleFieldBlur(e, 'first_name')
           }}
-          className="form-input w-48"
+          className={`critch-form-input w-48`}
         />
         {fieldErrors.first_name && touched.first_name && errors.first_name && (
-          <ErrorMessage name="first_name" component="div" className={`error-message`} />
+          <ErrorMessage name="first_name" component="div" className={`critch-error-message`} />
         )}
 
         <Field
@@ -62,10 +59,10 @@ export default function StepOne(): React.JSX.Element {
           onBlur={(e: Event): void => {
             handleFieldBlur(e, 'last_name')
           }}
-          className="form-input w-48"
+          className={`critch-form-input w-48`}
         />
         {fieldErrors.last_name && touched.last_name && errors.last_name && (
-          <ErrorMessage name="last_name" component="div" className={`error-message`} />
+          <ErrorMessage name="last_name" component="div" className={`critch-error-message`} />
         )}
       </div>
 
@@ -77,10 +74,10 @@ export default function StepOne(): React.JSX.Element {
         onBlur={(e: Event): void => {
           handleFieldBlur(e, 'email')
         }}
-        className="form-input m-1 w-[calc(100%)]"
+        className={`critch-form-input m-1 w-[calc(100%)]`}
       />
       {fieldErrors.email && touched.email && errors.email && (
-        <ErrorMessage name="email" component="div" className={`error-message`} />
+        <ErrorMessage name="email" component="div" className={`critch-error-message`} />
       )}
 
       <Field
@@ -91,10 +88,10 @@ export default function StepOne(): React.JSX.Element {
         onBlur={(e: Event): void => {
           handleFieldBlur(e, 'password')
         }}
-        className="form-input m-1 w-[calc(100%)]"
+        className={`critch-form-input m-1 w-[calc(100%)]`}
       />
       {fieldErrors.password && touched.password && errors.password && (
-        <ErrorMessage name="password" component="div" className={`error-message`} />
+        <ErrorMessage name="password" component="div" className={`critch-error-message`} />
       )}
 
       <Field
@@ -105,10 +102,10 @@ export default function StepOne(): React.JSX.Element {
         onBlur={(e: Event): void => {
           handleFieldBlur(e, 'confirm_password')
         }}
-        className="form-input m-1 w-[calc(100%)]"
+        className={`critch-form-input m-1 w-[calc(100%)]`}
       />
       {fieldErrors.confirm_password && touched.confirm_password && errors.confirm_password && (
-        <ErrorMessage name="confirm_password" component="div" className={`error-message`} />
+        <ErrorMessage name="confirm_password" component="div" className={`critch-error-message`} />
       )}
     </div>
   )

@@ -1,33 +1,37 @@
-import { useParams, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 import ChannelsBar from '@renderer/features/server/ChannelsBar/ChannelsBar'
 import MembersBar from '@renderer/features/server/MembersBar/MembersBar'
-import Chat from '@renderer/features/chat/Chat'
-import ServerBar from '@renderer/components/ServerBar/ServerBar'
+import Channel from '@renderer/features/chat/Channel'
+import { RootState } from '@renderer/app/store'
+import ServerBar from '@renderer/features/server/ServerBar/ServerBar'
 
 /**
- * Component representing the server view.
- * @component
- * @returns {React.JSX.Element} The rendered component.
+ * TODO: Under Development
+ * Component represents the server view
+ * @returns {React.JSX.Element }
  */
 export default function Server(): React.JSX.Element {
-  const { id } = useParams()
-  if (id) {
-    return (
-      <>
-        <ServerBar />
-        <div className="my-1 flex max-h-[calc(100%)] min-h-[calc(100%)] w-[calc(100vw)]  justify-between rounded-2xl bg-soft-white">
-          <ChannelsBar />
-          <Routes>
-            <Route path="channel/:id" element={<Chat />} />
-          </Routes>
-          <MembersBar />
-        </div>
-      </>
-    )
-  }
-  //TODO: later will navigate to dm to avoid errors if there is no server id
+  const activeChannel = useSelector((state: RootState) => state.channelsBar.channel)
+  //const { id } = useParams()
   return (
-    <div className="my-1 flex max-h-[calc(100%)] min-h-[calc(100%)] w-[calc(100vw)]  justify-between rounded-2xl bg-soft-white"></div>
+    <>
+      <ServerBar />
+      <div
+        className={`my-1 flex max-h-[calc(100%)] min-h-[calc(100%)] w-[calc(100vw)] 
+         justify-between rounded-2xl bg-soft-white`}
+      >
+        <ChannelsBar />
+        {!activeChannel ? (
+          <div>ServerInformation</div>
+        ) : (
+          <Routes>
+            <Route path="channel/:id" element={<Channel />} />
+          </Routes>
+        )}
+        <MembersBar />
+      </div>
+    </>
   )
 }

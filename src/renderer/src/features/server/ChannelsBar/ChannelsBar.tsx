@@ -1,12 +1,12 @@
 // import Channel from './SubComponents/Channel'
 import UserCard from './SubComponents/UserCard'
-import SearchBar from './SubComponents/SearchBar'
 import UserAvatarTest from '@renderer/assets/images/user-icon-test.svg'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { RootState } from '@renderer/app/store'
 import { setActiveChannel } from './channelsBarReducer'
 import Channel from './SubComponents/Channel'
+import ServerControl from './SubComponents/ChannelControl'
 
 // dump data
 const channels = [
@@ -33,29 +33,30 @@ const channels = [
 ]
 
 /**
- * @property none
- * @returns {ChannelsBar} @type React.JSX.Element
- * @description The channels bar component
+ * Channels bar component
+ * @returns {React.JSX.Element}
  */
 export default function ChannelsBar(): React.JSX.Element {
-  // Global State
   const activeChannel = useSelector((state: RootState) => state.channelsBar.channel)
   const dispatch = useDispatch()
 
-  // Component
   return (
     <>
-      <div className="relative mx-1 my-auto h-[calc(100vh-2rem)] w-[calc(100vw/5.5)] rounded-lg">
-        <SearchBar />
-        <div className=" h-[calc(85%)]">
-          <div className="critch-overflow-hidden-scroll h-[calc(95%)] overflow-y-scroll ">
+      <div
+        className={`relative mx-1 my-auto flex h-[calc(100vh-2rem)] w-[calc(100vw/5.5)] rounded-lg`}
+      >
+        <ServerControl />
+        <div className={`h-[calc(85%)]`}>
+          <div
+            className={`critch-overflow-hidden-scroll h-[calc(95%)] w-[calc(100%)] overflow-y-scroll`}
+          >
             {channels.map((channel) => {
               return (
                 <Channel
                   key={channel.channel_id}
                   id={channel.channel_id}
                   name={channel.name}
-                  active={channel.channel_id === activeChannel.channel_id ? true : false}
+                  active={channel.channel_id === activeChannel?.channel_id ? true : false}
                   clickHandler={(): void => {
                     dispatch(setActiveChannel(channel))
                   }}
@@ -63,7 +64,7 @@ export default function ChannelsBar(): React.JSX.Element {
               )
             })}
           </div>
-          <div className="absolute bottom-1 left-1 h-fit w-fit">
+          <div className={`absolute bottom-1 left-1 h-fit w-fit`}>
             <UserCard id={'1'} userName={'Abdullah Muhammed'} avatar={UserAvatarTest} />
           </div>
         </div>

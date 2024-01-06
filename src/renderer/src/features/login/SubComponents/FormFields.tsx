@@ -1,15 +1,13 @@
+import { LoginFormValues } from '@renderer/env'
 import { ErrorMessage, Field, useFormikContext } from 'formik'
 import { useState } from 'react'
 
-import { FormValues } from '../LoginForm.d'
-
 /**
- * Component representing the form fields for the login form.
- * @component
- * @returns {React.JSX.Element} The rendered component.
+ * Login Form Fields
+ * @returns { React.JSX.Element} renderer component.
  */
 export default function FormFields(): React.JSX.Element {
-  const { errors, touched, handleBlur, validateField } = useFormikContext<FormValues>()
+  const { errors, touched, handleBlur, validateField } = useFormikContext<LoginFormValues>()
 
   const [fieldErrors, setFieldErrors] = useState({
     email: false,
@@ -17,16 +15,15 @@ export default function FormFields(): React.JSX.Element {
   })
 
   /**
-   * Handles the onBlur event for a form field.
-   * @param {Event} e - The onBlur event.
-   * @param {string} fieldName - The name of the form field.
+   * Override default formik onBlur Behaviour
+   * @param {Event} e
+   * @param {string} fieldName
    * @returns {void}
    */
   const handleFieldBlur = (e: Event, fieldName: string): void => {
     handleBlur(e)
     validateField(fieldName)
 
-    // Set the field error to true and clear it after a delay
     setFieldErrors((prevFieldErrors) => ({ ...prevFieldErrors, [fieldName]: true }))
     setTimeout(() => {
       setFieldErrors((prevFieldErrors) => ({ ...prevFieldErrors, [fieldName]: false }))
@@ -34,8 +31,8 @@ export default function FormFields(): React.JSX.Element {
   }
 
   return (
-    <div className="w-[calc(30vw)] text-default-txt">
-      <h1 className="p-4 text-center text-default-txt">Welcome Back!</h1>
+    <div className={`w-[calc(30vw)] text-default-txt`}>
+      <h1 className={`p-4 text-center text-default-txt`}>Welcome Back!</h1>
       <Field
         type="email"
         placeholder="Email"
@@ -44,10 +41,10 @@ export default function FormFields(): React.JSX.Element {
         onBlur={(e: Event): void => {
           handleFieldBlur(e, 'email')
         }}
-        className="form-input m-1 w-[calc(100%)]"
+        className={`critch-form-input m-1 w-[calc(100%)]`}
       />
       {fieldErrors.email && touched.email && errors.email && (
-        <ErrorMessage name="email" component="div" className={`error-message`} />
+        <ErrorMessage name="email" component="div" className={`critch-error-message`} />
       )}
 
       <Field
@@ -58,15 +55,16 @@ export default function FormFields(): React.JSX.Element {
         onBlur={(e: Event): void => {
           handleFieldBlur(e, 'password')
         }}
-        className="form-input m-1 w-[calc(100%)]"
+        className={`critch-form-input m-1 w-[calc(100%)]`}
       />
       {fieldErrors.password && touched.password && errors.password && (
-        <ErrorMessage name="password" component="div" className={`error-message`} />
+        <ErrorMessage name="password" component="div" className={`critch-error-message`} />
       )}
-      <div className="flex justify-center">
+      <div className={`flex justify-center`}>
         <button
           type="submit"
-          className="m-0.5 rounded-md bg-soft-purble p-1.5 text-sm text-original-white hover:bg-soft-purble/80"
+          className={`m-0.5 rounded-md bg-soft-purble p-1.5 text-sm
+           text-original-white hover:bg-soft-purble/80`}
         >
           Login
         </button>
