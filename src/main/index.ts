@@ -1,8 +1,7 @@
-import { app, shell, BrowserWindow, screen } from 'electron'
+import { app, shell, BrowserWindow, screen, ipcMain, clipboard, Notification } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-
 function createWindow(): void {
   // Create the browser window.
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
@@ -16,8 +15,7 @@ function createWindow(): void {
     icon: icon,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      preload: join(__dirname, '../preload/index.js')
     }
   })
 
@@ -45,7 +43,6 @@ function createWindow(): void {
 app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.critch')
-
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
   // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
@@ -73,3 +70,14 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here
+ipcMain.on('write-to-clipboard', async (_, content: string) => {
+  clipboard.writeText(content)
+})
+
+ipcMain.on('show-notification', async (_, title: string, body: string) => {
+  new Notification({
+    title: title,
+    body: body,
+    timeoutType: 'default'
+  }).show()
+})

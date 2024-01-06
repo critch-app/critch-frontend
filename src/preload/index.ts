@@ -1,18 +1,8 @@
-import { contextBridge } from 'electron'
-import { electronAPI } from '@electron-toolkit/preload'
+import { contextBridge, ipcRenderer } from 'electron'
 
-const api = {}
-
-if (process.contextIsolated) {
-  try {
-    contextBridge.exposeInMainWorld('electron', electronAPI)
-    contextBridge.exposeInMainWorld('api', api)
-  } catch (error) {
-    console.error(error)
-  }
-} else {
-  // @ts-ignore (define in dts)
-  window.electron = electronAPI
-  // @ts-ignore (define in dts)
-  window.api = api
-}
+contextBridge.exposeInMainWorld('api', {
+  writeToClipboard: async (content: string): Promise<void> =>
+    ipcRenderer.send('write-to-clipboard', content),
+  showNotifications: async (title: string, body: string): Promise<void> =>
+    ipcRenderer.send('show-notification', title, body)
+})

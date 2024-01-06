@@ -1,8 +1,11 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
 
 declare global {
-  interface Window {
+  declare interface Window {
     electron: ElectronAPI
-    api: unknown
+    api: {
+      writeToClipboard: (content: string) => Promise<void>
+      showNotifications: (title: string, body: string) => Promise<void>
+    }
   }
 }
