@@ -5,17 +5,20 @@
 :root {
   scroll-behavior: smooth;
 }
+
 body {
   font-family: 'Roboto', sans-serif;
 }
 
 @layer components {
+  /* Hides scrollbars on specific elements for a cleaner visual appearance. */
   .critch-overflow-hidden-scroll::-webkit-scrollbar {
     display: none;
   }
 }
 
 @layer components {
+  /* Styles for visually indicating the currently active channel */
   .critch-active-channel {
     @apply sticky 
     m-2 
@@ -30,7 +33,7 @@ body {
   .critch-active-channel::before {
     content: '';
     @apply absolute
-    -left-2
+    -right-[calc(1.7rem)]
     m-2
     h-9
     w-1
@@ -40,27 +43,42 @@ body {
   }
 }
 
+/* Styles for channels that are not currently active */
 @layer components {
   .critch-inactive-channel {
     @apply m-2 
     flex 
-    cursor-pointer items-center 
-    rounded-md 
-    bg-hard-white/25
+    w-48 cursor-pointer 
+    items-center 
+    rounded-md
+    bg-hard-white/25 
     p-2 
     text-sm 
-    text-default-txt 
+    text-default-txt
     duration-150
     hover:bg-hard-white;
   }
 }
 
+/*
+  Styles for error messages, including animations for visual feedback:
+*/
 @layer components {
-  .error-message {
-    @apply fixed right-[calc(-90%)] top-[calc(-20%)] m-2 flex h-12 w-80 items-center justify-center rounded-md bg-soft-white p-2 text-sm font-semibold text-default-txt;
+  .critch-error-message {
+    @apply fixed right-[calc(-90%)] 
+    top-[calc(-20%)] 
+    m-2 flex 
+    h-12 w-80 
+    items-center
+    justify-center 
+    rounded-md 
+    bg-soft-white 
+    p-2 
+    text-sm font-semibold
+    text-default-txt;
   }
-
-  .error-message::after {
+  /* Base styles for the error message container */
+  .critch-error-message::after {
     content: '';
     position: absolute;
     height: 5px;
@@ -68,13 +86,15 @@ body {
     animation: decreaseWidth 2000ms linear 1;
   }
 
-  .error-message-animated {
+  /* Creates a visually appealing animated bar beneath the error message */
+  .critch-error-message-animated {
     animation-duration: 2000;
     animation-name: hideAfterDelay;
     animation-timing-function: linear;
     animation-fill-mode: forwards;
   }
 
+  /* Animates the width and color of the bar beneath the error message */
   @keyframes decreaseWidth {
     from {
       width: 100%;
@@ -86,6 +106,8 @@ body {
       background-color: red;
     }
   }
+
+  /* Animates the opacity and visibility of the error message itself */
   @keyframes hideAafterDelay {
     from {
       opacity: 1;
@@ -98,8 +120,25 @@ body {
   }
 }
 
+/* Styles for text input fields within forms */
 @layer components {
-  .form-input {
+  .critch-form-input {
     @apply rounded-md border-2 border-solid border-hard-white border-opacity-70 px-3 py-2 text-sm focus:outline-1 focus:outline-secondry-gray;
   }
+}
+
+/*
+  Styles for modals, creating a darkened overlay and centered content:
+*/
+.critch-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
 }
