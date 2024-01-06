@@ -1,36 +1,40 @@
+import ServerBar from '@renderer/features/server/ServerBar/ServerBar'
 import { useNavigate } from 'react-router-dom'
+import UserBar from './../features/home/UserBar'
+import { useSelector } from 'react-redux'
+import { RootState } from '@renderer/app/store'
+import { useEffect } from 'react'
+import AppIcon from '@renderer/components/AppIcon/AppIcon'
 
 /**
  * Component representing the home/DM view.
- * @component
- * @returns {React.JSX.Element} The rendered component.
+ * @returns {React.JSX.Element} rendered component.
  */
 export default function Home(): React.JSX.Element {
-  // TODO: Later Will Contain The DM Page
   const navigate = useNavigate()
+
+  const loggedInUserId = useSelector((state: RootState) => state.login.loggedInUserID)
+  const loggedInUserToken = useSelector((state: RootState) => state.login.loggedInUserToken)
+
+  useEffect(() => {
+    if (!loggedInUserId || !loggedInUserToken) {
+      navigate('/login')
+    }
+  })
+
   return (
-    <div className="my-1 flex max-h-[calc(100%)] min-h-[calc(100%)] w-[calc(100vw)]  justify-between rounded-2xl bg-soft-white">
-      <button
-        onClick={(): void => {
-          navigate('/register')
-        }}
+    <>
+      {loggedInUserId && <ServerBar />}
+      <div
+        className={`my-1 flex max-h-[calc(100%)] min-h-[calc(100%)] w-[calc(100vw)]
+          items-center justify-center rounded-2xl bg-soft-white`}
       >
-        Register
-      </button>
-      <button
-        onClick={(): void => {
-          navigate('/login')
-        }}
-      >
-        Login
-      </button>
-      <button
-        onClick={(): void => {
-          navigate('/server/1')
-        }}
-      >
-        Server
-      </button>
-    </div>
+        <div className={`animate-pulse duration-700`}>
+          <AppIcon width={`w-96`} height={`w-96`} />
+        </div>
+        <h1 className={`text-4xl text-default-txt`}>Critch DMs Are Comming Soon!</h1>
+      </div>
+      {loggedInUserId && <UserBar />}
+    </>
   )
 }
