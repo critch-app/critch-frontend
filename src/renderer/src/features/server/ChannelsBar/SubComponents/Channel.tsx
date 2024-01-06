@@ -5,13 +5,12 @@ import { Link } from 'react-router-dom'
 import React from 'react'
 
 /**
- * @property {id} @type any
- * @property {name} @type any
- * @property {active} @type any
- * @property {clickHandler} @type any
- * @returns {Channel} @type React.JSX.Element
- * @description The Channel Button Component
- * @todo types didn't specified yet
+ * Description
+ * @property {any} {id} - Channel id
+ * @property {any} {name} - Channel name
+ * @property {any} {active} - Channel state
+ * @property {any} {clickHandler} - On channel click handler
+ * @returns {React.JSX.Element}
  */
 export default function Channel({ id, name, active, clickHandler }: any): React.JSX.Element {
   return (

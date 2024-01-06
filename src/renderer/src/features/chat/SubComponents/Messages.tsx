@@ -30,43 +30,43 @@ const messages = [
     mine: true
   },
   {
-    id: 4,
+    id: 5,
     sender: 'Abdullah',
     content: 'This is an unknown sender.',
     mine: true
   },
   {
-    id: 4,
+    id: 6,
     sender: 'Abdullah',
     content: 'This is an unknown sender.',
     mine: true
   },
   {
-    id: 4,
+    id: 7,
     sender: 'Abdullah',
     content: 'This is an unknown sender.',
     mine: true
   },
   {
-    id: 4,
+    id: 8,
     sender: 'Abdullah',
     content: 'This is an unknown sender.',
     mine: true
   },
   {
-    id: 4,
+    id: 9,
     sender: 'Abdullah',
     content: 'This is an unknown sender.',
     mine: true
   },
   {
-    id: 4,
+    id: 10,
     sender: 'Abdullah',
     content: 'This is an unknown sender.',
     mine: true
   },
   {
-    id: 4,
+    id: 11,
     sender: 'Abdullah',
     content: 'This is an unknown sender.',
     mine: true
@@ -74,9 +74,8 @@ const messages = [
 ]
 
 /**
- * @property none
- * @returns {Messages} @type React.JSX.Element
- * @description The messages container component
+ * Messages Container Component
+ * @returns {React.JSX.Element} renderer component.
  */
 export default function Messages(): React.JSX.Element {
   const chatWindowRef = useRef<HTMLDivElement | null>(null)
@@ -87,21 +86,19 @@ export default function Messages(): React.JSX.Element {
 
   return (
     <div
-      className="critch-overflow-hidden-scroll h-[calc(80vh)] w-[calc(100%)] overflow-y-scroll"
       ref={chatWindowRef}
+      className={`critch-overflow-hidden-scroll h-[calc(80vh)] w-[calc(100%)] overflow-y-scroll`}
     >
       {messages.map((message) => {
         return (
-          <>
-            <Message
-              key={message.id}
-              sentAt={'8:30 AM'}
-              mine={message.mine}
-              senderAvatar={UserTestIcon}
-              senderUsername={message.sender ?? 'unknown'}
-              content={message.content}
-            />
-          </>
+          <Message
+            key={message.id}
+            sentAt={'8:30 AM'}
+            mine={message.mine}
+            senderAvatar={UserTestIcon}
+            senderUsername={message.sender ?? 'unknown'}
+            content={message.content}
+          />
         )
       })}
     </div>
