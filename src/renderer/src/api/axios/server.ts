@@ -16,10 +16,10 @@ export const getServer = async function (id: string): Promise<AxiosResponse> {
 
 // HTTP:PUT Request to add a new server member
 export const putServerMember = async function (
-  userId: string,
-  serverId: string
+  userID: string,
+  serverID: string
 ): Promise<AxiosResponse> {
-  const response = await axiosInstance.put(`/v1/servers/${serverId}/users/${userId}`)
+  const response = await axiosInstance.put(`/v1/servers/${serverID}/users/${userID}`)
   return response
 }
 
@@ -35,5 +35,30 @@ export const getServerMembers = async function (
       limit
     }
   })
+  return response
+}
+
+// HTTP:UPDATE Request to update a server
+export const updateServer = async function (
+  id: string,
+  body: ServerFormValues
+): Promise<AxiosResponse> {
+  const response = await axiosInstance.patch(`/v1/servers/${id}`, body)
+  return response
+}
+
+// HTTP:DELETE Request to delete a server
+export const deleteServer = async function (id: string): Promise<AxiosResponse> {
+  const response = await axiosInstance.delete(`/v1/servers/${id}`)
+  return response
+}
+
+// HTTP:DELETE Request to delete a server member
+export const deleteServerMember = async function (
+  serverID: string,
+  userID: string
+): Promise<AxiosResponse> {
+  const response = await axiosInstance.delete(`/v1
+  /servers/${serverID}/users/${userID}`)
   return response
 }
