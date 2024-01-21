@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { AxiosResponse } from 'axios'
 import axiosInstance from './axiosConfig'
 import { ServerFormValues } from '@renderer/env'

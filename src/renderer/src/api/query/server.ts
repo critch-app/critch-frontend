@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ServerFormValues } from '@renderer/env'
 import * as serverAxios from '../axios/server'
@@ -100,4 +101,43 @@ export function getServerMembersQuery(serverId: string, offset: number, limit: n
   })
 
   return query
+}
+
+export function updateServerMut(callback: () => void): any {
+  const mut = useMutation({
+    mutationFn: async ({ serverID, body }: { serverID: string; body: ServerFormValues }) => {
+      const response = await serverAxios.updateServer(serverID, body)
+      return response
+    },
+    onSuccess: () => {
+      callback()
+    }
+  })
+  return mut
+}
+
+export function deleteServerMut(callback: () => void): any {
+  const mut = useMutation({
+    mutationFn: async (serverID: string) => {
+      const response = await serverAxios.deleteServer(serverID)
+      return response
+    },
+    onSuccess: () => {
+      callback()
+    }
+  })
+  return mut
+}
+
+export function deleteServerMemberMut(callback: () => void): any {
+  const mut = useMutation({
+    mutationFn: async ({ userId, serverId }: { userId: string; serverId: string }) => {
+      const response = await serverAxios.deleteServerMember(userId, serverId)
+      return response
+    },
+    onSuccess: () => {
+      callback()
+    }
+  })
+  return mut
 }
