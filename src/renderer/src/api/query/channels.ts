@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChannelFormValues } from '@renderer/env'
 import * as channelAxios from '../axios/channel'
@@ -5,7 +6,8 @@ import {
   InvalidateQueryFilters,
   useMutation,
   useQuery,
-  useQueryClient
+  useQueryClient,
+  useInfiniteQuery
 } from '@tanstack/react-query'
 
 /**
@@ -47,4 +49,155 @@ export function getChannelByIDQuery(channelId: string): any {
     refetchInterval: 5 * 60 * 1000
   })
   return query
+}
+
+export function deleteChannelMut(callback: () => void): any {
+  const mut = useMutation({
+    mutationFn: async (channelID: string) => {
+      const response = await channelAxios.deleteChannel(channelID)
+      return response
+    },
+    onSuccess: () => {
+      callback()
+    }
+  })
+  return mut
+}
+
+export function updateChannelMut(callback: () => void): any {
+  const mut = useMutation({
+    mutationFn: async ({ channelID, body }: { channelID: string; body: ChannelFormValues }) => {
+      const response = await channelAxios.updateChannel(channelID, body)
+      return response
+    },
+    onSuccess: () => {
+      callback()
+    }
+  })
+  return mut
+}
+
+/**
+ * Fetches a specific server channels by server id.
+ * @param serverId - The ID of the server to retrieve its channels.
+ * @returns A query object with methods for accessing and managing the fetched data.
+ */
+export function getServerChannelsQuery(serverId: string, offset: number, limit: number): any {
+  const query = useInfiniteQuery({
+    queryKey: ['servers', serverId, 'channels'],
+    queryFn: async ({ pageParam = offset }) => {
+      const response = await channelAxios.getServerChannels(serverId, pageParam, limit)
+      if (response.data.error) {
+        throw response.data.error
+      }
+      return response
+    },
+    getNextPageParam: (lastPage: any, allPages: any) => {
+      const totalPages = allPages.length
+      const itemsPerPage = limit
+      const totalCount = totalPages * itemsPerPage
+
+      return totalCount > lastPage.length ? lastPage.length : undefined
+    },
+    initialPageParam: offset,
+    staleTime: 5 * 60 * 1000,
+    refetchInterval: 5 * 60 * 1000
+  })
+
+  return query
+}
+
+/**
+ * Fetches a DM channels
+ * @param isServerChannel - Essential to search for a server channel otherwise it's considered a direct message channel.
+ * @returns A query object with methods for accessing and managing the fetched data.
+ */
+export function getDMChannelsQuery(offset: number, limit: number, isServerChannel: boolean): any {
+  const query = useInfiniteQuery({
+    queryKey: ['channels', isServerChannel],
+    queryFn: async ({ pageParam = offset }) => {
+      const response = await channelAxios.getChannels(pageParam, limit, isServerChannel)
+      if (response.data.error) {
+        throw response.data.error
+      }
+      return response
+    },
+    getNextPageParam: (lastPage: any, allPages: any) => {
+      const totalPages = allPages.length
+      const itemsPerPage = limit
+      const totalCount = totalPages * itemsPerPage
+
+      return totalCount > lastPage.length ? lastPage.length : undefined
+    },
+    initialPageParam: offset,
+    staleTime: 5 * 60 * 1000,
+    refetchInterval: 5 * 60 * 1000
+  })
+
+  return query
+}
+
+/**
+ * Updates a channel member's.
+ * @param callback - A function to execute upon successful update.
+ * @returns A mutation object for triggering and managing the mutation.
+ */
+export function putChannelMemberMut(callback: () => void): any {
+  const queryClient = useQueryClient()
+  const mut = useMutation({
+    mutationFn: async ({ userID, channelID }: { userID: string; channelID: string }) => {
+      const response = await channelAxios.putChannelMember(userID, channelID)
+      return response
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['channels', '*', 'members'] as InvalidateQueryFilters)
+      callback()
+    }
+  })
+  return mut
+}
+
+/**
+ * Fetches channel members in an infinite loading pattern.
+ * @param channelID - The ID of the channel whose members to fetch.
+ * @param offset - The initial offset for pagination.
+ * @param limit - The number of members to fetch per page.
+ * @returns An infinite query object for managing the paginated data.
+ */
+export function getChannelMembersQuery(channelID: string, offset: number, limit: number): any {
+  const query = useInfiniteQuery({
+    queryKey: ['channels', channelID, 'members'],
+    queryFn: async ({ pageParam = offset }) => {
+      const response = await channelAxios.getChannelMembers(channelID, pageParam, limit)
+      if (response.data.error) {
+        throw response.data.error
+      }
+      return response
+    },
+    getNextPageParam: (lastPage: any, allPages: any) => {
+      const totalPages = allPages.length
+      const itemsPerPage = limit
+      const totalCount = totalPages * itemsPerPage
+
+      return totalCount > lastPage.length ? lastPage.length : undefined
+    },
+    initialPageParam: offset,
+    staleTime: 5 * 60 * 1000,
+    refetchInterval: 5 * 60 * 1000
+  })
+
+  return query
+}
+
+export function deleteChannelMemberMut(callback: () => void): any {
+  const mut = useMutation({
+    mutationFn: async ({ channelID, userID }: { channelID: string; userID: string }) => {
+      const response = await channelAxios.deleteChannelMember(channelID, userID)
+      return response
+    },
+    onSuccess: () => {
+      callback()
+    }
+  })
+  return mut
 }

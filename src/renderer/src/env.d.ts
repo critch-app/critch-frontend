@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /// <reference types="vite/client" />
 
 // @MultiUsage
@@ -51,4 +52,11 @@ export interface ChannelFormValues {
   name: string
   description: string
   server_id: string
+}
+
+// @Message
+
+export interface MessageFormValues {
+  content: string
+  attachment: string
 }
