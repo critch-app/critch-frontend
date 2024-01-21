@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { AxiosResponse } from 'axios'
 import axiosInstance from './axiosConfig'
 import { ChannelFormValues } from '@renderer/env'
@@ -14,7 +15,7 @@ export const getChannel = async function (id: string): Promise<AxiosResponse> {
   return response
 }
 
-// HTTP:UPDATE Request to update a channel
+// HTTP:UPDATE Request to update a channel by channel id
 export const updateChannel = async function (
   id: string,
   body: ChannelFormValues
@@ -59,5 +60,36 @@ export const deleteChannelMember = async function (
   userID: string
 ): Promise<AxiosResponse> {
   const response = await axiosInstance.delete(`/v1/channels/${channelID}/users/${userID}`)
+  return response
+}
+
+// HTTP:GET Request to get server channels by server id
+export const getServerChannels = async function (
+  id: string,
+  offset: number,
+  limit: number
+): Promise<AxiosResponse> {
+  const response = await axiosInstance.get(`/v1/servers/${id}/channels`, {
+    params: {
+      offset,
+      limit
+    }
+  })
+  return response
+}
+
+// HTTP:GET Request to get direct message channels
+export const getChannels = async function (
+  offset: number,
+  limit: number,
+  isServerChannel: boolean
+): Promise<AxiosResponse> {
+  const response = await axiosInstance.get(`/v1/channels`, {
+    params: {
+      offset,
+      limit,
+      isServerChannel
+    }
+  })
   return response
 }
