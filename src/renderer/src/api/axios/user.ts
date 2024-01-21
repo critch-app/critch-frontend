@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { AxiosResponse } from 'axios'
 import axiosInstance from './axiosConfig'
 import { LoginFormValues, RegisterFormValues } from '@renderer/env'
@@ -42,6 +43,21 @@ export const getUserServers = async function (
   limit: number
 ): Promise<AxiosResponse> {
   const response = await axiosInstance.get(`/v1/users/${id}/servers`, {
+    params: {
+      offset,
+      limit
+    }
+  })
+  return response
+}
+
+// HTTP:GET Request to get user's channels
+export const getUserChannels = async function (
+  id: string,
+  offset: number,
+  limit: number
+): Promise<AxiosResponse> {
+  const response = await axiosInstance.get(`/v1/users/${id}/channels`, {
     params: {
       offset,
       limit
