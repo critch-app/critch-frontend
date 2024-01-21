@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import store from '@renderer/app/store'
 import axios from 'axios'
 
