@@ -17,35 +17,50 @@ export const getChannel = async function (id: string): Promise<AxiosResponse> {
 
 // HTTP:UPDATE Request to update a channel by channel id
 export const updateChannel = async function (
-  id: string,
+  channelId: string,
   body: ChannelFormValues
 ): Promise<AxiosResponse> {
-  const response = await axiosInstance.patch(`/v1/channels/${id}`, body)
+  const response = await axiosInstance.patch(`/v1/channels/${channelId}`, body)
   return response
 }
 
-// HTTP:DELETE Request to delete a channel
-export const deleteChannel = async function (id: string): Promise<AxiosResponse> {
-  const response = await axiosInstance.delete(`/v1/channels/${id}`)
+// HTTP:DELETE Request to delete a channel by id
+export const deleteChannel = async function (channelId: string): Promise<AxiosResponse> {
+  const response = await axiosInstance.delete(`/v1/channels/${channelId}`)
   return response
 }
 
 // HTTP:PUT Request to add a new channel member
 export const putChannelMember = async function (
-  userID: string,
-  channelID: string
+  userId: string,
+  channelId: string
 ): Promise<AxiosResponse> {
-  const response = await axiosInstance.put(`/v1/channels/${channelID}/users/${userID}`)
+  const response = await axiosInstance.put(`/v1/channels/${channelId}/users/${userId}`)
   return response
 }
 
 // HTTP:GET Request to get channel members by channel id
 export const getChannelMembers = async function (
-  id: string,
+  channelId: string,
   offset: number,
   limit: number
 ): Promise<AxiosResponse> {
-  const response = await axiosInstance.get(`/v1/channels/${id}/users`, {
+  const response = await axiosInstance.get(`/v1/channels/${channelId}/users`, {
+    params: {
+      offset,
+      limit
+    }
+  })
+  return response
+}
+
+// HTTP:GET Request to get channel messages by channel id
+export const getChannelMessages = async function (
+  channelId: string,
+  offset: number,
+  limit: number
+): Promise<AxiosResponse> {
+  const response = await axiosInstance.get(`/v1/channels/${channelId}/messages`, {
     params: {
       offset,
       limit
@@ -56,20 +71,20 @@ export const getChannelMembers = async function (
 
 // HTTP:DELETE Request to delete a channel member
 export const deleteChannelMember = async function (
-  channelID: string,
-  userID: string
+  channelId: string,
+  userId: string
 ): Promise<AxiosResponse> {
-  const response = await axiosInstance.delete(`/v1/channels/${channelID}/users/${userID}`)
+  const response = await axiosInstance.delete(`/v1/channels/${channelId}/users/${userId}`)
   return response
 }
 
 // HTTP:GET Request to get server channels by server id
 export const getServerChannels = async function (
-  id: string,
+  serverId: string,
   offset: number,
   limit: number
 ): Promise<AxiosResponse> {
-  const response = await axiosInstance.get(`/v1/servers/${id}/channels`, {
+  const response = await axiosInstance.get(`/v1/servers/${serverId}/channels`, {
     params: {
       offset,
       limit
