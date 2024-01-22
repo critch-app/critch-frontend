@@ -10,27 +10,27 @@ export const postServer = async function (body: ServerFormValues): Promise<Axios
 }
 
 // HTTP:GET Request to get a server by id
-export const getServer = async function (id: string): Promise<AxiosResponse> {
-  const response = await axiosInstance.get(`/v1/servers/${id}`)
+export const getServer = async function (serverId: string): Promise<AxiosResponse> {
+  const response = await axiosInstance.get(`/v1/servers/${serverId}`)
   return response
 }
 
 // HTTP:PUT Request to add a new server member
 export const putServerMember = async function (
-  userID: string,
-  serverID: string
+  userId: string,
+  serverId: string
 ): Promise<AxiosResponse> {
-  const response = await axiosInstance.put(`/v1/servers/${serverID}/users/${userID}`)
+  const response = await axiosInstance.put(`/v1/servers/${serverId}/users/${userId}`)
   return response
 }
 
 // HTTP:GET Request to get server members by server id
 export const getServerMembers = async function (
-  id: string,
+  serverId: string,
   offset: number,
   limit: number
 ): Promise<AxiosResponse> {
-  const response = await axiosInstance.get(`/v1/servers/${id}/users`, {
+  const response = await axiosInstance.get(`/v1/servers/${serverId}/users`, {
     params: {
       offset,
       limit
@@ -41,25 +41,25 @@ export const getServerMembers = async function (
 
 // HTTP:UPDATE Request to update a server
 export const updateServer = async function (
-  id: string,
+  serverId: string,
   body: ServerFormValues
 ): Promise<AxiosResponse> {
-  const response = await axiosInstance.patch(`/v1/servers/${id}`, body)
+  const response = await axiosInstance.patch(`/v1/servers/${serverId}`, body)
   return response
 }
 
 // HTTP:DELETE Request to delete a server
-export const deleteServer = async function (id: string): Promise<AxiosResponse> {
-  const response = await axiosInstance.delete(`/v1/servers/${id}`)
+export const deleteServer = async function (serverId: string): Promise<AxiosResponse> {
+  const response = await axiosInstance.delete(`/v1/servers/${serverId}`)
   return response
 }
 
 // HTTP:DELETE Request to delete a server member
 export const deleteServerMember = async function (
-  serverID: string,
-  userID: string
+  serverId: string,
+  userId: string
 ): Promise<AxiosResponse> {
   const response = await axiosInstance.delete(`/v1
-  /servers/${serverID}/users/${userID}`)
+  /servers/${serverId}/users/${userId}`)
   return response
 }

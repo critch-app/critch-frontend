@@ -53,8 +53,8 @@ export function getChannelByIDQuery(channelId: string): any {
 
 export function deleteChannelMut(callback: () => void): any {
   const mut = useMutation({
-    mutationFn: async (channelID: string) => {
-      const response = await channelAxios.deleteChannel(channelID)
+    mutationFn: async (channelId: string) => {
+      const response = await channelAxios.deleteChannel(channelId)
       return response
     },
     onSuccess: () => {
@@ -66,8 +66,8 @@ export function deleteChannelMut(callback: () => void): any {
 
 export function updateChannelMut(callback: () => void): any {
   const mut = useMutation({
-    mutationFn: async ({ channelID, body }: { channelID: string; body: ChannelFormValues }) => {
-      const response = await channelAxios.updateChannel(channelID, body)
+    mutationFn: async ({ channelId, body }: { channelId: string; body: ChannelFormValues }) => {
+      const response = await channelAxios.updateChannel(channelId, body)
       return response
     },
     onSuccess: () => {
@@ -145,8 +145,8 @@ export function getDMChannelsQuery(offset: number, limit: number, isServerChanne
 export function putChannelMemberMut(callback: () => void): any {
   const queryClient = useQueryClient()
   const mut = useMutation({
-    mutationFn: async ({ userID, channelID }: { userID: string; channelID: string }) => {
-      const response = await channelAxios.putChannelMember(userID, channelID)
+    mutationFn: async ({ userId, channelId }: { userId: string; channelId: string }) => {
+      const response = await channelAxios.putChannelMember(userId, channelId)
       return response
     },
     onSuccess: () => {
@@ -159,16 +159,48 @@ export function putChannelMemberMut(callback: () => void): any {
 
 /**
  * Fetches channel members in an infinite loading pattern.
- * @param channelID - The ID of the channel whose members to fetch.
+ * @param channelId - The ID of the channel whose members to fetch.
  * @param offset - The initial offset for pagination.
  * @param limit - The number of members to fetch per page.
  * @returns An infinite query object for managing the paginated data.
  */
-export function getChannelMembersQuery(channelID: string, offset: number, limit: number): any {
+export function getChannelMembersQuery(channelId: string, offset: number, limit: number): any {
   const query = useInfiniteQuery({
-    queryKey: ['channels', channelID, 'members'],
+    queryKey: ['channels', channelId, 'members'],
     queryFn: async ({ pageParam = offset }) => {
-      const response = await channelAxios.getChannelMembers(channelID, pageParam, limit)
+      const response = await channelAxios.getChannelMembers(channelId, pageParam, limit)
+      if (response.data.error) {
+        throw response.data.error
+      }
+      return response
+    },
+    getNextPageParam: (lastPage: any, allPages: any) => {
+      const totalPages = allPages.length
+      const itemsPerPage = limit
+      const totalCount = totalPages * itemsPerPage
+
+      return totalCount > lastPage.length ? lastPage.length : undefined
+    },
+    initialPageParam: offset,
+    staleTime: 5 * 60 * 1000,
+    refetchInterval: 5 * 60 * 1000
+  })
+
+  return query
+}
+
+/**
+ * Fetches channel messages in an infinite loading pattern.
+ * @param channelId - The ID of the channel whose members to fetch.
+ * @param offset - The initial offset for pagination.
+ * @param limit - The number of members to fetch per page.
+ * @returns An infinite query object for managing the paginated data.
+ */
+export function getChannelMessagesQuery(channelId: string, offset: number, limit: number): any {
+  const query = useInfiniteQuery({
+    queryKey: ['channels', channelId, 'messages'],
+    queryFn: async ({ pageParam = offset }) => {
+      const response = await channelAxios.getChannelMessages(channelId, pageParam, limit)
       if (response.data.error) {
         throw response.data.error
       }
@@ -191,8 +223,8 @@ export function getChannelMembersQuery(channelID: string, offset: number, limit:
 
 export function deleteChannelMemberMut(callback: () => void): any {
   const mut = useMutation({
-    mutationFn: async ({ channelID, userID }: { channelID: string; userID: string }) => {
-      const response = await channelAxios.deleteChannelMember(channelID, userID)
+    mutationFn: async ({ channelId, userId }: { channelId: string; userId: string }) => {
+      const response = await channelAxios.deleteChannelMember(channelId, userId)
       return response
     },
     onSuccess: () => {
