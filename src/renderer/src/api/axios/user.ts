@@ -16,33 +16,33 @@ export const register = async function (body: RegisterFormValues): Promise<Axios
 }
 
 // HTTP:PUT Request to add a new server member
-export const getUserByID = async function (id: string): Promise<AxiosResponse> {
-  const response = await axiosInstance.get(`/v1/users/${id}`)
+export const getUserByID = async function (userId: string): Promise<AxiosResponse> {
+  const response = await axiosInstance.get(`/v1/users/${userId}`)
   return response
 }
 
 // HTTP:DELETE Request to delete a user
-export const deleteUser = async function (id: string): Promise<AxiosResponse> {
-  const response = await axiosInstance.delete(`/v1/users/${id}`)
+export const deleteUser = async function (userId: string): Promise<AxiosResponse> {
+  const response = await axiosInstance.delete(`/v1/users/${userId}`)
   return response
 }
 
 // HTTP:UPDATE Request to update a user
 export const updateUser = async function (
-  id: string,
+  userId: string,
   body: RegisterFormValues
 ): Promise<AxiosResponse> {
-  const response = await axiosInstance.patch(`/v1/users/${id}`, body)
+  const response = await axiosInstance.patch(`/v1/users/${userId}`, body)
   return response
 }
 
 // HTTP:GET Request to get user's servers
 export const getUserServers = async function (
-  id: string,
+  userId: string,
   offset: number,
   limit: number
 ): Promise<AxiosResponse> {
-  const response = await axiosInstance.get(`/v1/users/${id}/servers`, {
+  const response = await axiosInstance.get(`/v1/users/${userId}/servers`, {
     params: {
       offset,
       limit
@@ -53,11 +53,11 @@ export const getUserServers = async function (
 
 // HTTP:GET Request to get user's channels
 export const getUserChannels = async function (
-  id: string,
+  userId: string,
   offset: number,
   limit: number
 ): Promise<AxiosResponse> {
-  const response = await axiosInstance.get(`/v1/users/${id}/channels`, {
+  const response = await axiosInstance.get(`/v1/users/${userId}/channels`, {
     params: {
       offset,
       limit

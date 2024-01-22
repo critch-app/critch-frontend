@@ -105,8 +105,8 @@ export function getServerMembersQuery(serverId: string, offset: number, limit: n
 
 export function updateServerMut(callback: () => void): any {
   const mut = useMutation({
-    mutationFn: async ({ serverID, body }: { serverID: string; body: ServerFormValues }) => {
-      const response = await serverAxios.updateServer(serverID, body)
+    mutationFn: async ({ serverId, body }: { serverId: string; body: ServerFormValues }) => {
+      const response = await serverAxios.updateServer(serverId, body)
       return response
     },
     onSuccess: () => {
@@ -118,8 +118,8 @@ export function updateServerMut(callback: () => void): any {
 
 export function deleteServerMut(callback: () => void): any {
   const mut = useMutation({
-    mutationFn: async (serverID: string) => {
-      const response = await serverAxios.deleteServer(serverID)
+    mutationFn: async (serverId: string) => {
+      const response = await serverAxios.deleteServer(serverId)
       return response
     },
     onSuccess: () => {

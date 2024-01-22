@@ -6,14 +6,14 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 
 /**
  * Fetches a specific message by its ID.
- * @param messageID - The ID of the message to retrieve.
+ * @param messageId - The ID of the message to retrieve.
  * @returns A query object for accessing and managing the fetched data.
  */
-export function getServerByIDQuery(messageID: string): any {
+export function getServerByIDQuery(messageId: string): any {
   const query = useQuery({
-    queryKey: ['messages', messageID],
+    queryKey: ['messages', messageId],
     queryFn: async () => {
-      const response = await messageAxios.getMessage(messageID)
+      const response = await messageAxios.getMessage(messageId)
       if (response.data.error) {
         throw response.data.error
       }
@@ -27,8 +27,8 @@ export function getServerByIDQuery(messageID: string): any {
 
 export function updateMessageMut(callback: () => void): any {
   const mut = useMutation({
-    mutationFn: async ({ messageID, body }: { messageID: string; body: MessageFormValues }) => {
-      const response = await messageAxios.updateMessage(messageID, body)
+    mutationFn: async ({ messageId, body }: { messageId: string; body: MessageFormValues }) => {
+      const response = await messageAxios.updateMessage(messageId, body)
       return response
     },
     onSuccess: () => {
@@ -40,8 +40,8 @@ export function updateMessageMut(callback: () => void): any {
 
 export function deleteMessageMut(callback: () => void): any {
   const mut = useMutation({
-    mutationFn: async (messageID: string) => {
-      const response = await messageAxios.deleteMessage(messageID)
+    mutationFn: async (messageId: string) => {
+      const response = await messageAxios.deleteMessage(messageId)
       return response
     },
     onSuccess: () => {
