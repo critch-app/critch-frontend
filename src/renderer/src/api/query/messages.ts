@@ -9,7 +9,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
  * @param messageId - The ID of the message to retrieve.
  * @returns A query object for accessing and managing the fetched data.
  */
-export function getServerByIDQuery(messageId: string): any {
+export function getMessageByIDQuery(messageId: string): any {
   const query = useQuery({
     queryKey: ['messages', messageId],
     queryFn: async () => {
