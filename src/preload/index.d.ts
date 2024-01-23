@@ -6,6 +6,7 @@ declare global {
     api: {
       writeToClipboard: (content: string) => Promise<void>
       showNotifications: (title: string, body: string) => Promise<void>
+      generateInvitation: (serverId: string) => Promise<void>
     }
   }
 }
