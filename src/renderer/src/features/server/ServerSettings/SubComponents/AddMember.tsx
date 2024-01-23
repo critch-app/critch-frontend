@@ -1,62 +1,87 @@
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Divider from '@renderer/components/Divider/Divider'
+//import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+//import Divider from '@renderer/components/Divider/Divider'
 import { useEffect, useState } from 'react'
-import * as Yup from 'yup'
+import { useSelector } from 'react-redux'
+import { RootState } from '@renderer/app/store'
+import Loading from '@renderer/components/Loading/Loading'
+import Error from '@renderer/components/Error/Error'
 
-// TODO: Under Development
 export default function AddMembers(): React.JSX.Element {
-  const [inputValue, setInputValue] = useState('')
-  const [UUID, setUUID] = useState('')
-  const validationSchema = Yup.object({
-    id: Yup.string().trim().uuid()
+  const [invitation, setInvitation] = useState(null as string | null)
+  const [isLinkReady, setIsLinkReady] = useState(false)
+  const [isLinkError, setIsLinkError] = useState(false)
+  const serverID = useSelector((state: RootState) => state.serverBar.activeServerID)
+
+  window.electron.ipcRenderer.on('token-generated', async (_event, url: string) => {
+    setInvitation(url)
+    setIsLinkReady(true)
+  })
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  window.electron.ipcRenderer.on('token-error', async (_event, _error: Error) => {
+    setIsLinkReady(false)
+    setIsLinkError(true)
   })
 
-  const validateOnChange = async (): Promise<void> => {
-    try {
-      const res = await validationSchema.validate({ id: inputValue })
-      if (res && res.id) {
-        setUUID(res.id)
+  useEffect(() => {
+    if (!invitation) {
+      const generateInvitation = async (): Promise<void> => {
+        await window.api.generateInvitation(serverID)
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      /* empty */
+      generateInvitation()
+    } else {
+      setIsLinkReady(true)
     }
+  }, [])
+
+  if (isLinkError && !isLinkReady) {
+    return (
+      <div>
+        <Error
+          error={`Couldn't generate invatation link please try again latter or restart the applicataion`}
+        />
+      </div>
+    )
   }
 
-  useEffect(() => {
-    if (UUID) {
-      console.log(UUID)
-    }
-  }, [inputValue, UUID])
+  if (!isLinkReady) {
+    return (
+      <div>
+        <Loading size={170} />
+      </div>
+    )
+  }
 
   return (
-    <div
-      className={`h-[calc(100%)] w-[calc(100%)] flex-col justify-center rounded-lg bg-original-white`}
-    >
-      <div>
-        <h1 className={`px-3 py-2 text-xl text-default-txt`}>Add Members</h1>
-        <Divider width={`w-[calc(100%-2rem)]`} bgColor={`bg-primary-gray`} />
-      </div>
-      <div className={`relative flex items-center justify-center`}>
-        <FontAwesomeIcon
-          icon={faMagnifyingGlass}
-          className={`absolute left-[calc(7%)] top-[calc(50%)] -translate-y-1/2 text-default-txt`}
-        />
-        <input
-          type="text"
-          placeholder="Search Members With ID"
-          onChange={async (ev): Promise<void> => {
-            setInputValue(ev.target.value)
-            await validateOnChange()
+    <div className={`h-[calc(100%)] w-[calc(78%)]  rounded-lg bg-original-white p-5`}>
+      <h1 className={`px-3 py-3 text-3xl`}>Add Members</h1>
+      <p className={`px-3 py-1`}>Copy this link and shre it to make people join your server</p>
+      <p className={`px-3 py-1`}>This Link is valid for 30 days</p>
+      <div className={`h-[calc(100%)]`}>
+        <h3
+          className={`h-12 w-[calc(70%)] overflow-clip 
+        overflow-ellipsis whitespace-nowrap rounded-md bg-primary-gray p-2 text-default-txt`}
+        >
+          {invitation}
+        </h3>
+        <button
+          className={`mx-auto my-1 rounded-md bg-soft-purble p-1.5 text-sm
+          text-original-white hover:bg-soft-purble/80`}
+          onClick={async (): Promise<void> => {
+            if (!invitation) {
+              Promise.reject
+              return
+            } else {
+              await window.api.writeToClipboard(invitation)
+              await window.api.showNotifications(
+                'Invitation link copied to your clipboard',
+                invitation
+              )
+            }
           }}
-          onBlur={async (): Promise<void> => {
-            await validateOnChange()
-          }}
-          name="ID"
-          value={inputValue}
-          className={`critch-form-input my-2 w-[calc(90%)] rounded-full pl-[calc(5%)] text-lg`}
-        />
+        >
+          Copy
+        </button>
       </div>
     </div>
   )

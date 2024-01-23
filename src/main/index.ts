@@ -1,8 +1,11 @@
 import { app, shell, BrowserWindow, screen, ipcMain, clipboard, Notification } from 'electron'
-import { join } from 'path'
+import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-function createWindow(): void {
+import * as jwt from 'jsonwebtoken'
+
+let mainWindow: BrowserWindow
+function createWindow(): BrowserWindow {
   // Create the browser window.
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
   const mainWindow = new BrowserWindow({
@@ -18,6 +21,18 @@ function createWindow(): void {
       preload: join(__dirname, '../preload/index.js')
     }
   })
+
+  // register the URL Handler
+  if (process.defaultApp) {
+    // handle in windows & linux
+    if (process.argv.length >= 2) {
+      app.setAsDefaultProtocolClient('critch-invitation', process.execPath, [
+        path.resolve(process.argv[1])
+      ])
+    } else {
+      app.setAsDefaultProtocolClient('critch-invitation')
+    }
+  }
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
@@ -35,6 +50,7 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+  return mainWindow
 }
 
 // This method will be called when Electron has finished
@@ -50,7 +66,32 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  createWindow()
+  const gotTheLock = app.requestSingleInstanceLock()
+  mainWindow = createWindow()
+
+  if (!gotTheLock) {
+    app.quit()
+  } else {
+    if (process.platform !== 'darwin') {
+      app.on('second-instance', (_event, commandLine) => {
+        // Someone tried to run a second instance, we should focus our window.
+        if (mainWindow) {
+          if (mainWindow.isMinimized()) mainWindow.restore()
+          mainWindow.focus()
+        }
+        const url = commandLine.pop()
+        const token = url?.split('=')[1]
+        const payload = jwt.verify(token, 'my-secret-key')
+        mainWindow.webContents.send('add-me-to-server', payload.serverId)
+      })
+    } else {
+      app.on('open-url', (_event, url) => {
+        const token = url?.split('=')[1]
+        const payload = jwt.verify(token, 'my-secret-key')
+        mainWindow.webContents.send('add-me-to-server', payload.serverId)
+      })
+    }
+  }
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
@@ -80,4 +121,19 @@ ipcMain.on('show-notification', async (_, title: string, body: string) => {
     body: body,
     timeoutType: 'default'
   }).show()
+})
+
+// register an event to create an invitation link
+ipcMain.on('generate-invitation', async (event, serverId: string) => {
+  try {
+    const token = await jwt.sign({ serverId }, 'my-secret-key', {
+      algorithm: 'HS256',
+      expiresIn: 30 * 24 * 60 * 60
+    })
+    event.sender.send('token-generated', `critch-invitation://critch?token=${token}`)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    console.log(error.message)
+    event.sender.send('token-error', error?.message)
+  }
 })
