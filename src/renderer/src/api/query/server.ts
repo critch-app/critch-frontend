@@ -64,9 +64,10 @@ export function putServerMemberMut(callback: () => void): any {
       return response
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['servers', '*', 'members'] as InvalidateQueryFilters)
+      queryClient.invalidateQueries(['servers'] as InvalidateQueryFilters)
       callback()
-    }
+    },
+    retry: false
   })
   return mut
 }
