@@ -1,4 +1,4 @@
-import { putServerMemberMut } from '@renderer/api/query/server' // Assuming this is accessible here
+import { putServerMemberMut } from '@renderer/api/query/server'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@renderer/app/store'
