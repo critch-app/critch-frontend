@@ -1,20 +1,29 @@
 /* eslint-disable prettier/prettier */
-import useWebSocket from 'react-use-websocket'
+import useWebSocket, { ReadyState } from 'react-use-websocket'
 
 const baseWsUrl = 'ws://localhost:8080'
 
 const wsUrl = `${baseWsUrl}/v1/messaging-service`
 
-const createDirectMessageSocket = (): ((channelId: string, content: string) => void) => {
-  const { sendJsonMessage } = useWebSocket(wsUrl, {
-    queryParams: {}
-  })
+const createDirectMessageSocket = (): {
+  sendMessage: (channelId: string, content: string) => void
+  closeConnection: () => void
+} => {
+  const { sendJsonMessage, readyState } = useWebSocket(wsUrl)
 
-  return (channelId: string, content: string) => {
+  const sendMessage = (channelId: string, content: string): void => {
     if (sendJsonMessage) {
       sendJsonMessage({ channelId, content })
     }
   }
+
+  const closeConnection = (): void => {
+    if (readyState === ReadyState.OPEN) {
+      sendJsonMessage({ type: 'disconnect' })
+    }
+  }
+
+  return { sendMessage, closeConnection }
 }
 
 export default createDirectMessageSocket
