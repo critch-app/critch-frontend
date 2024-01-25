@@ -52,7 +52,7 @@ export default function ServerBar(): React.JSX.Element {
 
   // Handle error state
   if (query.status === 'error') {
-    return <Error error={apiError} />
+    return <Error error={apiError} reset={null} />
   }
 
   // Handle loading state

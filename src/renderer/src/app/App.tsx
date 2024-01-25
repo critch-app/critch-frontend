@@ -18,7 +18,7 @@ function App(): React.JSX.Element {
       <BrowserRouter>
         {isError && (
           <div>
-            <Error error={error} />
+            <Error error={error} reset={null} />
           </div>
         )}
         <Routes>
