@@ -46,7 +46,7 @@ export function getServerByIDQuery(serverId: string): any {
       return response
     },
     staleTime: 5 * 60 * 1000,
-    refetchInterval: 5 * 60 * 1000
+    refetchInterval: 5 * 60 * 1000 + 5
   })
   return query
 }
@@ -98,7 +98,7 @@ export function getServerMembersQuery(serverId: string, offset: number, limit: n
     },
     initialPageParam: offset,
     staleTime: 5 * 60 * 1000,
-    refetchInterval: 5 * 60 * 1000
+    refetchInterval: 5 * 60 * 1000 + 5
   })
 
   return query

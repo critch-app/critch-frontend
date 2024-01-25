@@ -35,7 +35,7 @@ export function addChannelMut(callback: () => void): any {
  * @param channelId - The ID of the channel to retrieve.
  * @returns A query object with methods for accessing and managing the fetched data.
  */
-export function getChannelByIDQuery(channelId: string): any {
+export function getChannelByIdQuery(channelId: string): any {
   const query = useQuery({
     queryKey: ['channels', channelId],
     queryFn: async () => {
@@ -46,7 +46,7 @@ export function getChannelByIDQuery(channelId: string): any {
       return response
     },
     staleTime: 5 * 60 * 1000,
-    refetchInterval: 5 * 60 * 1000
+    refetchInterval: 5 * 60 * 1000 + 5
   })
   return query
 }
@@ -101,7 +101,7 @@ export function getServerChannelsQuery(serverId: string, offset: number, limit: 
     },
     initialPageParam: offset,
     staleTime: 5 * 60 * 1000,
-    refetchInterval: 5 * 60 * 1000
+    refetchInterval: 5 * 60 * 1000 + 5
   })
 
   return query
@@ -131,7 +131,7 @@ export function getDMChannelsQuery(offset: number, limit: number, isServerChanne
     },
     initialPageParam: offset,
     staleTime: 5 * 60 * 1000,
-    refetchInterval: 5 * 60 * 1000
+    refetchInterval: 5 * 60 * 1000 + 5
   })
 
   return query
@@ -183,7 +183,7 @@ export function getChannelMembersQuery(channelId: string, offset: number, limit:
     },
     initialPageParam: offset,
     staleTime: 5 * 60 * 1000,
-    refetchInterval: 5 * 60 * 1000
+    refetchInterval: 5 * 60 * 1000 + 5
   })
 
   return query
@@ -215,7 +215,7 @@ export function getChannelMessagesQuery(channelId: string, offset: number, limit
     },
     initialPageParam: offset,
     staleTime: 5 * 60 * 1000,
-    refetchInterval: 5 * 60 * 1000
+    refetchInterval: 5 * 60 * 1000 + 5
   })
 
   return query

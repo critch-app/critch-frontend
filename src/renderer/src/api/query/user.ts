@@ -41,7 +41,7 @@ export function getUserByIdQuery(userId: string): any {
       return response
     },
     staleTime: 5 * 60 * 1000,
-    refetchInterval: 5 * 60 * 1000
+    refetchInterval: 5 * 60 * 1000 + 5
   })
   return query
 }
@@ -91,7 +91,7 @@ export function getUserServersQuery(userId: string, offset: number, limit: numbe
     },
     initialPageParam: offset,
     staleTime: 5 * 60 * 1000,
-    refetchInterval: 5 * 60 * 1000
+    refetchInterval: 5 * 60 * 1000 + 5
   })
 
   return query
@@ -116,7 +116,7 @@ export function getUserChannelsQuery(userId: string, offset: number, limit: numb
     },
     initialPageParam: offset,
     staleTime: 5 * 60 * 1000,
-    refetchInterval: 5 * 60 * 1000
+    refetchInterval: 5 * 60 * 1000 + 5
   })
 
   return query
