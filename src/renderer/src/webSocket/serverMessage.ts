@@ -13,7 +13,7 @@ const createServerMessageSocket = (): {
 
   const sendMessage = (channelId: string, content: string, serverId: string): void => {
     if (sendJsonMessage) {
-      sendJsonMessage({ channelId, content, serverId })
+      sendJsonMessage({ type: 'serverMessage', channelId, content, serverId })
     }
   }
 

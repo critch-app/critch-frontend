@@ -13,7 +13,7 @@ const createDirectMessageSocket = (): {
 
   const sendMessage = (channelId: string, content: string): void => {
     if (sendJsonMessage) {
-      sendJsonMessage({ channelId, content })
+      sendJsonMessage({ type: 'directMessage', channelId, content })
     }
   }
 
