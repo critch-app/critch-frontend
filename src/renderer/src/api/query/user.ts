@@ -136,3 +136,19 @@ export function getUserDmChannelsQuery(userId: string, offset: number, limit: nu
 
   return query
 }
+
+export function getUserRoleQuery(userId: string, serverId: string): any {
+  const query = useQuery({
+    queryKey: ['users', userId, 'servers', serverId, 'roles'],
+    queryFn: async () => {
+      const response = await userAxios.getUserServerRole(userId, serverId)
+      if (response.data.error) {
+        throw response.data.error
+      }
+      return response
+    },
+    staleTime: 5 * 60 * 1000,
+    refetchInterval: 5 * 60 * 1000 + 5
+  })
+  return query
+}
