@@ -133,9 +133,12 @@ export function getServerChannelsQuery(serverId: string, offset: number, limit: 
     getNextPageParam: (lastPage: any, allPages: any) => {
       const totalPages = allPages.length
       const itemsPerPage = limit
-      const totalCount = totalPages * itemsPerPage
+      const nextPageOffset = totalPages * itemsPerPage
 
-      return totalCount > lastPage.length ? lastPage.length : undefined
+      if (lastPage.data.length < limit) {
+        return null
+      }
+      return nextPageOffset
     },
     initialPageParam: offset,
     staleTime: 5 * 60 * 1000,
@@ -183,9 +186,12 @@ export function getChannelMembersQuery(
     getNextPageParam: (lastPage: any, allPages: any) => {
       const totalPages = allPages.length
       const itemsPerPage = limit
-      const totalCount = totalPages * itemsPerPage
+      const nextPageOffset = totalPages * itemsPerPage
 
-      return totalCount > lastPage.length ? lastPage.length : undefined
+      if (lastPage.data.length < limit) {
+        return null
+      }
+      return nextPageOffset
     },
     initialPageParam: offset,
     staleTime: 5 * 60 * 1000,
@@ -232,9 +238,12 @@ export function getChannelMessagesQuery(
     getNextPageParam: (lastPage: any, allPages: any) => {
       const totalPages = allPages.length
       const itemsPerPage = limit
-      const totalCount = totalPages * itemsPerPage
+      const nextPageOffset = totalPages * itemsPerPage
 
-      return totalCount > lastPage.length ? lastPage.length : undefined
+      if (lastPage.data.length < limit) {
+        return null
+      }
+      return nextPageOffset
     },
     initialPageParam: offset,
     staleTime: 5 * 60 * 1000,
