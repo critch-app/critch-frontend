@@ -90,7 +90,7 @@ export const putChannelMember = async function (
   serverId: string | null = null
 ): Promise<AxiosResponse> {
   const response = await axiosInstance.put(
-    `/v1/channels/${channelId}/users/${userId}${serverId ? `?server_id=${serverId}` : null}`
+    `/v1/channels/${channelId}/users/${userId}${serverId ? `?serverId=${serverId}` : null}`
   )
   return response
 }
@@ -102,7 +102,7 @@ export const deleteChannelMember = async function (
   serverId: string | null = null
 ): Promise<AxiosResponse> {
   const response = await axiosInstance.delete(
-    `/v1/channels/${channelId}/users/${userId}${serverId ? `?server_id=${serverId}` : null}`
+    `/v1/channels/${channelId}/users/${userId}${serverId ? `?serverId=${serverId}` : null}`
   )
   return response
 }

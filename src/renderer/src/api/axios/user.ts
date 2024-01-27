@@ -65,3 +65,11 @@ export const getUserDmChannels = async function (
   })
   return response
 }
+
+export const getUserServerRole = async function (
+  userId: string,
+  serverId: string
+): Promise<AxiosResponse> {
+  const response = await axiosInstance.get(`/v1/server-role?userId=${userId}&serverId=${serverId}`)
+  return response
+}
