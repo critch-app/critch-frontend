@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ChannelFormValues, ChannelType } from '@renderer/env'
+import { ChannelFormValues, ChannelType } from '@renderer/env.d'
 import * as channelAxios from '../axios/channel'
 import {
   InvalidateQueryFilters,

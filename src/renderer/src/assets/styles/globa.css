@@ -22,10 +22,12 @@ body {
   .critch-active-channel {
     @apply sticky 
     m-2 
-    flex cursor-pointer
-    items-center 
+    flex 
+    w-48 
+    cursor-pointer
+    items-center
     rounded-md
-    bg-hard-white
+    bg-hard-white 
     p-2
     text-sm 
     text-default-txt;

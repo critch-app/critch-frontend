@@ -3,9 +3,15 @@ import { Formik, Form } from 'formik'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
-import { ChannelFormValues } from '@renderer/env'
+import { ChannelFormValues, ChannelType } from '@renderer/env.d'
 import channelSchema from '@renderer/util/validation/channelSchema'
 import FormFields from '@renderer/features/server/AddChannel/SubComponents/FormFields'
+import { RootState } from '@renderer/app/store'
+import { useSelector } from 'react-redux'
+import { addChannelMut } from '@renderer/api/query/channels'
+import { useState } from 'react'
+import Loading from '@renderer/components/Loading/Loading'
+import Error from '@renderer/components/Error/Error'
 /**
  * Modal contain the add server form
  * @param {any} toggleModal - Modal State control
@@ -17,15 +23,42 @@ export default function AddChannelModal({
 }: {
   toggleModal: React.Dispatch<React.SetStateAction<boolean>>
 }): React.JSX.Element {
+  const activeServer = useSelector((state: RootState) => state.serverBar.activeServerID)
+  const mut = addChannelMut(() => {}, ChannelType.SERVER)
+  const [apiError, setApiError] = useState('')
   /**
    * On submit handler
    * @param {ChannelFormValues} {values}
    * @returns {void}
    */
-  const onSubmit = (values: ChannelFormValues): void => {
-    values.server_id = '1'
-    console.log(`form submitted with values`, values)
-    toggleModal(false)
+  const onSubmit = async (values: ChannelFormValues): Promise<void> => {
+    values.server_id = activeServer
+    try {
+      const res = await mut.mutateAsync(values)
+      if (res.data) {
+        toggleModal(false)
+      }
+    } catch (error: any) {
+      if (error.response && error.response.data && error.response.data.message) {
+        setApiError(error.response.data.message)
+      } else {
+        setApiError('An unexpected error occurred')
+      }
+    }
+  }
+
+  // Handle error state
+  if (mut.status == 'error') {
+    return <Error error={apiError} reset={mut.reset} />
+  }
+
+  // Handle loading state
+  if (mut.status == 'pending') {
+    return (
+      <div>
+        <Loading size={170} />
+      </div>
+    )
   }
 
   return (
