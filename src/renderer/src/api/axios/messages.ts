@@ -12,14 +12,23 @@ export const getMessage = async function (messageId: string): Promise<AxiosRespo
 // HTTP:UPDATE Request to update a message
 export const updateMessage = async function (
   messageId: string,
-  body: MessageFormValues
+  body: MessageFormValues,
+  isServerMessage: boolean
 ): Promise<AxiosResponse> {
-  const response = await axiosInstance.patch(`/v1/messages/${messageId}`, body)
+  const response = await axiosInstance.patch(
+    `/v1/messages/${messageId}?isServerMessage=${isServerMessage}`,
+    body
+  )
   return response
 }
 
 // HTTP:DELETE Request to delete a message
-export const deleteMessage = async function (messageId: string): Promise<AxiosResponse> {
-  const response = await axiosInstance.delete(`/v1/messages/${messageId}`)
+export const deleteMessage = async function (
+  messageId: string,
+  isServerMessage: boolean
+): Promise<AxiosResponse> {
+  const response = await axiosInstance.delete(
+    `/v1/messages/${messageId}?isServerMessage=${isServerMessage}`
+  )
   return response
 }

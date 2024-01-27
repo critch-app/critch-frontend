@@ -52,7 +52,7 @@ export const getUserServers = async function (
 }
 
 // HTTP:GET Request to get user's channels
-export const getUserChannels = async function (
+export const getUserDmChannels = async function (
   userId: string,
   offset: number,
   limit: number

@@ -1,8 +1,13 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { LoginFormValues, RegisterFormValues } from '@renderer/env'
 import * as userAxios from '../axios/user'
-import { useQuery, useMutation, useInfiniteQuery } from '@tanstack/react-query'
+import {
+  useQuery,
+  useMutation,
+  useInfiniteQuery,
+  useQueryClient,
+  InvalidateQueryFilters
+} from '@tanstack/react-query'
 
 export function loginMut(callback: () => void): any {
   const mut = useMutation({
@@ -47,12 +52,14 @@ export function getUserByIdQuery(userId: string): any {
 }
 
 export function deleteUserMut(callback: () => void): any {
+  const queryClient = useQueryClient()
   const mut = useMutation({
     mutationFn: async (userId: string) => {
       const response = await userAxios.deleteUser(userId)
       return response
     },
     onSuccess: () => {
+      queryClient.invalidateQueries(['users'] as InvalidateQueryFilters)
       callback()
     }
   })
@@ -60,12 +67,14 @@ export function deleteUserMut(callback: () => void): any {
 }
 
 export function updateUserMut(callback: () => void): any {
+  const queryClient = useQueryClient()
   const mut = useMutation({
     mutationFn: async ({ userId, body }: { userId: string; body: RegisterFormValues }) => {
       const response = await userAxios.updateUser(userId, body)
       return response
     },
     onSuccess: () => {
+      queryClient.invalidateQueries(['users'] as InvalidateQueryFilters)
       callback()
     }
   })
@@ -74,7 +83,7 @@ export function updateUserMut(callback: () => void): any {
 
 export function getUserServersQuery(userId: string, offset: number, limit: number): any {
   const query = useInfiniteQuery({
-    queryKey: [userId, 'servers'],
+    queryKey: ['servers'],
     queryFn: async ({ pageParam = offset }) => {
       const response = await userAxios.getUserServers(userId, pageParam, limit)
       if (response.data.error) {
@@ -97,11 +106,11 @@ export function getUserServersQuery(userId: string, offset: number, limit: numbe
   return query
 }
 
-export function getUserChannelsQuery(userId: string, offset: number, limit: number): any {
+export function getUserDmChannelsQuery(userId: string, offset: number, limit: number): any {
   const query = useInfiniteQuery({
-    queryKey: [userId, 'channels'],
+    queryKey: ['dm', 'channels'],
     queryFn: async ({ pageParam = offset }) => {
-      const response = await userAxios.getUserChannels(userId, pageParam, limit)
+      const response = await userAxios.getUserDmChannels(userId, pageParam, limit)
       if (response.data.error) {
         throw response.data.error
       }

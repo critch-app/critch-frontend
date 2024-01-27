@@ -54,9 +54,19 @@ export interface ChannelFormValues {
   server_id: string
 }
 
+export enum ChannelType {
+  DM = 'DM',
+  SERVER = 'Server'
+}
+
 // @Message
 
 export interface MessageFormValues {
   content: string
   attachment: string
+}
+
+export enum MessageType {
+  DM = 'DM',
+  SERVER = 'Server'
 }
