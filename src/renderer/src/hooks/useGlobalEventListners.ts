@@ -22,7 +22,7 @@ export function useGlobalEventListeners(): { isError: boolean; error: string } {
         )
       }
     })
-  })
+  }, [])
 
   return { isError, error }
 }
