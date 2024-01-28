@@ -82,13 +82,13 @@ app.whenReady().then(() => {
         const url = commandLine.pop()
         const token = url?.split('=')[1]
         const payload = jwt.verify(token, 'my-secret-key')
-        mainWindow.webContents.send('add-me-to-server', payload.serverId)
+        mainWindow.webContents.send('add-me-to-server', payload.serverId, payload.channels)
       })
     } else {
       app.on('open-url', (_event, url) => {
         const token = url?.split('=')[1]
         const payload = jwt.verify(token, 'my-secret-key')
-        mainWindow.webContents.send('add-me-to-server', payload.serverId)
+        mainWindow.webContents.send('add-me-to-server', payload.serverId, payload.channels)
       })
     }
   }
@@ -124,9 +124,9 @@ ipcMain.on('show-notification', async (_, title: string, body: string) => {
 })
 
 // register an event to create an invitation link
-ipcMain.on('generate-invitation', async (event, serverId: string) => {
+ipcMain.on('generate-invitation', async (event, serverId: string, channels: string[]) => {
   try {
-    const token = await jwt.sign({ serverId }, 'my-secret-key', {
+    const token = await jwt.sign({ serverId, channels }, 'my-secret-key', {
       algorithm: 'HS256',
       expiresIn: 30 * 24 * 60 * 60
     })

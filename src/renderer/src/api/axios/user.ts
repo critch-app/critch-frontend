@@ -52,7 +52,7 @@ export const getUserServers = async function (
 }
 
 // HTTP:GET Request to get user's channels
-export const getUserChannels = async function (
+export const getUserDmChannels = async function (
   userId: string,
   offset: number,
   limit: number
@@ -63,5 +63,13 @@ export const getUserChannels = async function (
       limit
     }
   })
+  return response
+}
+
+export const getUserServerRole = async function (
+  userId: string,
+  serverId: string
+): Promise<AxiosResponse> {
+  const response = await axiosInstance.get(`/v1/server-role?userId=${userId}&serverId=${serverId}`)
   return response
 }

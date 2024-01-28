@@ -46,7 +46,7 @@ export function getServerByIDQuery(serverId: string): any {
       return response
     },
     staleTime: 5 * 60 * 1000,
-    refetchInterval: 5 * 60 * 1000
+    refetchInterval: 5 * 60 * 1000 + 5
   })
   return query
 }
@@ -58,13 +58,15 @@ export function getServerByIDQuery(serverId: string): any {
  */
 export function putServerMemberMut(callback: () => void): any {
   const queryClient = useQueryClient()
+  let sid: string
   const mut = useMutation({
     mutationFn: async ({ userId, serverId }: { userId: string; serverId: string }) => {
+      sid = serverId
       const response = await serverAxios.putServerMember(userId, serverId)
       return response
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['servers'] as InvalidateQueryFilters)
+      queryClient.invalidateQueries(['servers', sid, 'members'] as InvalidateQueryFilters)
       callback()
     },
     retry: false
@@ -92,25 +94,30 @@ export function getServerMembersQuery(serverId: string, offset: number, limit: n
     getNextPageParam: (lastPage: any, allPages: any) => {
       const totalPages = allPages.length
       const itemsPerPage = limit
-      const totalCount = totalPages * itemsPerPage
+      const nextPageOffset = totalPages * itemsPerPage
 
-      return totalCount > lastPage.length ? lastPage.length : undefined
+      if (lastPage.data.length < limit) {
+        return null
+      }
+      return nextPageOffset
     },
     initialPageParam: offset,
     staleTime: 5 * 60 * 1000,
-    refetchInterval: 5 * 60 * 1000
+    refetchInterval: 5 * 60 * 1000 + 5
   })
 
   return query
 }
 
 export function updateServerMut(callback: () => void): any {
+  const queryClient = useQueryClient()
   const mut = useMutation({
     mutationFn: async ({ serverId, body }: { serverId: string; body: ServerFormValues }) => {
       const response = await serverAxios.updateServer(serverId, body)
       return response
     },
     onSuccess: () => {
+      queryClient.invalidateQueries(['servers'] as InvalidateQueryFilters)
       callback()
     }
   })
@@ -118,12 +125,14 @@ export function updateServerMut(callback: () => void): any {
 }
 
 export function deleteServerMut(callback: () => void): any {
+  const queryClient = useQueryClient()
   const mut = useMutation({
     mutationFn: async (serverId: string) => {
       const response = await serverAxios.deleteServer(serverId)
       return response
     },
     onSuccess: () => {
+      queryClient.invalidateQueries(['servers'] as InvalidateQueryFilters)
       callback()
     }
   })
@@ -131,12 +140,16 @@ export function deleteServerMut(callback: () => void): any {
 }
 
 export function deleteServerMemberMut(callback: () => void): any {
+  const queryClient = useQueryClient()
+  let sid: string
   const mut = useMutation({
     mutationFn: async ({ userId, serverId }: { userId: string; serverId: string }) => {
+      sid = serverId
       const response = await serverAxios.deleteServerMember(userId, serverId)
       return response
     },
     onSuccess: () => {
+      queryClient.invalidateQueries(['servers', sid, 'members'] as InvalidateQueryFilters)
       callback()
     }
   })

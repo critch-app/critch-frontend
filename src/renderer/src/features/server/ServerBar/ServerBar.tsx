@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-
 import Divider from '@renderer/components/Divider/Divider'
 import AppIcon from '@renderer/components/AppIcon/AppIcon'
 import ServerIcon from '@renderer/features/server/ServerBar/SubComponents/ServerIcon'
@@ -16,7 +15,7 @@ import { Link } from 'react-router-dom'
 import Loading from '@renderer/components/Loading/Loading'
 import Error from '@renderer/components/Error/Error'
 import { getUserServersQuery } from '@renderer/api/query/user'
-
+import { useInfiniteScroll } from '@renderer/hooks/useInfiniteScroll'
 /**
  * Servers bar component
  * @returns {React.JSX.Element} renderer component.
@@ -24,39 +23,42 @@ import { getUserServersQuery } from '@renderer/api/query/user'
 
 export default function ServerBar(): React.JSX.Element {
   const activeServer = useSelector((state: RootState) => state.serverBar.activeServerID)
-  const dispatch = useDispatch()
   const loggedInUserId = useSelector((state: RootState) => state.login.loggedInUserID)
-  const query = getUserServersQuery(loggedInUserId, 0, 50)
+  const dispatch = useDispatch()
+
   const [apiError, setApiError] = useState('')
   const [isAddServerModalOpened, toggleAddServerModal] = useState(false)
   const [servers, setServers] = useState<any[]>([])
+
+  const query = getUserServersQuery(loggedInUserId, 0, 50)
+  const { ref } = useInfiniteScroll(query)
+
   useEffect(() => {
-    ;(async (): Promise<void> => {
-      try {
-        if (loggedInUserId) {
-          await query
-          query.data.pages.forEach((page) => {
-            setServers(page.data)
-          })
-        }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        if (error.response && error.response.data && error.response.data.message) {
-          setApiError(error.response.data.message)
-        } else {
-          setApiError('An unexpected error occurred')
-        }
+    try {
+      if (loggedInUserId && query.isSuccess) {
+        const newServers: any = []
+        query.data.pages.forEach((page) => {
+          newServers.push(...page.data)
+        })
+        setServers(newServers)
       }
-    })()
-  }, [servers, query.status, query.fetchStatus, loggedInUserId])
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (error.response && error.response.data && error.response.data.message) {
+        setApiError(error.response.data.message)
+      } else {
+        setApiError('An unexpected error occurred')
+      }
+    }
+  }, [query.data, loggedInUserId])
 
   // Handle error state
   if (query.status === 'error') {
-    return <Error error={apiError} />
+    return <Error error={apiError} reset={null} />
   }
 
   // Handle loading state
-  if (query.status === 'pending' || query.isStale || query.fetchStatus == 'fetching') {
+  if (query.status === 'loading') {
     return (
       <div>
         <Loading size={170} />
@@ -86,10 +88,7 @@ export default function ServerBar(): React.JSX.Element {
         </div>
 
         <Divider width={'w-[calc(100%-1rem)]'} bgColor={'bg-primary-gray'} />
-        <div
-          key={Math.random()}
-          className={`critch-overflow-hidden-scroll h-[calc(85%)] overflow-y-scroll`}
-        >
+        <div className={`critch-overflow-hidden-scroll h-[calc(85%)] overflow-y-scroll`}>
           <div
             onClick={(): void => {
               toggleAddServerModal(true)
@@ -115,6 +114,7 @@ export default function ServerBar(): React.JSX.Element {
               />
             )
           })}
+          <div ref={ref}></div>
         </div>
       </div>
     </>

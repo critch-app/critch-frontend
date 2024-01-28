@@ -1,36 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // import Channel from './SubComponents/Channel'
 import UserCard from './SubComponents/UserCard'
-import UserAvatarTest from '@renderer/assets/images/user-icon-test.svg'
 import { useSelector, useDispatch } from 'react-redux'
-
 import { RootState } from '@renderer/app/store'
 import { setActiveChannel } from './channelsBarReducer'
 import Channel from './SubComponents/Channel'
 import ServerControl from './SubComponents/ChannelControl'
-
-// dump data
-const channels = [
-  {
-    channel_id: '1',
-    name: 'General'
-  },
-  {
-    channel_id: '2',
-    name: 'Marketing'
-  },
-  {
-    channel_id: '3',
-    name: 'Development'
-  },
-  {
-    channel_id: '4',
-    name: 'Support'
-  },
-  {
-    channel_id: '5',
-    name: 'Random'
-  }
-]
+import { getServerChannelsQuery } from '@renderer/api/query/channels'
+import { useInfiniteScroll } from '@renderer/hooks/useInfiniteScroll'
+import { useEffect, useState } from 'react'
+import Loading from '@renderer/components/Loading/Loading'
+import Error from '@renderer/components/Error/Error'
+import { getUserByIdQuery } from '@renderer/api/query/user'
 
 /**
  * Channels bar component
@@ -38,7 +19,47 @@ const channels = [
  */
 export default function ChannelsBar(): React.JSX.Element {
   const activeChannel = useSelector((state: RootState) => state.channelsBar.channel)
+  const activeServer = useSelector((state: RootState) => state.serverBar.activeServerID)
+  const loggedInUserId = useSelector((state: RootState) => state.login.loggedInUserID)
   const dispatch = useDispatch()
+  const [apiError, setApiError] = useState('')
+  const [channels, setChannels] = useState<any[]>([])
+  const userQuery = getUserByIdQuery(loggedInUserId)
+  const query = getServerChannelsQuery(activeServer, 0, 50)
+  const { ref } = useInfiniteScroll(query)
+
+  useEffect(() => {
+    try {
+      if (activeServer && query.isSuccess) {
+        const newChannels: any = []
+        query.data.pages.forEach((page) => {
+          newChannels.push(...page.data)
+        })
+        setChannels(newChannels)
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (error.response && error.response.data && error.response.data.message) {
+        setApiError(error.response.data.message)
+      } else {
+        setApiError('An unexpected error occurred')
+      }
+    }
+  }, [query.data, activeServer])
+
+  // Handle error state
+  if (query.status === 'error') {
+    return <Error error={apiError} reset={null} />
+  }
+
+  // Handle loading state
+  if (query.status === 'loading') {
+    return (
+      <div>
+        <Loading size={170} />
+      </div>
+    )
+  }
 
   return (
     <>
@@ -53,19 +74,25 @@ export default function ChannelsBar(): React.JSX.Element {
             {channels.map((channel) => {
               return (
                 <Channel
-                  key={channel.channel_id}
-                  id={channel.channel_id}
+                  key={channel.id}
+                  id={channel.id}
                   name={channel.name}
-                  active={channel.channel_id === activeChannel?.channel_id ? true : false}
+                  active={channel.id === activeChannel?.id ? true : false}
                   clickHandler={(): void => {
                     dispatch(setActiveChannel(channel))
                   }}
                 />
               )
             })}
+            <div ref={ref}></div>
           </div>
           <div className={`absolute bottom-1 left-1 h-fit w-fit`}>
-            <UserCard id={'1'} userName={'Abdullah Muhammed'} avatar={UserAvatarTest} />
+            {loggedInUserId && userQuery.data.data && (
+              <UserCard
+                userName={`${userQuery.data.data.first_name} ${userQuery.data.data.last_name}`}
+                photo={userQuery.data.data.photo}
+              />
+            )}
           </div>
         </div>
       </div>

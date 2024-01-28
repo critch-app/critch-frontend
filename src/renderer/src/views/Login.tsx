@@ -54,7 +54,7 @@ export default function Login(): React.JSX.Element {
 
   // Handle error state
   if (mut.status == 'error') {
-    return <Error error={apiError} />
+    return <Error error={apiError} reset={mut.reset} />
   }
 
   // Handle loading state
