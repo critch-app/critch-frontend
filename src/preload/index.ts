@@ -8,8 +8,8 @@ contextBridge.exposeInMainWorld('api', {
   showNotifications: async (title: string, body: string): Promise<void> => {
     ipcRenderer.send('show-notification', title, body)
   },
-  generateInvitation: async (serverId: string): Promise<void> => {
-    ipcRenderer.send('generate-invitation', serverId)
+  generateInvitation: async (serverId: string, channels: string[]): Promise<void> => {
+    ipcRenderer.send('generate-invitation', serverId, channels)
   }
 })
 

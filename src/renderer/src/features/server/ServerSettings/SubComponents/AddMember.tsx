@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 //import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 //import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 //import Divider from '@renderer/components/Divider/Divider'
@@ -6,12 +7,54 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@renderer/app/store'
 import Loading from '@renderer/components/Loading/Loading'
 import Error from '@renderer/components/Error/Error'
+import { getServerChannelsQuery } from '@renderer/api/query/channels'
+import { useInfiniteScroll } from '@renderer/hooks/useInfiniteScroll'
 
 export default function AddMembers(): React.JSX.Element {
   const [invitation, setInvitation] = useState(null as string | null)
   const [isLinkReady, setIsLinkReady] = useState(false)
   const [isLinkError, setIsLinkError] = useState(false)
-  const serverID = useSelector((state: RootState) => state.serverBar.activeServerID)
+  const [apiError, setApiError] = useState('')
+  const activeServer = useSelector((state: RootState) => state.serverBar.activeServerID)
+  const channelsQuery = getServerChannelsQuery(activeServer, 0, 50)
+  const [channels, setChannels] = useState<any>([])
+  const [selectedChannels, setSelectedChannels] = useState<any>([])
+  const { ref } = useInfiniteScroll(channelsQuery)
+
+  // Query to get channels
+  useEffect(() => {
+    try {
+      if (activeServer && channelsQuery.isSuccess) {
+        const newChannels: any = []
+        channelsQuery.data.pages.forEach((page) => {
+          newChannels.push(...page.data)
+        })
+        setChannels(newChannels)
+        console.log(selectedChannels.length)
+        console.log(channels.length)
+      }
+    } catch (error: any) {
+      if (error.response && error.response.data && error.response.data.message) {
+        setApiError(error.response.data.message)
+      } else {
+        setApiError('An unexpected error occurred')
+      }
+    }
+  }, [channelsQuery.data, activeServer])
+
+  // Handle error state
+  if (channelsQuery.status === 'error' || (isLinkError && !isLinkReady)) {
+    return <Error error={apiError || "Couldn't genertae invitation link"} reset={null} />
+  }
+
+  // Handle loading state
+  if (channels.status === 'loading') {
+    return (
+      <div>
+        <Loading size={170} />
+      </div>
+    )
+  }
 
   window.electron.ipcRenderer.on('token-generated', async (_event, url: string) => {
     setInvitation(url)
@@ -23,35 +66,6 @@ export default function AddMembers(): React.JSX.Element {
     setIsLinkError(true)
   })
 
-  useEffect(() => {
-    if (!invitation) {
-      const generateInvitation = async (): Promise<void> => {
-        await window.api.generateInvitation(serverID)
-      }
-      generateInvitation()
-    } else {
-      setIsLinkReady(true)
-    }
-  }, [])
-
-  if (isLinkError && !isLinkReady) {
-    return (
-      <div>
-        <Error
-          error={`Couldn't generate invatation link please try again latter or restart the applicataion`}
-        />
-      </div>
-    )
-  }
-
-  if (!isLinkReady) {
-    return (
-      <div>
-        <Loading size={170} />
-      </div>
-    )
-  }
-
   return (
     <div className={`h-[calc(100%)] w-[calc(78%)]  rounded-lg bg-original-white p-5`}>
       <h1 className={`px-3 py-3 text-3xl`}>Add Members</h1>
@@ -62,7 +76,7 @@ export default function AddMembers(): React.JSX.Element {
           className={`h-12 w-[calc(70%)] overflow-clip 
         overflow-ellipsis whitespace-nowrap rounded-md bg-primary-gray p-2 text-default-txt`}
         >
-          {invitation}
+          {invitation || '----'}
         </h3>
         <button
           className={`mx-auto my-1 rounded-md bg-soft-purble p-1.5 text-sm
@@ -79,9 +93,49 @@ export default function AddMembers(): React.JSX.Element {
               )
             }
           }}
+          disabled={!invitation || selectedChannels.length === 0 || channels.length === 0}
         >
           Copy
         </button>
+        <button
+          className={`mx-auto my-1 rounded-md bg-soft-purble p-1.5 text-sm
+        text-original-white hover:bg-soft-purble/80`}
+          onClick={async (): Promise<void> => {
+            await window.api.generateInvitation(activeServer, selectedChannels)
+            setIsLinkReady(true)
+          }}
+          disabled={selectedChannels.length === 0 || channels.length === 0}
+        >
+          Generate
+        </button>
+
+        <div
+          className={`critch-overflow-hidden-scroll h-[calc(95%)] w-[calc(100%)] overflow-y-scroll`}
+        >
+          {channels.length > 0 ? (
+            channels.map((channel) => {
+              return (
+                <div key={channel.id} id={channel.id}>
+                  <p>{channel.name}</p>
+                  <input
+                    type="checkbox"
+                    onChange={(): void => {
+                      setSelectedChannels((prevChannels) =>
+                        prevChannels.includes(channel.id)
+                          ? prevChannels.filter((id) => id !== channel.id)
+                          : [...prevChannels, channel.id]
+                      )
+                      console.log(selectedChannels)
+                    }}
+                  ></input>
+                </div>
+              )
+            })
+          ) : (
+            <p>You need to add channels before generating invitations</p>
+          )}
+          <div ref={ref}></div>
+        </div>
       </div>
     </div>
   )

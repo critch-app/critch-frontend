@@ -44,12 +44,12 @@ export default function MembersBar(): React.JSX.Element {
   }, [query.data, activeServer])
 
   // Handle error state
-  if (query.status === 'error') {
+  if (query.status === 'error' || serverQuery.status === 'error') {
     return <Error error={apiError} reset={null} />
   }
 
   // Handle loading state
-  if (query.status === 'loading') {
+  if (query.status === 'loading' || serverQuery.status === 'loading') {
     return (
       <div>
         <Loading size={170} />

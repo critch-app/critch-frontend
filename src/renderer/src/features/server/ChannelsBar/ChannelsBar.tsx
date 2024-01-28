@@ -37,7 +37,6 @@ export default function ChannelsBar(): React.JSX.Element {
         })
         setChannels(newChannels)
       }
-      console.log(userQuery.data)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.message) {
