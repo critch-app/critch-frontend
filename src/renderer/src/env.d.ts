@@ -70,3 +70,10 @@ export enum MessageType {
   DM = 'DM',
   SERVER = 'Server'
 }
+
+// ws Events
+export enum EventType {
+  MESSAGE = 'message',
+  NOTIFICATION = 'notification',
+  Error = 'error'
+}
