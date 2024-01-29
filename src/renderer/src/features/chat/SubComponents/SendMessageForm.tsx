@@ -1,13 +1,22 @@
 import { faPaperPlane, faFaceSmileBeam } from '@fortawesome/free-regular-svg-icons'
 import { faPaperclip } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState } from 'react'
+import WS from '@renderer/api/ws/ws'
+import { RootState } from '@renderer/app/store'
+import { useWebSocketProvider } from '@renderer/hooks/useWebSocketProvider'
+import { useContext, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 /**
  * Send Message Input
  * @returns {React.JSX.Element} renderer component.
  */
 export default function SendMessageForm(): React.JSX.Element {
+  const activeServer = useSelector((state: RootState) => state.serverBar.activeServerID)
+  const loggedInUserToken = useSelector((state: RootState) => state.login.loggedInUserToken)
+  const loggedInUserId = useSelector((state: RootState) => state.login.loggedInUserID)
+  const activeChannel = useSelector((state: RootState) => state.channelsBar.channel)
+  const socket = useContext(useWebSocketProvider())
   const [content, setContent] = useState('')
   return (
     <>
@@ -40,9 +49,19 @@ export default function SendMessageForm(): React.JSX.Element {
               />
             </button>
             <button
-              type="button"
-              onClick={(ev): void => {
+              onClick={async (ev): Promise<void> => {
                 ev.preventDefault()
+                if (socket) {
+                  socket.sendMessage(
+                    JSON.stringify({
+                      sender_id: loggedInUserId,
+                      server_id: activeServer,
+                      channel_id: activeChannel.id,
+                      content,
+                      attatchment: 'none'
+                    })
+                  )
+                }
                 setContent('')
               }}
             >

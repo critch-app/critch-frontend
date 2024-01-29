@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@renderer/app/store'
 import { useEffect } from 'react'
 import AppIcon from '@renderer/components/AppIcon/AppIcon'
+import { useMessaging } from '@renderer/hooks/useMessaging'
 
 /**
  * Component representing the home/DM view.
@@ -12,7 +13,7 @@ import AppIcon from '@renderer/components/AppIcon/AppIcon'
  */
 export default function Home(): React.JSX.Element {
   const navigate = useNavigate()
-
+  useMessaging(null)
   const loggedInUserId = useSelector((state: RootState) => state.login.loggedInUserID)
   const loggedInUserToken = useSelector((state: RootState) => state.login.loggedInUserToken)
 
