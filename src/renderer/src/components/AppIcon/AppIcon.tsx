@@ -1,10 +1,4 @@
 import logo from '@renderer/assets/images/logo.png'
-/**
- * Reusable app icon component
- * @property {string} height - Component height
- * @property {string} width - Component width
- * @returns {React.JSX.Element} The rendered component.
- */
 export default function AppIcon({
   height,
   width

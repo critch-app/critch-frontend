@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import store from '@renderer/app/store'
 import axios from 'axios'
 
@@ -14,9 +13,9 @@ const axiosInstance = axios.create({
 // Add interceptor (aka Middleware) to the instance to always add the autorization header with any request
 axiosInstance.interceptors.request.use(
   async (config) => {
-    const loggedInUserToken = await store.getState().login.loggedInUserToken
-    if (loggedInUserToken) {
-      config.headers.Authorization = 'Bearer ' + loggedInUserToken
+    const usetToken = await store.getState().login.userToken
+    if (usetToken) {
+      config.headers.Authorization = 'Bearer ' + usetToken
     } else {
       config.headers.Authorization = 'Bearer ' + 'none'
     }

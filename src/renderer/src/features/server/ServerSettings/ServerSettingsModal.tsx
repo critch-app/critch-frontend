@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import Bar from './SubComponents/Bar'
 import { useState } from 'react'
 import AddMembers from './SubComponents/AddMember'
 
-// TODO: Under Development
 export default function ServerSettingsModal({
   toggleModal
 }: {

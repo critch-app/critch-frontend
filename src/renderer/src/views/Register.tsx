@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -10,11 +9,6 @@ import { useSelector } from 'react-redux'
 import Loading from '@renderer/components/Loading/Loading'
 import Error from '@renderer/components/Error/Error'
 
-/**
- * Component represents the signup view
- * @returns {React.JSX.Element} rendered component.
- */
-
 export default function Register(): React.JSX.Element {
   const [step, setStep] = useState(1)
   const [apiError, setApiError] = useState('')
@@ -24,11 +18,11 @@ export default function Register(): React.JSX.Element {
     navigate('/login')
   })
 
-  const loggedInUserId = useSelector((state: RootState) => state.login.loggedInUserID)
-  const loggedInUserToken = useSelector((state: RootState) => state.login.loggedInUserToken)
+  const userId = useSelector((state: RootState) => state.login.userId)
+  const userToken = useSelector((state: RootState) => state.login.userToken)
 
   useEffect(() => {
-    if (loggedInUserId && loggedInUserToken) {
+    if (userId && userToken) {
       navigate('/')
     }
   })

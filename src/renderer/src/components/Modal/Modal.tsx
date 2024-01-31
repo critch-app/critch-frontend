@@ -1,12 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createPortal } from 'react-dom'
 import { useRef, useEffect } from 'react'
 
-/**
- * Reusable modla component
- * @param {any} children - The JSX element contained by th modla
- * @returns {React.JSX.Element} renderer component.
- */
 export default function Modal({ children }: any): React.JSX.Element {
   const elRef = useRef<HTMLDivElement | null>(null)
 

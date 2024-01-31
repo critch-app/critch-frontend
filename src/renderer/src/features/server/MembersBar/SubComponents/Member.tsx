@@ -1,16 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Divider from '@renderer/components/Divider/Divider'
 import React from 'react'
 
-/**
- * Member card component
- * @property {any} id - Member id
- * @property {any} userName - Member name
- * @property {any} avatar - Member avatar
- * @returns {React.JSX.Element} renderer component.
- */
-export default function Member({ id, userName, avatar }: any): React.JSX.Element {
+export default function Member({ userName, avatar }: any): React.JSX.Element {
   return (
     <>
       <div

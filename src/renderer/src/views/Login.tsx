@@ -1,19 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link, useNavigate } from 'react-router-dom'
 
 import AppIcon from '@renderer/components/AppIcon/AppIcon'
 import LoginForm from '@renderer/features/login/LoginForm'
 import { loginMut } from '@renderer/api/query/user'
-import { setLoggedInUserID, setLoggedInUserToken } from '@renderer/features/login/loginReducer'
+import { setUserId, setUserToken } from '@renderer/reducers/loginReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@renderer/app/store'
 import { useEffect, useState } from 'react'
 import Error from '@renderer/components/Error/Error'
 import Loading from '@renderer/components/Loading/Loading'
-/**
- * Component represents the login view
- * @returns {React.JSX.Element} rendered component.
- */
 
 export default function Login(): React.JSX.Element {
   const [apiError, setApiError] = useState('')
@@ -23,11 +18,11 @@ export default function Login(): React.JSX.Element {
     navigate('/')
   })
 
-  const loggedInUserId = useSelector((state: RootState) => state.login.loggedInUserID)
-  const loggedInUserToken = useSelector((state: RootState) => state.login.loggedInUserToken)
+  const userId = useSelector((state: RootState) => state.login.userId)
+  const userToken = useSelector((state: RootState) => state.login.userToken)
   const dispatch = useDispatch()
   useEffect(() => {
-    if (loggedInUserId && loggedInUserToken) {
+    if (userId && userToken) {
       navigate('/')
     }
   })
@@ -41,8 +36,8 @@ export default function Login(): React.JSX.Element {
     let res
     try {
       res = await mut.mutateAsync(values)
-      dispatch(setLoggedInUserID(res.data.user_id))
-      dispatch(setLoggedInUserToken(res.data.token))
+      dispatch(setUserId(res.data.user_id))
+      dispatch(setUserToken(res.data.token))
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.message) {
         setApiError(error.response.data.message)

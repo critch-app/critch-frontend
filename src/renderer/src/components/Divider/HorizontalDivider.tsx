@@ -1,9 +1,3 @@
-/**
- * Reusable Horizontal Divider Component
- * @property {string} height - Component height
- * @property {string} bgColor - Component color
- * @returns {React.JSX.Element } The rendered component.
- */
 export default function HorizontalDivider({
   height,
   bgColor

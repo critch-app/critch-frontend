@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// import Channel from './SubComponents/Channel'
 import UserCard from './SubComponents/UserCard'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@renderer/app/store'
-import { setActiveChannel } from './channelsBarReducer'
+import { setActiveChannelId } from '../../../reducers/channelReducer'
 import Channel from './SubComponents/Channel'
 import ServerControl from './SubComponents/ChannelControl'
 import { getServerChannelsQuery } from '@renderer/api/query/channels'
@@ -13,31 +11,28 @@ import Loading from '@renderer/components/Loading/Loading'
 import Error from '@renderer/components/Error/Error'
 import { getUserByIdQuery } from '@renderer/api/query/user'
 
-/**
- * Channels bar component
- * @returns {React.JSX.Element}
- */
 export default function ChannelsBar(): React.JSX.Element {
-  const activeChannel = useSelector((state: RootState) => state.channelsBar.channel)
-  const activeServer = useSelector((state: RootState) => state.serverBar.activeServerID)
-  const loggedInUserId = useSelector((state: RootState) => state.login.loggedInUserID)
+  const activeChannelId = useSelector((state: RootState) => state.channel.id)
+  const activeServerId = useSelector((state: RootState) => state.server.id)
+  const userId = useSelector((state: RootState) => state.login.userId)
   const dispatch = useDispatch()
   const [apiError, setApiError] = useState('')
   const [channels, setChannels] = useState<any[]>([])
-  const userQuery = getUserByIdQuery(loggedInUserId)
-  const query = getServerChannelsQuery(activeServer, 0, 50)
-  const { ref } = useInfiniteScroll(query)
+  const [user, setUser] = useState<any>({})
+  const userQuery = getUserByIdQuery(userId as string)
+  const channelQuery = getServerChannelsQuery(activeServerId as string, 0, 50)
+  const { ref } = useInfiniteScroll(channelQuery)
 
   useEffect(() => {
     try {
-      if (activeServer && query.isSuccess) {
+      if (activeServerId && channelQuery.isSuccess && userQuery.isSuccess) {
         const newChannels: any = []
-        query.data.pages.forEach((page) => {
+        channelQuery.data.pages.forEach((page) => {
           newChannels.push(...page.data)
         })
         setChannels(newChannels)
+        setUser(userQuery.data.data)
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.message) {
         setApiError(error.response.data.message)
@@ -45,15 +40,15 @@ export default function ChannelsBar(): React.JSX.Element {
         setApiError('An unexpected error occurred')
       }
     }
-  }, [query.data, activeServer])
+  }, [channelQuery.data, activeServerId, userQuery.data])
 
   // Handle error state
-  if (query.status === 'error') {
+  if (channelQuery.status === 'error' || userQuery.status === 'error') {
     return <Error error={apiError} reset={null} />
   }
 
   // Handle loading state
-  if (query.status === 'loading') {
+  if (channelQuery.status === 'loading' || userQuery.status === 'loading') {
     return (
       <div>
         <Loading size={170} />
@@ -77,9 +72,9 @@ export default function ChannelsBar(): React.JSX.Element {
                   key={channel.id}
                   id={channel.id}
                   name={channel.name}
-                  active={channel.id === activeChannel?.id ? true : false}
+                  active={channel.id === activeChannelId ? true : false}
                   clickHandler={(): void => {
-                    dispatch(setActiveChannel(channel))
+                    dispatch(setActiveChannelId(channel.id))
                   }}
                 />
               )
@@ -87,11 +82,8 @@ export default function ChannelsBar(): React.JSX.Element {
             <div ref={ref}></div>
           </div>
           <div className={`absolute bottom-1 left-1 h-fit w-fit`}>
-            {loggedInUserId && userQuery.data.data && (
-              <UserCard
-                userName={`${userQuery.data.data.first_name} ${userQuery.data.data.last_name}`}
-                photo={userQuery.data.data.photo}
-              />
+            {userId && userQuery.data.data && (
+              <UserCard userName={`${user.first_name} ${user.last_name}`} photo={user.photo} />
             )}
           </div>
         </div>

@@ -1,33 +1,27 @@
-/* eslint-disable prettier/prettier */
 import { AxiosResponse } from 'axios'
 import axiosInstance from './axiosConfig'
-import { LoginFormValues, RegisterFormValues } from '@renderer/env'
+import { LoginFormValues, RegisterFormValues } from '@renderer/env.d'
 
-// HTTP:POST Request to login a user
 export const login = async function (body: LoginFormValues): Promise<AxiosResponse> {
   const response = await axiosInstance.post('/v1/login', body)
   return response
 }
 
-// HTTP:POST Request to add a new user
 export const register = async function (body: RegisterFormValues): Promise<AxiosResponse> {
   const response = await axiosInstance.post('/v1/users', body)
   return response
 }
 
-// HTTP:PUT Request to add a new server member
 export const getUserByID = async function (userId: string): Promise<AxiosResponse> {
   const response = await axiosInstance.get(`/v1/users/${userId}`)
   return response
 }
 
-// HTTP:DELETE Request to delete a user
 export const deleteUser = async function (userId: string): Promise<AxiosResponse> {
   const response = await axiosInstance.delete(`/v1/users/${userId}`)
   return response
 }
 
-// HTTP:UPDATE Request to update a user
 export const updateUser = async function (
   userId: string,
   body: RegisterFormValues
@@ -36,7 +30,6 @@ export const updateUser = async function (
   return response
 }
 
-// HTTP:GET Request to get user's servers
 export const getUserServers = async function (
   userId: string,
   offset: number,
@@ -51,7 +44,6 @@ export const getUserServers = async function (
   return response
 }
 
-// HTTP:GET Request to get user's channels
 export const getUserDmChannels = async function (
   userId: string,
   offset: number,

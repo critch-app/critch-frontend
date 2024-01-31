@@ -13,18 +13,16 @@ import { useWebSocket } from '@renderer/hooks/useWebSocket'
 import { RootState } from './store'
 import { useSelector } from 'react-redux'
 import { useWebSocketProvider } from '@renderer/hooks/useWebSocketProvider'
-/**
- * Main application component that handles routing and renders primary views.
- *
- * @returns {React.JSX.Element} The rendered component hierarchy.
- */
+import ErrorBoundary from '@renderer/components/ErrorBoundary/ErrorBoundary'
+
 function App(): React.JSX.Element {
-  const loggedInUserToken = useSelector((state: RootState) => state.login.loggedInUserToken)
+  const userToken = useSelector((state: RootState) => state.login.userToken)
   const { isError, error } = useGlobalEventListeners()
   const { isConnectionError, connectionError } = useConnectionState()
   const navigate = useNavigate()
-  const { isWsConnectionError, ws } = useWebSocket(loggedInUserToken)
+  const { isWsConnectionError, ws } = useWebSocket(userToken)
   const WSProvider = useWebSocketProvider()
+
   useEffect(() => {
     if (isWsConnectionError) {
       navigate(`/login`)
@@ -42,18 +40,20 @@ function App(): React.JSX.Element {
   }, [isConnectionError])
 
   return (
-    <WSProvider.Provider value={ws}>
-      <div className={`mt-1 flex`}>
-        {isError && <Error error={error} reset={null} />}
-        <Routes>
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/*" element={<Home />} />
-          <Route path="/server/:id/*" element={<Server />} />
-          <Route path="/un-recovered-error" element={<UnrecoveredError />} />
-        </Routes>
-      </div>
-    </WSProvider.Provider>
+    <ErrorBoundary>
+      <WSProvider.Provider value={ws}>
+        <div className={`mt-1 flex`}>
+          {isError && <Error error={error} reset={null} />}
+          <Routes>
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/*" element={<Home />} />
+            <Route path="/server/:id/*" element={<Server />} />
+            <Route path="/un-recovered-error" element={<UnrecoveredError />} />
+          </Routes>
+        </div>
+      </WSProvider.Provider>
+    </ErrorBoundary>
   )
 }
 

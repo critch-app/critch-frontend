@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { LoginFormValues, RegisterFormValues } from '@renderer/env'
+import { LoginFormValues, RegisterFormValues } from '@renderer/env.d'
 import * as userAxios from '../axios/user'
 import {
   useQuery,

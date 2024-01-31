@@ -1,11 +1,7 @@
 import { ErrorMessage, Field, useFormikContext } from 'formik'
 import { useState } from 'react'
-import { RegisterStepThreeValues } from '@renderer/env'
+import { RegisterStepThreeValues } from '@renderer/env.d'
 
-/**
- * Register form step three/three component
- * @returns {React.JSX.Element}  renderer component.
- */
 export default function StepThree(): React.JSX.Element {
   const { errors, touched, handleBlur, validateField, values } =
     useFormikContext<RegisterStepThreeValues>()
@@ -25,14 +21,23 @@ export default function StepThree(): React.JSX.Element {
     handleBlur(e)
     validateField(fieldName)
 
-    setFieldErrors((prevFieldErrors) => ({ ...prevFieldErrors, [fieldName]: true }))
+    setFieldErrors((prevFieldErrors) => ({
+      ...prevFieldErrors,
+      [fieldName]: true
+    }))
     setTimeout(() => {
-      setFieldErrors((prevFieldErrors) => ({ ...prevFieldErrors, [fieldName]: false }))
+      setFieldErrors((prevFieldErrors) => ({
+        ...prevFieldErrors,
+        [fieldName]: false
+      }))
     }, 2000)
   }
 
   const handleImageError = (fieldName: string): void => {
-    setFieldErrors((prevFieldErrors) => ({ ...prevFieldErrors, [fieldName]: true }))
+    setFieldErrors((prevFieldErrors) => ({
+      ...prevFieldErrors,
+      [fieldName]: true
+    }))
   }
 
   return (

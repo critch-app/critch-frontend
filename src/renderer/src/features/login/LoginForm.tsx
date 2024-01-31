@@ -2,13 +2,8 @@ import { Formik, Form } from 'formik'
 
 import loginSchema from '@renderer/util/validation/loginSchema'
 import FormFields from '@renderer/features/login/SubComponents/FormFields'
-import { OnSubmitFunction } from '@renderer/env'
+import { OnSubmitFunction } from '@renderer/env.d'
 
-/**
- * Login form component
- * @property {OnSubmitFunction} onSubmit Submit event handler
- * @returns {React.JSX.Element} renderer component.
- */
 export default function LoginForm({ onSubmit }: { onSubmit: OnSubmitFunction }): React.JSX.Element {
   return (
     <div className={`h-[calc(70%)] w-full flex-col items-center justify-center`}>

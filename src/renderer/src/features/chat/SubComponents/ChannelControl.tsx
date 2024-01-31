@@ -2,11 +2,6 @@ import { faGear, faPhone, faCirclePlay } from '@fortawesome/free-solid-svg-icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Divider from '@renderer/components/Divider//Divider'
 
-/**
- * Channel control component
- * @property {string} channelName - Active channel name
- * @returns {React.JSX.Element} renderer component.
- */
 export default function ChannelControl({
   channelName
 }: {

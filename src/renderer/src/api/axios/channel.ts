@@ -1,9 +1,7 @@
-/* eslint-disable prettier/prettier */
 import { AxiosResponse } from 'axios'
 import axiosInstance from './axiosConfig'
-import { ChannelFormValues } from '@renderer/env'
+import { ChannelFormValues } from '@renderer/env.d'
 
-// HTTP:POST Request to add a new channel
 export const postChannel = async function (
   body: ChannelFormValues,
   isServerChannel: boolean
@@ -12,7 +10,6 @@ export const postChannel = async function (
   return response
 }
 
-// HTTP:GET Request to get a channel by id
 export const getChannel = async function (
   id: string,
   isServerChannel: boolean
@@ -21,7 +18,6 @@ export const getChannel = async function (
   return response
 }
 
-// HTTP:UPDATE Request to update a channel by channel id
 export const updateChannel = async function (
   channelId: string,
   body: ChannelFormValues,
@@ -34,7 +30,6 @@ export const updateChannel = async function (
   return response
 }
 
-// HTTP:DELETE Request to delete a channel by id
 export const deleteChannel = async function (
   channelId: string,
   isServerChannel: boolean
@@ -45,7 +40,6 @@ export const deleteChannel = async function (
   return response
 }
 
-// HTTP:GET Request to get channel members by channel id
 export const getChannelMembers = async function (
   channelId: string,
   isServerChannel: boolean,
@@ -64,7 +58,6 @@ export const getChannelMembers = async function (
   return response
 }
 
-// HTTP:GET Request to get channel messages by channel id
 export const getChannelMessages = async function (
   channelId: string,
   isServerChannel: boolean,
@@ -83,7 +76,6 @@ export const getChannelMessages = async function (
   return response
 }
 
-// HTTP:PUT Request to add a new channel member
 export const putChannelMember = async function (
   userId: string,
   channelId: string,
@@ -95,7 +87,6 @@ export const putChannelMember = async function (
   return response
 }
 
-// HTTP:DELETE Request to delete a channel member
 export const deleteChannelMember = async function (
   channelId: string,
   userId: string,
@@ -107,7 +98,6 @@ export const deleteChannelMember = async function (
   return response
 }
 
-// HTTP:GET Request to get server channels by server id
 export const getServerChannels = async function (
   serverId: string,
   offset: number,

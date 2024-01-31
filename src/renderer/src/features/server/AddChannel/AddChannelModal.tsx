@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Formik, Form } from 'formik'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
@@ -12,18 +11,13 @@ import { addChannelMut } from '@renderer/api/query/channels'
 import { useState } from 'react'
 import Loading from '@renderer/components/Loading/Loading'
 import Error from '@renderer/components/Error/Error'
-/**
- * Modal contain the add server form
- * @param {any} toggleModal - Modal State control
- * @returns {React.JSX.Element} renderer component.
- */
 
 export default function AddChannelModal({
   toggleModal
 }: {
   toggleModal: React.Dispatch<React.SetStateAction<boolean>>
 }): React.JSX.Element {
-  const activeServer = useSelector((state: RootState) => state.serverBar.activeServerID)
+  const activeServerId = useSelector((state: RootState) => state.server.id)
   const mut = addChannelMut(() => {}, ChannelType.SERVER)
   const [apiError, setApiError] = useState('')
   /**
@@ -32,7 +26,7 @@ export default function AddChannelModal({
    * @returns {void}
    */
   const onSubmit = async (values: ChannelFormValues): Promise<void> => {
-    values.server_id = activeServer
+    values.server_id = activeServerId as string
     try {
       const res = await mut.mutateAsync(values)
       if (res.data) {

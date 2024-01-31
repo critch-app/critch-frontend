@@ -1,21 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/**
- * Reusable message component
- * @property {any} senderAvatar
- * @property {any} senderUsername
- * @property {any} content
- * @property {any} mine
- * @property {any} sentAt
- * @returns {React.JSX.Element} renderer component.
- */
 export default function Message({
   senderAvatar,
   senderUsername,
   content,
   mine,
   sentAt
-}: any): React.JSX.Element {
+}: {
+  senderAvatar: string
+  senderUsername: string
+  content: string
+  mine: boolean
+  sentAt: string
+}): React.JSX.Element {
   return (
     <div className={`m-4 flex p-2 ${mine ? 'justify-end' : ''}`}>
       {!mine ? (

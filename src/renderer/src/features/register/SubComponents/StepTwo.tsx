@@ -1,13 +1,9 @@
-import { RegisterStepTwoValues } from '@renderer/env'
+import { RegisterStepTwoValues } from '@renderer/env.d'
 import { ErrorMessage, FormikErrors, useFormikContext } from 'formik'
 import { useState } from 'react'
 import PhoneInputWithCountrySelect from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
 
-/**
- * Register form step two/three component
- * @returns {React.JSX.Element}  renderer component.
- */
 export default function StepTwo(): React.JSX.Element {
   const { errors, touched, handleBlur, validateField, setFieldValue } =
     useFormikContext<RegisterStepTwoValues>()
@@ -16,18 +12,19 @@ export default function StepTwo(): React.JSX.Element {
     phone: false
   })
 
-  /**
-   * Override default formik onBlur Behaviour
-   * @param {string} fieldName
-   * @returns {void}
-   */
   const handleFieldBlur = (fieldName: string): void => {
     handleBlur({ target: { name: fieldName } })
     validateField(fieldName)
 
-    setFieldErrors((prevFieldErrors) => ({ ...prevFieldErrors, [fieldName]: true }))
+    setFieldErrors((prevFieldErrors) => ({
+      ...prevFieldErrors,
+      [fieldName]: true
+    }))
     setTimeout(() => {
-      setFieldErrors((prevFieldErrors) => ({ ...prevFieldErrors, [fieldName]: false }))
+      setFieldErrors((prevFieldErrors) => ({
+        ...prevFieldErrors,
+        [fieldName]: false
+      }))
     }, 2000)
   }
 
