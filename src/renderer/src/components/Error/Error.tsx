@@ -3,13 +3,6 @@ import Modal from '../Modal/Modal'
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { useState } from 'react'
 
-/**
- * Renders an error message within a modal window.
- *
- * @property {string} error - The error message to display.
- * @returns {React.JSX.Element} The rendered error modal.
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function Error({
   error,
   reset

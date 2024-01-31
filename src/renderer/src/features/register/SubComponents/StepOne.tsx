@@ -1,11 +1,7 @@
-import { RegisterStepOneValues } from '@renderer/env'
+import { RegisterStepOneValues } from '@renderer/env.d'
 import { ErrorMessage, Field, useFormikContext } from 'formik'
 import { useState } from 'react'
 
-/**
- * Register form step one/three component
- * @returns {React.JSX.Element} renderer component.
- */
 export default function StepOne(): React.JSX.Element {
   const { errors, touched, handleBlur, validateField } = useFormikContext<RegisterStepOneValues>()
 
@@ -17,19 +13,19 @@ export default function StepOne(): React.JSX.Element {
     confirm_password: false
   })
 
-  /**
-   * Override default formik onBlur Behaviour
-   * @param {Event} e
-   * @param {string} fieldName
-   * @returns {any}
-   */
   const handleFieldBlur = (e: Event, fieldName: string): void => {
     handleBlur(e)
     validateField(fieldName)
 
-    setFieldErrors((prevFieldErrors) => ({ ...prevFieldErrors, [fieldName]: true }))
+    setFieldErrors((prevFieldErrors) => ({
+      ...prevFieldErrors,
+      [fieldName]: true
+    }))
     setTimeout(() => {
-      setFieldErrors((prevFieldErrors) => ({ ...prevFieldErrors, [fieldName]: false }))
+      setFieldErrors((prevFieldErrors) => ({
+        ...prevFieldErrors,
+        [fieldName]: false
+      }))
     }, 2000)
   }
 

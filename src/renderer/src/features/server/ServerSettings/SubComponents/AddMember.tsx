@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-//import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
-//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-//import Divider from '@renderer/components/Divider/Divider'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@renderer/app/store'
@@ -15,16 +11,15 @@ export default function AddMembers(): React.JSX.Element {
   const [isLinkReady, setIsLinkReady] = useState(false)
   const [isLinkError, setIsLinkError] = useState(false)
   const [apiError, setApiError] = useState('')
-  const activeServer = useSelector((state: RootState) => state.serverBar.activeServerID)
-  const channelsQuery = getServerChannelsQuery(activeServer, 0, 50)
+  const activeServerId = useSelector((state: RootState) => state.server.id)
+  const channelsQuery = getServerChannelsQuery(activeServerId as string, 0, 50)
   const [channels, setChannels] = useState<any>([])
   const [selectedChannels, setSelectedChannels] = useState<any>([])
   const { ref } = useInfiniteScroll(channelsQuery)
 
-  // Query to get channels
   useEffect(() => {
     try {
-      if (activeServer && channelsQuery.isSuccess) {
+      if (activeServerId && channelsQuery.isSuccess) {
         const newChannels: any = []
         channelsQuery.data.pages.forEach((page) => {
           newChannels.push(...page.data)
@@ -40,7 +35,7 @@ export default function AddMembers(): React.JSX.Element {
         setApiError('An unexpected error occurred')
       }
     }
-  }, [channelsQuery.data, activeServer])
+  }, [channelsQuery.data, activeServerId])
 
   // Handle error state
   if (channelsQuery.status === 'error' || (isLinkError && !isLinkReady)) {
@@ -60,8 +55,8 @@ export default function AddMembers(): React.JSX.Element {
     setInvitation(url)
     setIsLinkReady(true)
   })
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  window.electron.ipcRenderer.on('token-error', async (_event, _error: Error) => {
+
+  window.electron.ipcRenderer.on('token-error', async () => {
     setIsLinkReady(false)
     setIsLinkError(true)
   })
@@ -101,7 +96,7 @@ export default function AddMembers(): React.JSX.Element {
           className={`mx-auto my-1 rounded-md bg-soft-purble p-1.5 text-sm
         text-original-white hover:bg-soft-purble/80`}
           onClick={async (): Promise<void> => {
-            await window.api.generateInvitation(activeServer, selectedChannels)
+            await window.api.generateInvitation(activeServerId as string, selectedChannels)
             setIsLinkReady(true)
           }}
           disabled={selectedChannels.length === 0 || channels.length === 0}

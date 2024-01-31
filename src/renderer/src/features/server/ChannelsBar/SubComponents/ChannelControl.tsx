@@ -3,32 +3,28 @@ import { faHome, faMagnifyingGlass, faPlus } from '@fortawesome/free-solid-svg-i
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { setActiveChannel } from '@renderer/features/server/ChannelsBar/channelsBarReducer'
+import { setActiveChannelId } from '@renderer/reducers/channelReducer'
 import AddChannelModal from '../../AddChannel/AddChannelModal'
 import Modal from '@renderer/components/Modal/Modal'
 import { getUserRoleQuery } from '@renderer/api/query/user'
 import { RootState } from '@renderer/app/store'
 import Loading from '@renderer/components/Loading/Loading'
 import Error from '@renderer/components/Error/Error'
-/**
- * Server Control Buttons
- * @returns {React.JSX.Element} renderer component.
- */
+
 export default function ServerControl(): React.JSX.Element {
-  const activeServer = useSelector((state: RootState) => state.serverBar.activeServerID)
-  const loggedInUserId = useSelector((state: RootState) => state.login.loggedInUserID)
+  const activeServerId = useSelector((state: RootState) => state.server.id)
+  const userId = useSelector((state: RootState) => state.login.userId)
   const dispatch = useDispatch()
-  const roleQuery = getUserRoleQuery(loggedInUserId, activeServer)
+  const roleQuery = getUserRoleQuery(userId as string, activeServerId as string)
   const [isAddChannelModalOpened, toggleAddChannelModal] = useState(false)
   const [role, setRole] = useState('')
   const [apiError, setApiError] = useState('')
 
   useEffect(() => {
     try {
-      if (activeServer && loggedInUserId && roleQuery.isSuccess) {
+      if (activeServerId && userId && roleQuery.isSuccess) {
         setRole(roleQuery.data.data.role)
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.message) {
         setApiError(error.response.data.message)
@@ -36,7 +32,7 @@ export default function ServerControl(): React.JSX.Element {
         setApiError('An unexpected error occurred')
       }
     }
-  }, [roleQuery.data, activeServer, loggedInUserId])
+  }, [roleQuery.data, activeServerId, userId])
 
   // Handle error state
   if (roleQuery.status === 'error') {
@@ -64,7 +60,7 @@ export default function ServerControl(): React.JSX.Element {
           className={`m-1 cursor-pointer rounded-md bg-original-white px-2 py-1
          text-default-txt duration-150 hover:bg-soft-purble hover:text-original-white`}
           onClick={(): void => {
-            dispatch(setActiveChannel(null))
+            dispatch(setActiveChannelId(null))
           }}
         >
           <FontAwesomeIcon icon={faHome} />

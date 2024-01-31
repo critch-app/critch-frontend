@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// import Divider from '@renderer/components/Divider/Divider'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGear } from '@fortawesome/free-solid-svg-icons'
 import React, { useEffect, useState } from 'react'
@@ -10,26 +8,19 @@ import { RootState } from '@renderer/app/store'
 import { useSelector } from 'react-redux'
 import Loading from '@renderer/components/Loading/Loading'
 import Error from '@renderer/components/Error/Error'
-/**
- * TODO: Under development
- * ServerTitle component
- * @property {any} name - Server name
- * @property {any} cover - Server cover
- * @returns {any} renderer component.
- */
+
 export default function ServerTitle({ name, cover }: any): React.JSX.Element {
-  const activeServer = useSelector((state: RootState) => state.serverBar.activeServerID)
-  const loggedInUserId = useSelector((state: RootState) => state.login.loggedInUserID)
-  const roleQuery = getUserRoleQuery(loggedInUserId, activeServer)
+  const activeServerId = useSelector((state: RootState) => state.server.id)
+  const userId = useSelector((state: RootState) => state.login.userId)
+  const roleQuery = getUserRoleQuery(userId as string, activeServerId as string)
   const [role, setRole] = useState('')
   const [apiError, setApiError] = useState('')
 
   useEffect(() => {
     try {
-      if (activeServer && loggedInUserId && roleQuery.isSuccess) {
+      if (activeServerId && userId && roleQuery.isSuccess) {
         setRole(roleQuery.data.data.role)
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.message) {
         setApiError(error.response.data.message)
@@ -37,7 +28,7 @@ export default function ServerTitle({ name, cover }: any): React.JSX.Element {
         setApiError('An unexpected error occurred')
       }
     }
-  }, [roleQuery.data, activeServer, loggedInUserId])
+  }, [roleQuery.data, activeServerId, userId])
 
   // Handle error state
   if (roleQuery.status === 'error') {

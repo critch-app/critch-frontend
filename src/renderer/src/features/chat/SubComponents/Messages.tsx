@@ -10,19 +10,25 @@ import { useInfiniteScroll } from '@renderer/hooks/useInfiniteScroll'
 import Loading from '@renderer/components/Loading/Loading'
 import Error from '@renderer/components/Error/Error'
 import { useMessaging } from '@renderer/hooks/useMessaging'
-/**
- * Messages Container Component
- * @returns {React.JSX.Element} renderer component.
- */
+
 export default function Messages(): React.JSX.Element {
   const chatWindowRef = useRef<HTMLDivElement | null>(null)
-  const activeServer = useSelector((state: RootState) => state.serverBar.activeServerID)
-  const activeChannel = useSelector((state: RootState) => state.channelsBar.channel)
-  const loggedInUserId = useSelector((state: RootState) => state.login.loggedInUserID)
-  const query = getChannelMessagesQuery(activeChannel.id, ChannelType.SERVER, activeServer, 0, 50)
+  const activeServer = useSelector((state: RootState) => state.server.id)
+  const activeChannel = useSelector((state: RootState) => state.channel.id)
+  const loggedInUserId = useSelector((state: RootState) => state.login.userId)
+
+  const query = getChannelMessagesQuery(
+    activeChannel as string,
+    ChannelType.SERVER,
+    activeServer as string,
+    0,
+    50
+  )
+
   const { ref } = useInfiniteScroll(query)
   const [apiError, setApiError] = useState('')
   const [messages, setMessages] = useState<any>([])
+
   useMessaging(setMessages)
 
   useEffect(() => {

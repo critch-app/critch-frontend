@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useSelector, useDispatch } from 'react-redux'
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -7,8 +6,8 @@ import Divider from '@renderer/components/Divider/Divider'
 import AppIcon from '@renderer/components/AppIcon/AppIcon'
 import ServerIcon from '@renderer/features/server/ServerBar/SubComponents/ServerIcon'
 import { RootState } from '@renderer/app/store'
-import { setActiveServer } from '@renderer/features/server/ServerBar/serverBarReducer'
-import { setActiveChannel } from '@renderer/features/server/ChannelsBar/channelsBarReducer'
+import { setActiveServerId } from '@renderer/reducers/serverReducer'
+import { setActiveChannelId } from '@renderer/reducers/channelReducer'
 import AddServerModal from '@renderer/features/server/AddServer/AddServerModal'
 import Modal from '@renderer/components/Modal/Modal'
 import { Link } from 'react-router-dom'
@@ -16,33 +15,28 @@ import Loading from '@renderer/components/Loading/Loading'
 import Error from '@renderer/components/Error/Error'
 import { getUserServersQuery } from '@renderer/api/query/user'
 import { useInfiniteScroll } from '@renderer/hooks/useInfiniteScroll'
-/**
- * Servers bar component
- * @returns {React.JSX.Element} renderer component.
- */
 
 export default function ServerBar(): React.JSX.Element {
-  const activeServer = useSelector((state: RootState) => state.serverBar.activeServerID)
-  const loggedInUserId = useSelector((state: RootState) => state.login.loggedInUserID)
+  const activeServerId = useSelector((state: RootState) => state.server.id)
+  const userId = useSelector((state: RootState) => state.login.userId)
   const dispatch = useDispatch()
 
   const [apiError, setApiError] = useState('')
   const [isAddServerModalOpened, toggleAddServerModal] = useState(false)
   const [servers, setServers] = useState<any[]>([])
 
-  const query = getUserServersQuery(loggedInUserId, 0, 50)
-  const { ref } = useInfiniteScroll(query)
+  const serversQuery = getUserServersQuery(userId as string, 0, 50)
+  const { ref } = useInfiniteScroll(serversQuery)
 
   useEffect(() => {
     try {
-      if (loggedInUserId && query.isSuccess) {
+      if (userId && serversQuery.isSuccess) {
         const newServers: any = []
-        query.data.pages.forEach((page) => {
+        serversQuery.data.pages.forEach((page) => {
           newServers.push(...page.data)
         })
         setServers(newServers)
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.message) {
         setApiError(error.response.data.message)
@@ -50,15 +44,15 @@ export default function ServerBar(): React.JSX.Element {
         setApiError('An unexpected error occurred')
       }
     }
-  }, [query.data, loggedInUserId])
+  }, [serversQuery.data, userId])
 
   // Handle error state
-  if (query.status === 'error') {
+  if (serversQuery.status === 'error') {
     return <Error error={apiError} reset={null} />
   }
 
   // Handle loading state
-  if (query.status === 'loading') {
+  if (serversQuery.status === 'loading') {
     return (
       <div>
         <Loading size={170} />
@@ -80,7 +74,7 @@ export default function ServerBar(): React.JSX.Element {
           <Link
             to="/"
             onClick={(): void => {
-              dispatch(setActiveServer(null))
+              dispatch(setActiveServerId(null))
             }}
           >
             <AppIcon width={`w-24`} height={`h-24`} />
@@ -106,10 +100,10 @@ export default function ServerBar(): React.JSX.Element {
                 id={server.id}
                 name={server.name}
                 photo={server.photo}
-                active={server.id === activeServer ? true : false}
+                active={server.id === activeServerId ? true : false}
                 clickHandler={(): void => {
-                  dispatch(setActiveServer(server.id))
-                  dispatch(setActiveChannel(null))
+                  dispatch(setActiveServerId(server.id))
+                  dispatch(setActiveChannelId(null))
                 }}
               />
             )

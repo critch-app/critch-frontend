@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Formik, Form } from 'formik'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
-import { ServerFormValues } from '@renderer/env'
+import { ServerFormValues } from '@renderer/env.d'
 import serverSchema from '@renderer/util/validation/serverSchema'
 import FormFields from '@renderer/features/server/AddServer/SubComponents/FormFields'
 import { useSelector } from 'react-redux'
@@ -12,11 +11,6 @@ import { addServerMut } from '@renderer/api/query/server'
 import { useState } from 'react'
 import Loading from '@renderer/components/Loading/Loading'
 import Error from '@renderer/components/Error/Error'
-/**
- * Modal contain the add server form
- * @param {any} toggleModal - Modal State control
- * @returns {React.JSX.Element} renderer component.
- */
 
 export default function AddServerModal({
   toggleModal
@@ -24,20 +18,16 @@ export default function AddServerModal({
   toggleModal: React.Dispatch<React.SetStateAction<boolean>>
 }): React.JSX.Element {
   const mut = addServerMut(() => {})
-  const loggedInUserId = useSelector((state: RootState) => state.login.loggedInUserID)
+  const userId = useSelector((state: RootState) => state.login.userId)
   const [apiError, setApiError] = useState('')
-  /**
-   * On submit handler
-   * @param {ServerFormValues} {values}
-   * @returns {void}
-   */
+
   const onSubmit = async (values: ServerFormValues): Promise<void> => {
     values.photo =
       values.photo ||
       `https://images.placeholders.dev/?width=128&height=128&text=${values.name
         .slice(0, 2)
         .toUpperCase()}&bgColor=%23f7f6f6&textColor=%236d6e71`
-    values.owner_id = loggedInUserId
+    values.owner_id = userId as string
     try {
       const res = await mut.mutateAsync(values)
       if (res.data) {
