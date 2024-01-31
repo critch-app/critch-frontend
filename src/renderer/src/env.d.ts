@@ -75,5 +75,11 @@ export enum MessageType {
 export enum EventType {
   MESSAGE = 'message',
   NOTIFICATION = 'notification',
-  Error = 'error'
+  ERROR = 'error',
+  RTC_OFFER = 'rtc_offer',
+  RTC_ANSWER = 'rtc_answer',
+  ICE_CANDIDATE = 'ice_candidate',
+  RUNNING_MEETINGS = 'running_meetings',
+  NEW_MEETING = 'new_meeting',
+  CLOSE_MEETING = 'close_meeting'
 }
