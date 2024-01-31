@@ -8,33 +8,38 @@ import { useSelector } from 'react-redux'
 export function useMessaging(setMessages: React.SetStateAction<any> | null): void {
   const socket = useContext(useWebSocketProvider())
   const queryClient = useQueryClient()
-  const activeServer = useSelector((state: RootState) => state.serverBar.activeServerID)
-  const activeChannel = useSelector((state: RootState) => state.channelsBar.channel)
-
-  useEffect(() => {
-    socket?.onMessage((event: MessageEvent): void => {
-      const data = JSON.parse(event.data)
-      if (activeChannel && data.channel_id === activeChannel.id && setMessages) {
-        setMessages((msgs: any) => [...msgs, data])
-      } else {
-        window.api.showNotifications('New Message received', data.content)
-        queryClient.invalidateQueries([
-          'servers',
-          data.server_id,
-          'channels',
-          data.channel_id,
-          'messages'
-        ] as InvalidateQueryFilters)
+  const activeServerId = useSelector((state: RootState) => state.server.id)
+  const activeChannelId = useSelector((state: RootState) => state.channel.id)
+  const userId = useSelector((state: RootState) => state.login.userId)
+  const userToken = useSelector((state: RootState) => state.login.userToken)
+  useEffect((): void | (() => void) => {
+    if (userId && userToken) {
+      socket?.onMessage((event: MessageEvent): void => {
+        const data = JSON.parse(event.data)
+        if (activeChannelId && data.channel_id === activeChannelId && setMessages) {
+          setMessages((msgs: any) => [...msgs, data])
+        } else {
+          window.api.showNotifications('New Message received', data.content)
+          queryClient.invalidateQueries([
+            'servers',
+            data.server_id,
+            'channels',
+            data.channel_id,
+            'messages'
+          ] as InvalidateQueryFilters)
+        }
+      }, EventType.MESSAGE)
+      if (activeServerId && activeChannelId) {
+        return () => {
+          queryClient.invalidateQueries([
+            'servers',
+            activeServerId,
+            'channels',
+            activeChannelId,
+            'messages'
+          ] as InvalidateQueryFilters)
+        }
       }
-    }, EventType.MESSAGE)
-    return () => {
-      queryClient.invalidateQueries([
-        'servers',
-        activeServer,
-        'channels',
-        activeChannel.id,
-        'messages'
-      ] as InvalidateQueryFilters)
     }
-  }, [activeChannel?.id])
+  }, [activeChannelId, userId, userToken])
 }
