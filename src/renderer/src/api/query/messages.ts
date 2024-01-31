@@ -1,6 +1,4 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { MessageFormValues, MessageType } from '@renderer/env'
+import { MessageFormValues, MessageType } from '@renderer/env.d'
 import * as messageAxios from '../axios/messages'
 import {
   InvalidateQueryFilters,
@@ -9,11 +7,6 @@ import {
   useQueryClient
 } from '@tanstack/react-query'
 
-/**
- * Fetches a specific message by its ID.
- * @param messageId - The ID of the message to retrieve.
- * @returns A query object for accessing and managing the fetched data.
- */
 export function getMessageByIdQuery(
   messageId: string,
   channelId: string,
@@ -40,11 +33,6 @@ export function getMessageByIdQuery(
   return query
 }
 
-/**
- * Fetches a specific channel by its ID.
- * @param channelId - The ID of the channel to retrieve.
- * @returns A query object with methods for accessing and managing the fetched data.
- */
 export function updateMessageMut(
   callback: () => void,
   messageType: MessageType,
@@ -84,11 +72,6 @@ export function updateMessageMut(
   return mut
 }
 
-/**
- * Fetches a specific channel by its ID.
- * @param channelId - The ID of the channel to retrieve.
- * @returns A query object with methods for accessing and managing the fetched data.
- */
 export function deleteMessageMut(
   callback: () => void,
   messageType: MessageType,

@@ -1,6 +1,6 @@
 import WS from '@renderer/api/ws/ws'
 import { useEffect, useState } from 'react'
-export function useWebSocket(token: string): {
+export function useWebSocket(token: string | null): {
   isWsConnectionError: boolean
   wsConnectionError: string
   ws: WS | null
@@ -25,13 +25,15 @@ export function useWebSocket(token: string): {
   }
 
   useEffect(() => {
-    ;(async (): Promise<void> => {
-      const ws = await new WS(token)
-      ws.onClose(handleClose)
-      ws.onOpen(handleOpen)
-      ws.onError(handleError)
-      setWs(ws)
-    })()
+    if (token) {
+      ;(async (): Promise<void> => {
+        const ws = await new WS(token)
+        ws.onClose(handleClose)
+        ws.onOpen(handleOpen)
+        ws.onError(handleError)
+        setWs(ws)
+      })()
+    }
   }, [token])
 
   return { isWsConnectionError, wsConnectionError, ws }

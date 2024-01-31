@@ -1,13 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
 
-/**
- * User card component
- * @property {any} id - logged user id
- * @property {any} userName - logged user name
- * @property {any} avatar - logged user avatar
- * @returns {React.JSX.Element} renderer component.
- */
 export default function UserCard({ userName, photo }: any): React.JSX.Element {
   return (
     <>

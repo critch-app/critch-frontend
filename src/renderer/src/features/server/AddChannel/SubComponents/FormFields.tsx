@@ -1,11 +1,7 @@
-import { ChannelFormValues } from '@renderer/env'
+import { ChannelFormValues } from '@renderer/env.d'
 import { ErrorMessage, Field, useFormikContext } from 'formik'
 import { useState } from 'react'
 
-/**
- * Add server form fields
- * @returns {React.JSX.Element}  renderer component.
- */
 export default function FormFields(): React.JSX.Element {
   const { errors, touched, handleBlur, validateField } = useFormikContext<ChannelFormValues>()
 
@@ -15,17 +11,14 @@ export default function FormFields(): React.JSX.Element {
     server_id: false
   })
 
-  /**
-   * Override default formik onBlur Behaviour
-   * @param {Event} e
-   * @param {string} fieldName
-   * @returns {void}
-   */
   const handleFieldBlur = (e: Event, fieldName: string): void => {
     handleBlur(e)
     validateField(fieldName)
 
-    setFieldErrors((prevFieldErrors) => ({ ...prevFieldErrors, [fieldName]: true }))
+    setFieldErrors((prevFieldErrors) => ({
+      ...prevFieldErrors,
+      [fieldName]: true
+    }))
     setTimeout(() => {
       setFieldErrors((prevFieldErrors) => ({
         ...prevFieldErrors,

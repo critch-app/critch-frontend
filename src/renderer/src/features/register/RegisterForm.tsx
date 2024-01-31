@@ -3,18 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import { Formik, Form } from 'formik'
 
-import { OnSubmitFunction, SetStepFunction } from '@renderer/env'
+import { OnSubmitFunction, SetStepFunction } from '@renderer/env.d'
 import StepOne from './SubComponents/StepOne'
 import StepTwo from './SubComponents/StepTwo'
 import StepThree from './SubComponents/StepThree'
 
-/**
- * Description
- * @property {OnSubmitFunction} onSubmit - Submit handler
- * @property {number} currentStep - current step in the form
- * @property {SetStepFunction} setStep - State control function
- * @returns {React.JSX.Element}  renderer component.
- */
 export default function RegisterForm({
   onSubmit,
   currentStep,

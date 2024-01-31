@@ -1,6 +1,4 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { ServerFormValues } from '@renderer/env'
+import { ServerFormValues } from '@renderer/env.d'
 import * as serverAxios from '../axios/server'
 import {
   InvalidateQueryFilters,
@@ -10,11 +8,6 @@ import {
   useQueryClient
 } from '@tanstack/react-query'
 
-/**
- * Creates a mutation for adding a new server.
- * @param callback - A function to execute upon successful server creation.
- * @returns A mutation object for triggering and managing the mutation.
- */
 export function addServerMut(callback: () => void): any {
   const queryClient = useQueryClient()
   const mut = useMutation({
@@ -30,11 +23,6 @@ export function addServerMut(callback: () => void): any {
   return mut
 }
 
-/**
- * Fetches a specific server by its ID.
- * @param serverId - The ID of the server to retrieve.
- * @returns A query object for accessing and managing the fetched data.
- */
 export function getServerByIDQuery(serverId: string): any {
   const query = useQuery({
     queryKey: ['servers', serverId],
@@ -51,11 +39,6 @@ export function getServerByIDQuery(serverId: string): any {
   return query
 }
 
-/**
- * Updates a server member's.
- * @param callback - A function to execute upon successful update.
- * @returns A mutation object for triggering and managing the mutation.
- */
 export function putServerMemberMut(callback: () => void): any {
   const queryClient = useQueryClient()
   let sid: string
@@ -74,13 +57,6 @@ export function putServerMemberMut(callback: () => void): any {
   return mut
 }
 
-/**
- * Fetches server members in an infinite loading pattern.
- * @param serverId - The ID of the server whose members to fetch.
- * @param offset - The initial offset for pagination.
- * @param limit - The number of members to fetch per page.
- * @returns An infinite query object for managing the paginated data.
- */
 export function getServerMembersQuery(serverId: string, offset: number, limit: number): any {
   const query = useInfiniteQuery({
     queryKey: ['servers', serverId, 'members'],

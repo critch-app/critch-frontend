@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChannelFormValues, ChannelType } from '@renderer/env.d'
 import * as channelAxios from '../axios/channel'
 import {
@@ -9,11 +7,7 @@ import {
   useQueryClient,
   useInfiniteQuery
 } from '@tanstack/react-query'
-/**
- * Creates a mutation for adding a new channel.
- * @param callback - A function to execute upon successful channel creation.
- * @returns A mutation object with methods for triggering and managing the mutation.
- */
+
 export function addChannelMut(callback: () => void, channelType: ChannelType): any {
   const queryClient = useQueryClient()
   let serverId: string
@@ -35,11 +29,6 @@ export function addChannelMut(callback: () => void, channelType: ChannelType): a
   return mut
 }
 
-/**
- * Fetches a specific channel by its ID.
- * @param channelId - The ID of the channel to retrieve.
- * @returns A query object with methods for accessing and managing the fetched data.
- */
 export function getChannelByIdQuery(channelId: string, channelType: ChannelType): any {
   const query = useQuery({
     queryKey: ['channels', channelId],
@@ -56,11 +45,6 @@ export function getChannelByIdQuery(channelId: string, channelType: ChannelType)
   return query
 }
 
-/**
- * Fetches a specific channel by its ID.
- * @param channelId - The ID of the channel to retrieve.
- * @returns A query object with methods for accessing and managing the fetched data.
- */
 export function deleteChannelMut(callback: () => void, channelType: ChannelType): any {
   const queryClient = useQueryClient()
   let sid: string
@@ -85,11 +69,6 @@ export function deleteChannelMut(callback: () => void, channelType: ChannelType)
   return mut
 }
 
-/**
- * Fetches a specific channel by its ID.
- * @param channelId - The ID of the channel to retrieve.
- * @returns A query object with methods for accessing and managing the fetched data.
- */
 export function updateChannelMut(callback: () => void, channelType: ChannelType): any {
   const queryClient = useQueryClient()
   let serverId: string
@@ -115,11 +94,6 @@ export function updateChannelMut(callback: () => void, channelType: ChannelType)
   return mut
 }
 
-/**
- * Fetches a specific server channels by server id.
- * @param serverId - The ID of the server to retrieve its channels.
- * @returns A query object with methods for accessing and managing the fetched data.
- */
 export function getServerChannelsQuery(serverId: string, offset: number, limit: number): any {
   const query = useInfiniteQuery({
     queryKey: ['servers', serverId, 'channels'],
@@ -148,13 +122,6 @@ export function getServerChannelsQuery(serverId: string, offset: number, limit: 
   return query
 }
 
-/**
- * Fetches channel members in an infinite loading pattern.
- * @param channelId - The ID of the channel whose members to fetch.
- * @param offset - The initial offset for pagination.
- * @param limit - The number of members to fetch per page.
- * @returns An infinite query object for managing the paginated data.
- */
 export function getChannelMembersQuery(
   channelId: string,
   channelType: ChannelType,
@@ -201,13 +168,6 @@ export function getChannelMembersQuery(
   return query
 }
 
-/**
- * Fetches channel messages in an infinite loading pattern.
- * @param channelId - The ID of the channel whose members to fetch.
- * @param offset - The initial offset for pagination.
- * @param limit - The number of members to fetch per page.
- * @returns An infinite query object for managing the paginated data.
- */
 export function getChannelMessagesQuery(
   channelId: string,
   channelType: ChannelType,
@@ -253,11 +213,6 @@ export function getChannelMessagesQuery(
   return query
 }
 
-/**
- * Updates a channel member's.
- * @param callback - A function to execute upon successful update.
- * @returns A mutation object for triggering and managing the mutation.
- */
 export function putChannelMemberMut(callback: () => void): any {
   let sid: string | null
   let cid: string
@@ -295,11 +250,6 @@ export function putChannelMemberMut(callback: () => void): any {
   return mut
 }
 
-/**
- * Updates a channel member's.
- * @param callback - A function to execute upon successful update.
- * @returns A mutation object for triggering and managing the mutation.
- */
 export function deleteChannelMemberMut(callback: () => void): any {
   let sid: string | null
   let cid: string

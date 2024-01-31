@@ -1,9 +1,3 @@
-/**
- * Reusable Vertical Divider Component
- * @property {string} width - Component width
- * @property {string} bgColor - Component color
- * @returns {React.JSX.Element } The rendered component.
- */
 export default function Divider({
   width,
   bgColor

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getUserByIdQuery } from '@renderer/api/query/user'
 import { RootState } from '@renderer/app/store'
 import Loading from '@renderer/components/Loading/Loading'
@@ -8,23 +7,18 @@ import Error from '@renderer/components/Error/Error'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopy } from '@fortawesome/free-solid-svg-icons'
 
-/**
- * TODO: Under Development
- * User Bar Component
- * @returns {React.JSX.Element} renderer component
- */
 export default function UserBar(): React.JSX.Element {
-  const loggedInUserId = useSelector((state: RootState) => state.login.loggedInUserID)
-  const loggedInUserToken = useSelector((state: RootState) => state.login.loggedInUserToken)
+  const userId = useSelector((state: RootState) => state.login.userId)
+  const userToken = useSelector((state: RootState) => state.login.userToken)
 
-  const query = getUserByIdQuery(loggedInUserId)
+  const query = getUserByIdQuery(userId as string)
   const [user, setUser] = useState({}) as any
   const [apiError, setApiError] = useState('')
 
   useEffect(() => {
     ;(async (): Promise<void> => {
       try {
-        if (loggedInUserId && loggedInUserToken) {
+        if (userId && userToken) {
           await query
           const userData = query.data.data
           if (userData) {

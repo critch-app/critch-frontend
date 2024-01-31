@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 
-// TODO: Under Development
 export default function Bar({
   pageNumber,
   setPageNumber

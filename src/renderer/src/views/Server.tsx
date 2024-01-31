@@ -1,4 +1,3 @@
-import { Route, Routes } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import ChannelsBar from '@renderer/features/server/ChannelsBar/ChannelsBar'
@@ -6,15 +5,10 @@ import MembersBar from '@renderer/features/server/MembersBar/MembersBar'
 import Channel from '@renderer/features/chat/Channel'
 import { RootState } from '@renderer/app/store'
 import ServerBar from '@renderer/features/server/ServerBar/ServerBar'
+import ServerInfo from '@renderer/features/chat/SubComponents/ServerInfo'
 
-/**
- * TODO: Under Development
- * Component represents the server view
- * @returns {React.JSX.Element }
- */
 export default function Server(): React.JSX.Element {
-  const activeChannel = useSelector((state: RootState) => state.channelsBar.channel)
-  //const { id } = useParams()
+  const activeChannelId = useSelector((state: RootState) => state.channel.id)
   return (
     <>
       <ServerBar />
@@ -23,13 +17,7 @@ export default function Server(): React.JSX.Element {
          justify-between rounded-2xl bg-soft-white`}
       >
         <ChannelsBar />
-        {!activeChannel ? (
-          <div>ServerInformation</div>
-        ) : (
-          <Routes>
-            <Route path="channel/:id" element={<Channel />} />
-          </Routes>
-        )}
+        {activeChannelId ? <Channel /> : <ServerInfo />}
         <MembersBar />
       </div>
     </>

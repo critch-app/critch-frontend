@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import ServerTitle from './SubComponents/ServerTitle'
 import ServerCover from '@renderer/assets/images/server-cover-test.svg'
 import Member from './SubComponents/Member'
@@ -10,30 +9,25 @@ import Loading from '@renderer/components/Loading/Loading'
 import Error from '@renderer/components/Error/Error'
 import { useInfiniteScroll } from '@renderer/hooks/useInfiniteScroll'
 
-/**
- * Members bar componetn
- * @returns {React.JSX.Element} renderer component.
- */
 export default function MembersBar(): React.JSX.Element {
-  const activeServer = useSelector((state: RootState) => state.serverBar.activeServerID)
-  const query = getServerMembersQuery(activeServer, 0, 50)
-  const serverQuery = getServerByIDQuery(activeServer)
+  const activeServerId = useSelector((state: RootState) => state.server.id)
+  const mambersQuery = getServerMembersQuery(activeServerId as string, 0, 50)
+  const serverQuery = getServerByIDQuery(activeServerId as string)
   const [apiError, setApiError] = useState('')
   const [serverName, setServerName] = useState('')
   const [members, setMembers] = useState<any[]>([])
-  const { ref } = useInfiniteScroll(query)
+  const { ref } = useInfiniteScroll(mambersQuery)
 
   useEffect(() => {
     try {
-      if (activeServer) {
+      if (activeServerId && mambersQuery.isSuccess && serverQuery.isSuccess) {
         const newMembers: any = []
-        query.data.pages.forEach((page) => {
+        mambersQuery.data.pages.forEach((page) => {
           newMembers.push(...page.data)
         })
         setServerName(serverQuery.data.data.name)
         setMembers(newMembers)
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.message) {
         setApiError(error.response.data.message)
@@ -41,15 +35,15 @@ export default function MembersBar(): React.JSX.Element {
         setApiError('An unexpected error occurred')
       }
     }
-  }, [query.data, activeServer])
+  }, [mambersQuery.data, activeServerId, serverQuery.data])
 
   // Handle error state
-  if (query.status === 'error' || serverQuery.status === 'error') {
+  if (mambersQuery.status === 'error' || serverQuery.status === 'error') {
     return <Error error={apiError} reset={null} />
   }
 
   // Handle loading state
-  if (query.status === 'loading' || serverQuery.status === 'loading') {
+  if (mambersQuery.status === 'loading' || serverQuery.status === 'loading') {
     return (
       <div>
         <Loading size={170} />

@@ -1,14 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link } from 'react-router-dom'
-/**
- * Description
- * @property {any} id - Server id
- * @property {any} photo - Server photo/logo url
- * @property {any} name - Server name
- * @property {any} active - Server state
- * @property {any} clickHandler - On server click handler
- * @returns {React.JSX.Element} renderer component.
- */
+
 export default function ServerIcon({
   id,
   photo,
