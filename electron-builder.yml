@@ -1,7 +1,7 @@
-appId: com.critch.app
-productName: critch
+appId: 'com.critch.app'
+productName: 'critch'
 directories:
-  buildResources: build
+  buildResources: 'build'
 files:
   - '!**/.vscode/*'
   - '!src/*'
@@ -38,6 +38,3 @@ linux:
 appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
-publish:
-  provider: Critch
-  url: https://example.com/auto-updates
