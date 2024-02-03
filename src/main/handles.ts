@@ -1,5 +1,5 @@
 import { clipboard, Notification } from 'electron'
-import * as jwt from 'jsonwebtoken'
+import { sign } from 'jsonwebtoken'
 
 export const copyToClipboard = async (_, content: string): Promise<void> => {
   clipboard.writeText(content)
@@ -19,7 +19,7 @@ export const generateInvitation = async (
   channels: string[]
 ): Promise<void> => {
   try {
-    const token = await jwt.sign({ serverId, channels }, 'my-secret-key', {
+    const token = sign({ serverId, channels }, 'my-secret-key', {
       algorithm: 'HS256',
       expiresIn: 30 * 24 * 60 * 60
     })

@@ -1,12 +1,20 @@
 import { faGear, faPhone, faCirclePlay } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { RootState } from '@renderer/app/store'
 import Divider from '@renderer/components/Divider//Divider'
+import { joinMeeting } from '@renderer/reducers/meetingReducer'
+import { useDispatch, useSelector } from 'react-redux'
 
 export default function ChannelControl({
-  channelName
+  channelName,
+  channelId
 }: {
   channelName: string
+  channelId: string
 }): React.JSX.Element {
+  const serverId = useSelector((state: RootState) => state.server.id)
+
+  const dispatch = useDispatch()
   return (
     <>
       <div className={`flex items-center justify-between`}>
@@ -20,6 +28,9 @@ export default function ChannelControl({
             className={`mx-1 inline-flex h-7 w-7 items-center justify-center 
             rounded-full bg-soft-purble/70 p-2 duration-200 hover:rotate-180
           hover:bg-soft-purble/100`}
+            onClick={async (): Promise<void> => {
+              dispatch(joinMeeting({ channelId, serverId: serverId as string }))
+            }}
           >
             <FontAwesomeIcon icon={faPhone} />
           </button>

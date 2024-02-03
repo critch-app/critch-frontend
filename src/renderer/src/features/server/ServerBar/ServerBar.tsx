@@ -15,10 +15,14 @@ import Loading from '@renderer/components/Loading/Loading'
 import Error from '@renderer/components/Error/Error'
 import { getUserServersQuery } from '@renderer/api/query/user'
 import { useInfiniteScroll } from '@renderer/hooks/useInfiniteScroll'
+import { togglePip } from '@renderer/reducers/meetingReducer'
 
 export default function ServerBar(): React.JSX.Element {
   const activeServerId = useSelector((state: RootState) => state.server.id)
   const userId = useSelector((state: RootState) => state.login.userId)
+  const joinedChannel = useSelector((state: RootState) => state.meeting.joinedChannel)
+  const joinedServer = useSelector((state: RootState) => state.meeting.joinedServer)
+  const pip = useSelector((state: RootState) => state.meeting.pip)
   const dispatch = useDispatch()
 
   const [apiError, setApiError] = useState('')
@@ -70,13 +74,11 @@ export default function ServerBar(): React.JSX.Element {
       <div
         className={`mb-0.5 ml-0.5 mr-1 mt-0.5 h-[calc(100vh-1rem)] w-24 rounded-2xl bg-hard-white `}
       >
-        <div className={`mx-auto w-[calc(100%)] duration-150 hover:scale-125`}>
-          <Link
-            to="/"
-            onClick={(): void => {
-              dispatch(setActiveServerId(null))
-            }}
-          >
+        <div
+          className={`mx-auto w-[calc(100%)] duration-150 hover:scale-125`}
+          onClick={() => dispatch(setActiveServerId(null))}
+        >
+          <Link to="/">
             <AppIcon width={`w-24`} height={`h-24`} />
           </Link>
         </div>
@@ -102,6 +104,9 @@ export default function ServerBar(): React.JSX.Element {
                 photo={server.photo}
                 active={server.id === activeServerId ? true : false}
                 clickHandler={(): void => {
+                  if (joinedServer && joinedChannel && !pip) {
+                    dispatch(togglePip())
+                  }
                   dispatch(setActiveServerId(server.id))
                   dispatch(setActiveChannelId(null))
                 }}

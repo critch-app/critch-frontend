@@ -52,7 +52,7 @@ export default function Messages(): React.JSX.Element {
 
   useEffect(() => {
     scrollToBottom(chatWindowRef)
-  }, [messages.length])
+  }, [messages.length, messages])
 
   // Handle error state
   if (query.status === 'error') {

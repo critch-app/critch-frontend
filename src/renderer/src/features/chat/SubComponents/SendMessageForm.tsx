@@ -2,6 +2,7 @@ import { faPaperPlane, faFaceSmileBeam } from '@fortawesome/free-regular-svg-ico
 import { faPaperclip } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { RootState } from '@renderer/app/store'
+import { EventType } from '@renderer/env.d'
 import { useWebSocketProvider } from '@renderer/hooks/useWebSocketProvider'
 import { useContext, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -45,18 +46,19 @@ export default function SendMessageForm(): React.JSX.Element {
             </button>
             <button
               disabled={!content}
-              onClick={async (ev): Promise<void> => {
+              onClick={(ev): void => {
                 ev.preventDefault()
                 if (socket) {
-                  socket.sendMessage(
-                    JSON.stringify({
+                  const message = JSON.stringify({
+                    type: EventType.MESSAGE,
+                    data: {
                       sender_id: userId,
                       server_id: activeServerId,
                       channel_id: activeChannelId,
-                      content,
-                      attatchment: 'none'
-                    })
-                  )
+                      content
+                    }
+                  })
+                  socket.sendMessage(message)
                 }
                 setContent('')
               }}
