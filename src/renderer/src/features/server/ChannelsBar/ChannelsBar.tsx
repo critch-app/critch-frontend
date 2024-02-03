@@ -10,11 +10,16 @@ import { useEffect, useState } from 'react'
 import Loading from '@renderer/components/Loading/Loading'
 import Error from '@renderer/components/Error/Error'
 import { getUserByIdQuery } from '@renderer/api/query/user'
+import { togglePip } from '@renderer/reducers/meetingReducer'
 
 export default function ChannelsBar(): React.JSX.Element {
   const activeChannelId = useSelector((state: RootState) => state.channel.id)
   const activeServerId = useSelector((state: RootState) => state.server.id)
   const userId = useSelector((state: RootState) => state.login.userId)
+  const joinedChannel = useSelector((state: RootState) => state.meeting.joinedChannel)
+  const joinedServer = useSelector((state: RootState) => state.meeting.joinedServer)
+  const pip = useSelector((state: RootState) => state.meeting.pip)
+
   const dispatch = useDispatch()
   const [apiError, setApiError] = useState('')
   const [channels, setChannels] = useState<any[]>([])
@@ -74,6 +79,9 @@ export default function ChannelsBar(): React.JSX.Element {
                   name={channel.name}
                   active={channel.id === activeChannelId ? true : false}
                   clickHandler={(): void => {
+                    if (joinedServer && joinedChannel && !pip) {
+                      dispatch(togglePip())
+                    }
                     dispatch(setActiveChannelId(channel.id))
                   }}
                 />

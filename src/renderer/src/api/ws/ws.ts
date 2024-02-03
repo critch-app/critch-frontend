@@ -4,13 +4,20 @@ class WS {
   private handlers: Map<EventType, (event: MessageEvent) => void> = new Map()
   private socket: WebSocket
   private token: string
+  private url(token: string): string {
+    return `wss://critch-api.onrender.com/v1/messaging-service?token=${token}`
+  }
+  // ws://localhost:8080/v1/messaging-service?token=${this.token}`
 
   public constructor(token: string) {
     this.token = token
-    this.socket = new WebSocket(`ws://localhost:8080/v1/messaging-service?token=${this.token}`)
+    this.socket = new WebSocket(this.url(this.token))
     this.socket.addEventListener('message', (event: MessageEvent) => {
       this.handleMessage(event)
     })
+    this.socket.onclose = () => {
+      this.reconnect()
+    }
   }
 
   private handleMessage(event: MessageEvent): void {
@@ -19,6 +26,7 @@ class WS {
     if (handler) {
       handler(event)
     } else {
+      console.log(data)
       console.warn('Unhandled event type:', data.type)
     }
   }
@@ -47,6 +55,13 @@ class WS {
 
   public removeEventListener(eventType: EventType): void {
     this.handlers.delete(eventType)
+  }
+
+  public reconnect() {
+    this.socket = new WebSocket(this.url(this.token))
+    this.socket.addEventListener('message', (event: MessageEvent) => {
+      this.handleMessage(event)
+    })
   }
 }
 

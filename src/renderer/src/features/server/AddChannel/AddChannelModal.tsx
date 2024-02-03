@@ -8,9 +8,10 @@ import FormFields from '@renderer/features/server/AddChannel/SubComponents/FormF
 import { RootState } from '@renderer/app/store'
 import { useSelector } from 'react-redux'
 import { addChannelMut } from '@renderer/api/query/channels'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import Loading from '@renderer/components/Loading/Loading'
 import Error from '@renderer/components/Error/Error'
+import { useWebSocketProvider } from '@renderer/hooks/useWebSocketProvider'
 
 export default function AddChannelModal({
   toggleModal
@@ -18,7 +19,11 @@ export default function AddChannelModal({
   toggleModal: React.Dispatch<React.SetStateAction<boolean>>
 }): React.JSX.Element {
   const activeServerId = useSelector((state: RootState) => state.server.id)
-  const mut = addChannelMut(() => {}, ChannelType.SERVER)
+  const socket = useContext(useWebSocketProvider())
+  const mut = addChannelMut(() => {
+    toggleModal(false)
+    socket?.reconnect()
+  }, ChannelType.SERVER)
   const [apiError, setApiError] = useState('')
   /**
    * On submit handler
@@ -28,10 +33,7 @@ export default function AddChannelModal({
   const onSubmit = async (values: ChannelFormValues): Promise<void> => {
     values.server_id = activeServerId as string
     try {
-      const res = await mut.mutateAsync(values)
-      if (res.data) {
-        toggleModal(false)
-      }
+      await mut.mutateAsync(values)
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.message) {
         setApiError(error.response.data.message)
