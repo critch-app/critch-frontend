@@ -1,12 +1,6 @@
 import { Link } from 'react-router-dom'
 
-export default function ServerIcon({
-  id,
-  photo,
-  name,
-  active,
-  clickHandler
-}: any): React.JSX.Element {
+export default function ServerIcon({ photo, name, active, clickHandler }: any): React.JSX.Element {
   return (
     <div className={`relative`}>
       {active && (
@@ -21,7 +15,7 @@ export default function ServerIcon({
       ${active ? '' : 'shadow-extra-gray hover:scale-125 hover:drop-shadow-2xl '}`}
         onClick={clickHandler}
       >
-        <Link to={`/server/${id}`}>
+        <Link to={`/server`}>
           <img src={photo} alt={`${name} logo`} className={`h-full w-full rounded-full`} />
         </Link>
       </div>
