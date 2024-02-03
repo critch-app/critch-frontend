@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 /// <reference types="vite/client" />
-
+import { Client, RemoteStream } from 'ion-sdk-js'
+import { IonSFUJSONRPCSignal } from 'ion-sdk-js/lib/signal/json-rpc-impl'
 // @MultiUsage
 export type OnSubmitFunction = (params: object) => void
 
@@ -82,4 +83,14 @@ export enum EventType {
   RUNNING_MEETINGS = 'running_meetings',
   NEW_MEETING = 'new_meeting',
   CLOSE_MEETING = 'close_meeting'
+}
+export interface GlobalPipContextValue {
+  mediaStream: MediaStream | null
+  setMediaStream: React.Dispatch<React.SetStateAction<MediaStream | null>>
+  remoteStreams: RemoteStream[]
+  setRemoteStreams: React.Dispatch<React.SetStateAction<RemoteStream[]>>
+  client: Client | null
+  setClient: React.Dispatch<React.SetStateAction<Client | null>>
+  signal: IonSFUJSONRPCSignal | null
+  setSignal: React.Dispatch<React.SetStateAction<IonSFUJSONRPCSignal | null>>
 }
