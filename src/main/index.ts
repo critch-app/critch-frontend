@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, screen, ipcMain } from 'electron'
 import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import * as jwt from 'jsonwebtoken'
+import { verify } from 'jsonwebtoken'
 import { copyToClipboard, generateInvitation, showNotification } from './handles'
 
 let mainWindow: BrowserWindow
@@ -72,13 +72,19 @@ app.whenReady().then(() => {
         }
         const url = commandLine.pop()
         const token = url?.split('=')[1]
-        const payload = jwt.verify(token, 'my-secret-key')
+        const payload = verify(token as string, 'my-secret-key') as {
+          serverId: string
+          channels: string[]
+        }
         mainWindow.webContents.send('add-me-to-server', payload.serverId, payload.channels)
       })
     } else {
       app.on('open-url', (_event, url) => {
         const token = url?.split('=')[1]
-        const payload = jwt.verify(token, 'my-secret-key')
+        const payload = verify(token, 'my-secret-key') as {
+          serverId: string
+          channels: string[]
+        }
         mainWindow.webContents.send('add-me-to-server', payload.serverId, payload.channels)
       })
     }
