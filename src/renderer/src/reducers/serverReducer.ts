@@ -2,7 +2,7 @@ import { createAction, createReducer } from '@reduxjs/toolkit'
 
 const initialState = { id: null } as { id: string | null }
 
-export const setActiveServerId = createAction<any>('setActiveServer')
+export const setActiveServerId = createAction<any>('setActiveServerId')
 
 const ServerReducer = createReducer(initialState, (builder) => {
   builder.addCase(setActiveServerId, (state, action) => {
