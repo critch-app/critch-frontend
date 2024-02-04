@@ -23,10 +23,9 @@ export default function RemoteVideo({
   return (
     <div
       key={key}
-      className=" m-2 w-fit rounded-xl border-4 border-solid border-soft-purble shadow-sm shadow-secondry-gray"
+      className="to-soft-purbl m-2 w-80 rounded-xl border-4 border-solid border-soft-purble bg-gradient-to-br from-hard-purble shadow-sm"
     >
       <video
-        key={key}
         ref={videoRef}
         autoPlay
         playsInline

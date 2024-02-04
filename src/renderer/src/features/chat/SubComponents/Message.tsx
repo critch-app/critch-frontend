@@ -57,7 +57,7 @@ export default function Message({
       ) : null}
 
       <div
-        className={`relative h-fit w-80 rounded-md p-2 text-[calc(0.8rem)] text-lg ${
+        className={`relative min-h-10 w-80  overflow-hidden overflow-ellipsis rounded-md p-2 text-[calc(0.8rem)] text-lg ${
           mine ? 'bg-soft-purble  text-soft-white' : 'bg-soft-white text-default-txt'
         }`}
       >

@@ -25,8 +25,6 @@ export default function AddMembers(): React.JSX.Element {
           newChannels.push(...page.data)
         })
         setChannels(newChannels)
-        console.log(selectedChannels.length)
-        console.log(channels.length)
       }
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.message) {
@@ -118,9 +116,8 @@ export default function AddMembers(): React.JSX.Element {
           {channels.length > 0 ? (
             channels.map((channel) => {
               return (
-                <div>
+                <div key={channel.id}>
                   <div
-                    key={channel.id}
                     id={channel.id}
                     className={`m-1 flex justify-between rounded-md bg-soft-white p-2`}
                   >
@@ -134,7 +131,6 @@ export default function AddMembers(): React.JSX.Element {
                             ? prevChannels.filter((id) => id !== channel.id)
                             : [...prevChannels, channel.id]
                         )
-                        console.log(selectedChannels)
                       }}
                     ></input>
                   </div>
