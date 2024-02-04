@@ -29,7 +29,6 @@ export interface RegisterStepTwoValues {
 }
 
 export interface RegisterStepThreeValues {
-  status: strign
   photo: string
 }
 

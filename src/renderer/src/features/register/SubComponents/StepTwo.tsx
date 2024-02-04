@@ -1,10 +1,14 @@
 import { RegisterStepTwoValues } from '@renderer/env.d'
 import { ErrorMessage, FormikErrors, useFormikContext } from 'formik'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import PhoneInputWithCountrySelect from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
 
-export default function StepTwo(): React.JSX.Element {
+export default function StepTwo({
+  setIsStepContainError
+}: {
+  setIsStepContainError: React.Dispatch<React.SetStateAction<boolean>>
+}): React.JSX.Element {
   const { errors, touched, handleBlur, validateField, setFieldValue } =
     useFormikContext<RegisterStepTwoValues>()
 
@@ -27,6 +31,10 @@ export default function StepTwo(): React.JSX.Element {
       }))
     }, 2000)
   }
+
+  useEffect(() => {
+    setIsStepContainError(errors.phone !== undefined)
+  }, [errors])
 
   return (
     <div className={`w-[calc(30vw)] text-default-txt`}>

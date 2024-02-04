@@ -1,8 +1,12 @@
 import { RegisterStepOneValues } from '@renderer/env.d'
 import { ErrorMessage, Field, useFormikContext } from 'formik'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-export default function StepOne(): React.JSX.Element {
+export default function StepOne({
+  setIsStepContainError
+}: {
+  setIsStepContainError: React.Dispatch<React.SetStateAction<boolean>>
+}): React.JSX.Element {
   const { errors, touched, handleBlur, validateField } = useFormikContext<RegisterStepOneValues>()
 
   const [fieldErrors, setFieldErrors] = useState({
@@ -28,6 +32,16 @@ export default function StepOne(): React.JSX.Element {
       }))
     }, 2000)
   }
+
+  useEffect(() => {
+    setIsStepContainError(
+      errors.first_name !== undefined ||
+        errors.last_name !== undefined ||
+        errors.email !== undefined ||
+        errors.password !== undefined ||
+        errors.confirm_password !== undefined
+    )
+  }, [errors])
 
   return (
     <div className={`w-[calc(30vw)] text-default-txt`}>
