@@ -37,7 +37,6 @@ export default function Messages(): React.JSX.Element {
         query.data.pages.forEach((page) => {
           newMessages.push(...page.data)
         })
-        // for each message get the sender data
         setMessages(newMessages)
       }
     } catch (error: any) {

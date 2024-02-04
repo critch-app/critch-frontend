@@ -23,9 +23,7 @@ export default function Message({
         if (senderId) {
           await query
           const userData = query.data.data
-          if (userData) {
-            await setUser(userData)
-          }
+          setUser(userData)
         }
       } catch (error: any) {
         if (error.response && error.response.data && error.response.data.message) {
@@ -35,7 +33,7 @@ export default function Message({
         }
       }
     })()
-  }, [user, query.status])
+  }, [query.status])
 
   if (query.status === 'error') {
     return <Error error={apiError} reset={null} />
@@ -51,29 +49,25 @@ export default function Message({
   }
 
   return (
-    <div className={`m-4 flex p-2 ${mine ? 'justify-end' : ''}`}>
+    <div className={`relative m-4 flex p-2 ${mine ? 'justify-end' : ''}`}>
       {!mine ? (
         <img src={user.photo} alt={`${user.first_name} Avatar`} className="mx-2 h-7 w-7" />
       ) : null}
 
       <div
-        className={`relative min-h-10 w-80  overflow-hidden overflow-ellipsis rounded-md p-2 text-[calc(0.8rem)] text-lg ${
+        className={` w-80 overflow-hidden overflow-ellipsis rounded-md p-2 text-lg ${
           mine ? 'bg-soft-purble  text-soft-white' : 'bg-soft-white text-default-txt'
         }`}
       >
         {content}
-
-        <span
-          className={`absolute -bottom-5 text-[calc(0.6rem)] ${
-            mine ? 'left-1' : 'right-1'
-          } text-xs text-primary-gray/90`}
-        >
-          {user.first_name} , {sentAt.split('.')[0]}
-        </span>
       </div>
-
+      <span
+        className={`absolute -bottom-2  ${!mine ? 'left-52' : 'right-52'} text-xs text-secondry-gray`}
+      >
+        {user.first_name} , {sentAt.split('.')[0]}
+      </span>
       {mine ? (
-        <img src={user.photo} alt={`${user.photo} Avatar`} className={`mx-2 h-7 w-7`} />
+        <img src={user.photo} alt={`${user.first_name} Avatar`} className={`mx-2 h-10 w-10`} />
       ) : null}
     </div>
   )
