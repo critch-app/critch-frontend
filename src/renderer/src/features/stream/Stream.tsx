@@ -29,8 +29,12 @@ export default function Stream(): React.JSX.Element {
   const [remoteStreams, setRemoteStreams] = useState<RemoteStream[]>([])
 
   const handleRemoteStream = (stream: RemoteStream) => {
-    setRemoteStreams((prevStreams) => [...prevStreams, stream])
-    setPipRemoteStreams((prevStreams) => [...prevStreams, stream])
+    setRemoteStreams((prevStreams) =>
+      prevStreams.includes(stream) ? prevStreams : [...prevStreams, stream]
+    )
+    setPipRemoteStreams((prevStreams) =>
+      prevStreams.includes(stream) ? prevStreams : [...prevStreams, stream]
+    )
   }
 
   const handleLeftRemoteStream = (stream: RemoteStream) => {
