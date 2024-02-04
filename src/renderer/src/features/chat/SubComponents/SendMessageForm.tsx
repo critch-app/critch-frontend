@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { RootState } from '@renderer/app/store'
 import { EventType } from '@renderer/env.d'
 import { useWebSocketProvider } from '@renderer/hooks/useWebSocketProvider'
+import EmojiPicker, { EmojiClickData, EmojiStyle } from 'emoji-picker-react'
 import { useContext, useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -13,7 +14,7 @@ export default function SendMessageForm(): React.JSX.Element {
   const activeChannelId = useSelector((state: RootState) => state.channel.id)
   const socket = useContext(useWebSocketProvider())
   const [content, setContent] = useState('')
-
+  const [emojiActive, setEmojiActive] = useState<boolean>(false)
   return (
     <>
       <div>
@@ -32,12 +33,28 @@ export default function SendMessageForm(): React.JSX.Element {
           <div
             className={`absolute bottom-6 right-[calc(5%)] flex w-16 justify-between text-lg text-default-txt`}
           >
-            <button type="button">
+            <button
+              type="button"
+              onClick={() => {
+                setEmojiActive(!emojiActive)
+              }}
+            >
               <FontAwesomeIcon
                 icon={faFaceSmileBeam}
                 className={`duration-150 hover:text-soft-purble`}
               />
             </button>
+            {emojiActive && (
+              <div className={`absolute bottom-10 right-1/2`}>
+                <EmojiPicker
+                  emojiStyle={EmojiStyle.FACEBOOK}
+                  lazyLoadEmojis={true}
+                  onEmojiClick={(emojiData: EmojiClickData) => {
+                    setContent(content + emojiData.emoji)
+                  }}
+                />
+              </div>
+            )}
             <button type="button">
               <FontAwesomeIcon
                 icon={faPaperclip}
