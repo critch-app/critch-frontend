@@ -9,6 +9,7 @@ import { InvalidateQueryFilters, useQueryClient } from '@tanstack/react-query'
 export function useGlobalEventListeners(): { isError: boolean; error: string } {
   const [isError, setIsError] = useState(false)
   const [error, setError] = useState('')
+  const [isEventRegisterd, setIsEventRegisterd] = useState(false)
   const userId = useSelector((state: RootState) => state.login.userId)
   const userToken = useSelector((state: RootState) => state.login.userToken)
   const serverMemberMut = putServerMemberMut(() => {})
@@ -17,7 +18,7 @@ export function useGlobalEventListeners(): { isError: boolean; error: string } {
   const queryClient = useQueryClient()
 
   useEffect(() => {
-    if (userId && userToken) {
+    if (userId && userToken && !isEventRegisterd) {
       window.electron.ipcRenderer.on('add-me-to-server', async (_event, serverId, channels) => {
         setIsError(false)
         setError('')
@@ -38,7 +39,9 @@ export function useGlobalEventListeners(): { isError: boolean; error: string } {
               // Ignore errors for individual channels
             }
           })
+
           await Promise.allSettled(channelPromises)
+
           const succsesChannelAdditions = channelPromises.filter((p) => p.status !== 'rejected')
 
           socket?.sendMessage(
@@ -61,6 +64,7 @@ export function useGlobalEventListeners(): { isError: boolean; error: string } {
           setError(error.message)
         }
       })
+      setIsEventRegisterd(true)
     }
   }, [userId, userToken])
 
