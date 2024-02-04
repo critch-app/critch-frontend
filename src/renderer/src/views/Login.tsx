@@ -40,7 +40,7 @@ export default function Login(): React.JSX.Element {
       dispatch(setUserToken(res.data.token))
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.message) {
-        setApiError(error.response.data.message)
+        setApiError('Something went wrong make sure to use correct email and password')
       } else {
         setApiError('An unexpected error occurred')
       }

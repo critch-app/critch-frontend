@@ -41,7 +41,7 @@ export default function Register(): React.JSX.Element {
       await mut.mutateAsync(values)
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.message) {
-        setApiError(error.response.data.message)
+        setApiError('Something went wrong make sure to use unique email and phone number')
       } else {
         setApiError('An unexpected error occurred')
       }
