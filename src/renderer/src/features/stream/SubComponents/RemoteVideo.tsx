@@ -5,7 +5,7 @@ export default function RemoteVideo({
   key
 }: {
   remoteStream: MediaStream
-  key: number
+  key: string
 }): React.JSX.Element {
   const videoRef = useRef<HTMLVideoElement | null>(null)
 

@@ -29,12 +29,9 @@ export default function Stream(): React.JSX.Element {
   const [remoteStreams, setRemoteStreams] = useState<RemoteStream[]>([])
 
   const handleRemoteStream = (stream: RemoteStream) => {
-    setRemoteStreams((prevStreams) =>
-      prevStreams.includes(stream) ? prevStreams : [...prevStreams, stream]
-    )
-    setPipRemoteStreams((prevStreams) =>
-      prevStreams.includes(stream) ? prevStreams : [...prevStreams, stream]
-    )
+    const uniqueStreams = new Set([...remoteStreams, stream])
+    setRemoteStreams(Array.from(uniqueStreams))
+    setPipRemoteStreams(Array.from(uniqueStreams))
   }
 
   const handleLeftRemoteStream = (stream: RemoteStream) => {
@@ -94,8 +91,8 @@ export default function Stream(): React.JSX.Element {
         className={`critch-overflow-hidden-scroll relative flex h-[calc(100vh-7rem)] min-w-[calc(100%-31rem)]  flex-wrap items-center justify-evenly overflow-y-scroll rounded-lg  bg-hard-white p-3`}
       >
         <SelfVideo client={client} signal={signal} />
-        {remoteStreams.map((stream, idx) => {
-          return <RemoteVideo remoteStream={stream} key={idx} />
+        {remoteStreams.map((stream) => {
+          return <RemoteVideo remoteStream={stream} key={stream.id} />
         })}
       </div>
 
