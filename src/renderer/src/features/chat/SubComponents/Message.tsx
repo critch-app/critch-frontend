@@ -55,14 +55,14 @@ export default function Message({
       ) : null}
 
       <div
-        className={` w-80 overflow-hidden overflow-ellipsis rounded-md p-2 text-lg ${
+        className={`w-80 overflow-hidden overflow-ellipsis rounded-md p-2 text-lg ${
           mine ? 'bg-soft-purble  text-soft-white' : 'bg-soft-white text-default-txt'
         }`}
       >
         {content}
       </div>
       <span
-        className={`absolute -bottom-2  ${!mine ? 'left-52' : 'right-52'} text-xs text-secondry-gray`}
+        className={`absolute -bottom-2  ${!mine ? 'left-48' : 'right-48'} text-xs text-secondry-gray`}
       >
         {user.first_name} , {sentAt.split('.')[0]}
       </span>
