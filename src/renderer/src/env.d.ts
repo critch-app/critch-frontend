@@ -82,7 +82,8 @@ export enum EventType {
   ICE_CANDIDATE = 'ice_candidate',
   RUNNING_MEETINGS = 'running_meetings',
   NEW_MEETING = 'new_meeting',
-  CLOSE_MEETING = 'close_meeting'
+  CLOSE_MEETING = 'close_meeting',
+  JOIN_CHANNEL = 'join_channel'
 }
 export interface GlobalPipContextValue {
   mediaStream: MediaStream | null

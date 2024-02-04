@@ -1,8 +1,11 @@
 import { putServerMemberMut } from '@renderer/api/query/server'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@renderer/app/store'
 import { putChannelMemberMut } from '@renderer/api/query/channels'
+import { useWebSocketProvider } from './useWebSocketProvider'
+import { EventType } from '@renderer/env.d'
+import { InvalidateQueryFilters, useQueryClient } from '@tanstack/react-query'
 export function useGlobalEventListeners(): { isError: boolean; error: string } {
   const [isError, setIsError] = useState(false)
   const [error, setError] = useState('')
@@ -10,6 +13,8 @@ export function useGlobalEventListeners(): { isError: boolean; error: string } {
   const userToken = useSelector((state: RootState) => state.login.userToken)
   const serverMemberMut = putServerMemberMut(() => {})
   const channelMemberMut = putChannelMemberMut(() => {})
+  const socket = useContext(useWebSocketProvider())
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     if (userId && userToken) {
@@ -36,6 +41,17 @@ export function useGlobalEventListeners(): { isError: boolean; error: string } {
             }
           })
           await Promise.allSettled(channelPromises)
+          const succsesChannelAdditions = channelPromises.filter((p) => p.status !== 'rejected')
+          socket?.reconnect()
+          socket?.sendMessage(
+            JSON.stringify({
+              type: EventType.JOIN_CHANNEL,
+              data: {
+                server_id: serverId,
+                channels: succsesChannelAdditions
+              }
+            })
+          )
 
           const failedChannelAdditions = channelPromises.filter((p) => p.status === 'rejected')
           if (failedChannelAdditions.length === channels.length) {
@@ -49,6 +65,27 @@ export function useGlobalEventListeners(): { isError: boolean; error: string } {
       })
     }
   }, [userId, userToken])
+
+  useEffect(() => {
+    socket?.onMessage((event: MessageEvent) => {
+      const data = JSON.parse(event.data).data
+      queryClient.invalidateQueries([
+        'servers',
+        data.server_id,
+        'members'
+      ] as InvalidateQueryFilters)
+
+      data.channels.forEach((id: string) => {
+        queryClient.invalidateQueries([
+          'servers',
+          data.server_id,
+          'channels',
+          id,
+          'members'
+        ] as InvalidateQueryFilters)
+      })
+    }, EventType.JOIN_CHANNEL)
+  }, [])
 
   return { isError, error }
 }
