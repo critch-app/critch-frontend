@@ -25,7 +25,7 @@ export default function FormFields(): React.JSX.Element {
         ...prevFieldErrors,
         [fieldName]: false
       }))
-    }, 2000)
+    }, 4000)
   }
 
   return (

@@ -33,7 +33,7 @@ export default function StepThree({
         ...prevFieldErrors,
         [fieldName]: false
       }))
-    }, 2000)
+    }, 4000)
   }
 
   const handleImageError = (fieldName: string): void => {

@@ -7,7 +7,7 @@ import { OnSubmitFunction, SetStepFunction } from '@renderer/env.d'
 import StepOne from './SubComponents/StepOne'
 import StepTwo from './SubComponents/StepTwo'
 import StepThree from './SubComponents/StepThree'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function RegisterForm({
   onSubmit,
@@ -18,7 +18,10 @@ export default function RegisterForm({
   currentStep: number
   setStep: SetStepFunction
 }): React.JSX.Element {
-  const [isStepContainError, setIsStepContainError] = useState(true)
+  const [isStepContainError, setIsStepContainError] = useState<boolean>(true)
+  useEffect(() => {
+    setIsStepContainError(true)
+  }, [currentStep])
   return (
     <div className={`h-[calc(70%)] w-full flex-col items-center justify-center`}>
       <Formik

@@ -29,7 +29,7 @@ export default function StepTwo({
         ...prevFieldErrors,
         [fieldName]: false
       }))
-    }, 2000)
+    }, 4000)
   }
 
   useEffect(() => {

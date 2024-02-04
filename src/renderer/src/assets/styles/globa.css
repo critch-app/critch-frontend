@@ -85,12 +85,12 @@ body {
     position: absolute;
     height: 5px;
     bottom: 0;
-    animation: decreaseWidth 2000ms linear 1;
+    animation: decreaseWidth 4000ms linear 1;
   }
 
   /* Creates a visually appealing animated bar beneath the error message */
   .critch-error-message-animated {
-    animation-duration: 2000;
+    animation-duration: 4000ms;
     animation-name: hideAfterDelay;
     animation-timing-function: linear;
     animation-fill-mode: forwards;

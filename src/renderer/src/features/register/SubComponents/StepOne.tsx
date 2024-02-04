@@ -30,7 +30,7 @@ export default function StepOne({
         ...prevFieldErrors,
         [fieldName]: false
       }))
-    }, 2000)
+    }, 4000)
   }
 
   useEffect(() => {
