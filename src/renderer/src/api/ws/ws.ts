@@ -58,6 +58,7 @@ class WS {
   }
 
   public reconnect() {
+    this.socket.close()
     this.socket = new WebSocket(this.url(this.token))
     this.socket.addEventListener('message', (event: MessageEvent) => {
       this.handleMessage(event)
