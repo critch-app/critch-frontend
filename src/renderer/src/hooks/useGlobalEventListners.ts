@@ -41,6 +41,7 @@ export function useGlobalEventListeners(): { isError: boolean; error: string } {
             })
             await Promise.allSettled(channelPromises)
             const succsesChannelAdditions = channelPromises.filter((p) => p.status !== 'rejected')
+
             socket?.sendMessage(
               JSON.stringify({
                 type: EventType.JOIN_CHANNEL,
@@ -50,6 +51,7 @@ export function useGlobalEventListeners(): { isError: boolean; error: string } {
                 }
               })
             )
+
             const failedChannelAdditions = channelPromises.filter((p) => p.status === 'rejected')
             if (failedChannelAdditions.length === channels.length) {
               setIsError(true)
