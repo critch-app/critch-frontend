@@ -21,46 +21,46 @@ export function useGlobalEventListeners(): { isError: boolean; error: string } {
       window.electron.ipcRenderer.on('add-me-to-server', async (_event, serverId, channels) => {
         setIsError(false)
         setError('')
-
         try {
-          await serverMemberMut.mutateAsync({ userId: userId, serverId })
-        } catch (serverError: any) {
-          // Ignore server addition error
-        }
-
-        try {
-          const channelPromises = channels.map(async (channelId: string) => {
-            try {
-              await channelMemberMut.mutateAsync({
-                userId: userId,
-                channelId,
-                serverId
-              })
-            } catch (channelError) {
-              // Ignore errors for individual channels
-            }
-          })
-          await Promise.allSettled(channelPromises)
-          const succsesChannelAdditions = channelPromises.filter((p) => p.status !== 'rejected')
-          socket?.reconnect()
-          socket?.sendMessage(
-            JSON.stringify({
-              type: EventType.JOIN_CHANNEL,
-              data: {
-                server_id: serverId,
-                channels: succsesChannelAdditions
+          try {
+            await serverMemberMut.mutateAsync({ userId: userId, serverId })
+          } catch (serverError: any) {
+            // Ignore server addition error
+          }
+          try {
+            const channelPromises = channels.map(async (channelId: string) => {
+              try {
+                await channelMemberMut.mutateAsync({
+                  userId: userId,
+                  channelId,
+                  serverId
+                })
+              } catch (channelError) {
+                // Ignore errors for individual channels
               }
             })
-          )
-
-          const failedChannelAdditions = channelPromises.filter((p) => p.status === 'rejected')
-          if (failedChannelAdditions.length === channels.length) {
+            await Promise.allSettled(channelPromises)
+            const succsesChannelAdditions = channelPromises.filter((p) => p.status !== 'rejected')
+            socket?.sendMessage(
+              JSON.stringify({
+                type: EventType.JOIN_CHANNEL,
+                data: {
+                  server_id: serverId,
+                  channels: succsesChannelAdditions
+                }
+              })
+            )
+            const failedChannelAdditions = channelPromises.filter((p) => p.status === 'rejected')
+            if (failedChannelAdditions.length === channels.length) {
+              setIsError(true)
+              setError('Failed to add user to the server or the channels')
+            }
+          } catch (error: any) {
             setIsError(true)
-            setError('Failed to add user to the server or the channels')
+            setError(error.message)
           }
-        } catch (error: any) {
-          setIsError(true)
-          setError(error.message)
+        } finally {
+          socket?.reconnect()
         }
       })
     }
