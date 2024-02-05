@@ -1,14 +1,17 @@
 import { ErrorMessage, Field, useFormikContext } from 'formik'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { RegisterStepThreeValues } from '@renderer/env.d'
 
-export default function StepThree(): React.JSX.Element {
+export default function StepThree({
+  setIsStepContainError
+}: {
+  setIsStepContainError: React.Dispatch<React.SetStateAction<boolean>>
+}): React.JSX.Element {
   const { errors, touched, handleBlur, validateField, values } =
     useFormikContext<RegisterStepThreeValues>()
 
   const [fieldErrors, setFieldErrors] = useState({
-    photo: false,
-    status: false
+    photo: false
   })
 
   /**
@@ -30,7 +33,7 @@ export default function StepThree(): React.JSX.Element {
         ...prevFieldErrors,
         [fieldName]: false
       }))
-    }, 2000)
+    }, 4000)
   }
 
   const handleImageError = (fieldName: string): void => {
@@ -39,6 +42,10 @@ export default function StepThree(): React.JSX.Element {
       [fieldName]: true
     }))
   }
+
+  useEffect(() => {
+    setIsStepContainError(errors.photo !== undefined)
+  }, [errors])
 
   return (
     <div className={`w-[calc(30vw)] flex-col items-center justify-center text-default-txt`}>
@@ -72,20 +79,6 @@ export default function StepThree(): React.JSX.Element {
       />
       {fieldErrors.photo && touched.photo && errors.photo && (
         <ErrorMessage name="photo" component="div" className={`critch-error-message`} />
-      )}
-
-      <Field
-        type="text"
-        placeholder="Bio"
-        id="status"
-        name="status"
-        onBlur={(e: Event): void => {
-          handleFieldBlur(e, 'status')
-        }}
-        className={`critch-form-input m-1 w-[calc(100%)]`}
-      />
-      {fieldErrors.status && touched.status && errors.status && (
-        <ErrorMessage name="status" component="div" className={`critch-error-message`} />
       )}
       <div className={`flex justify-center`}>
         <button

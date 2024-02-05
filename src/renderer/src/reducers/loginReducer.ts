@@ -5,8 +5,8 @@ const initialState = { userId: null, userToken: null } as {
   userToken: string | null
 }
 
-export const setUserToken = createAction<any>('setLoggedInUserToken')
-export const setUserId = createAction<any>('setLoggedInUserID')
+export const setUserToken = createAction<any>('setUserToken')
+export const setUserId = createAction<any>('setUserId')
 
 const loginReducer = createReducer(initialState, (builder) => {
   builder.addCase(setUserId, (state, action) => {

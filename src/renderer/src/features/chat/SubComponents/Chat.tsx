@@ -18,6 +18,7 @@ export default function Chat(): React.JSX.Element {
     id: string
   } | null>(null)
   const [apiError, setApiError] = useState('')
+
   useEffect(() => {
     try {
       if (query.isSuccess) {

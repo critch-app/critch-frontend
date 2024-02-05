@@ -25,8 +25,6 @@ export default function AddMembers(): React.JSX.Element {
           newChannels.push(...page.data)
         })
         setChannels(newChannels)
-        console.log(selectedChannels.length)
-        console.log(channels.length)
       }
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.message) {
@@ -63,66 +61,79 @@ export default function AddMembers(): React.JSX.Element {
 
   return (
     <div className={`h-[calc(100%)] w-[calc(78%)]  rounded-lg bg-original-white p-5`}>
-      <h1 className={`px-3 py-3 text-3xl`}>Add Members</h1>
-      <p className={`px-3 py-1`}>Copy this link and shre it to make people join your server</p>
-      <p className={`px-3 py-1`}>This Link is valid for 30 days</p>
+      <h1 className={`px-1 py-1 text-3xl`}>Add Members</h1>
+      <div className={`text-sm`}>
+        <p className={`px-2 py-1`}>
+          Select the channels you want to add people to and click generate
+        </p>
+        <p className={`px-2 py-1`}>Copy this link and shre it to make people join your server</p>
+        <p className={`px-2 py-1`}>This Link is valid for 30 days</p>
+      </div>
       <div className={`h-[calc(100%)]`}>
-        <h3
-          className={`h-12 w-[calc(70%)] overflow-clip 
-        overflow-ellipsis whitespace-nowrap rounded-md bg-primary-gray p-2 text-default-txt`}
-        >
-          {invitation || '----'}
-        </h3>
-        <button
-          className={`mx-auto my-1 rounded-md bg-soft-purble p-1.5 text-sm
+        <div className={``}>
+          <h3
+            className={`mx-1 h-12 w-[calc(95%)] overflow-clip 
+        overflow-ellipsis whitespace-nowrap rounded-md bg-soft-white p-2 text-default-txt`}
+          >
+            {invitation || '----'}
+          </h3>
+          <div className={`flex w-[calc(20%)] items-center`}>
+            <button
+              className={`mx-auto my-1 rounded-md bg-soft-purble p-1.5 text-sm
           text-original-white hover:bg-soft-purble/80`}
-          onClick={async (): Promise<void> => {
-            if (!invitation) {
-              Promise.reject
-              return
-            } else {
-              await window.api.writeToClipboard(invitation)
-              await window.api.showNotifications(
-                'Invitation link copied to your clipboard',
-                invitation
-              )
-            }
-          }}
-          disabled={!invitation || selectedChannels.length === 0 || channels.length === 0}
-        >
-          Copy
-        </button>
-        <button
-          className={`mx-auto my-1 rounded-md bg-soft-purble p-1.5 text-sm
+              onClick={async (): Promise<void> => {
+                if (!invitation) {
+                  Promise.reject
+                  return
+                } else {
+                  await window.api.writeToClipboard(invitation)
+                  await window.api.showNotifications(
+                    'Invitation link copied to your clipboard',
+                    invitation
+                  )
+                }
+              }}
+              disabled={!invitation || selectedChannels.length === 0 || channels.length === 0}
+            >
+              Copy
+            </button>
+            <button
+              className={`mx-auto my-1 rounded-md bg-soft-purble p-1.5 text-sm
         text-original-white hover:bg-soft-purble/80`}
-          onClick={async (): Promise<void> => {
-            await window.api.generateInvitation(activeServerId as string, selectedChannels)
-            setIsLinkReady(true)
-          }}
-          disabled={selectedChannels.length === 0 || channels.length === 0}
-        >
-          Generate
-        </button>
-
+              onClick={async (): Promise<void> => {
+                await window.api.generateInvitation(activeServerId as string, selectedChannels)
+                setIsLinkReady(true)
+              }}
+              disabled={selectedChannels.length === 0 || channels.length === 0}
+            >
+              Generate
+            </button>
+          </div>
+        </div>
         <div
-          className={`critch-overflow-hidden-scroll h-[calc(95%)] w-[calc(100%)] overflow-y-scroll`}
+          className={`critch-overflow-hidden-scroll h-[calc(50%)] w-[calc(100%)] overflow-y-scroll rounded-lg bg-hard-white text-xl`}
         >
           {channels.length > 0 ? (
             channels.map((channel) => {
               return (
-                <div key={channel.id} id={channel.id}>
-                  <p>{channel.name}</p>
-                  <input
-                    type="checkbox"
-                    onChange={(): void => {
-                      setSelectedChannels((prevChannels) =>
-                        prevChannels.includes(channel.id)
-                          ? prevChannels.filter((id) => id !== channel.id)
-                          : [...prevChannels, channel.id]
-                      )
-                      console.log(selectedChannels)
-                    }}
-                  ></input>
+                <div key={channel.id}>
+                  <div
+                    id={channel.id}
+                    className={`m-1 flex justify-between rounded-md bg-soft-white p-2`}
+                  >
+                    <p>{channel.name}</p>
+                    <input
+                      className="h-5 w-5"
+                      type="checkbox"
+                      onChange={(): void => {
+                        setSelectedChannels((prevChannels) =>
+                          prevChannels.includes(channel.id)
+                            ? prevChannels.filter((id) => id !== channel.id)
+                            : [...prevChannels, channel.id]
+                        )
+                      }}
+                    ></input>
+                  </div>
                 </div>
               )
             })

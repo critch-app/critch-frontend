@@ -2,7 +2,7 @@ import { createAction, createReducer } from '@reduxjs/toolkit'
 
 const initialState = { id: null } as { id: string | null }
 
-export const setActiveChannelId = createAction<any>('setActiveChannel')
+export const setActiveChannelId = createAction<any>('setActiveChannelId')
 
 const channelReducer = createReducer(initialState, (builder) => {
   builder.addCase(setActiveChannelId, (state, action) => {

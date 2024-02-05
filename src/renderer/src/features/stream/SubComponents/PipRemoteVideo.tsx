@@ -20,7 +20,6 @@ export default function PipRemoteVideo({
 
   return (
     <video
-      hidden={true}
       ref={videoRef}
       autoPlay
       playsInline

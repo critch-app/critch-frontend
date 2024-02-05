@@ -5,13 +5,14 @@ import { EventType } from '@renderer/env.d'
 import { RootState } from '@renderer/app/store'
 import { useSelector } from 'react-redux'
 
-export function useMessaging(setMessages: React.SetStateAction<any> | null): void {
+export function useMessaging(setMessages: React.Dispatch<any> | null): void {
   const socket = useContext(useWebSocketProvider())
   const queryClient = useQueryClient()
   const activeServerId = useSelector((state: RootState) => state.server.id)
   const activeChannelId = useSelector((state: RootState) => state.channel.id)
   const userId = useSelector((state: RootState) => state.login.userId)
   const userToken = useSelector((state: RootState) => state.login.userToken)
+
   useEffect((): void | (() => void) => {
     if (userId && userToken) {
       socket?.onMessage((event: MessageEvent): void => {
@@ -31,6 +32,7 @@ export function useMessaging(setMessages: React.SetStateAction<any> | null): voi
       }, EventType.MESSAGE)
       if (activeServerId && activeChannelId) {
         return () => {
+          socket?.removeEventListener(EventType.MESSAGE)
           queryClient.invalidateQueries([
             'servers',
             activeServerId,
@@ -39,6 +41,8 @@ export function useMessaging(setMessages: React.SetStateAction<any> | null): voi
             'messages'
           ] as InvalidateQueryFilters)
         }
+      } else {
+        return socket?.removeEventListener(EventType.MESSAGE)
       }
     }
   }, [activeChannelId, userId, userToken])

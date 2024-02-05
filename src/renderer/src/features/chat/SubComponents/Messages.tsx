@@ -1,5 +1,4 @@
 import Message from './Message'
-import UserTestIcon from '@renderer/assets/images/user-icon-test.svg'
 import { useRef, useEffect, useState } from 'react'
 import { scrollToBottom } from '@renderer/util/helpers'
 import { getChannelMessagesQuery } from '@renderer/api/query/channels'
@@ -38,7 +37,6 @@ export default function Messages(): React.JSX.Element {
         query.data.pages.forEach((page) => {
           newMessages.push(...page.data)
         })
-        // for each message get the sender data
         setMessages(newMessages)
       }
     } catch (error: any) {
@@ -80,8 +78,7 @@ export default function Messages(): React.JSX.Element {
             key={message.id}
             sentAt={message.sent_at}
             mine={message.sender_id == loggedInUserId}
-            senderAvatar={UserTestIcon}
-            senderUsername={message.sender ?? 'unknown'}
+            senderId={message.sender_id}
             content={message.content}
           />
         )
