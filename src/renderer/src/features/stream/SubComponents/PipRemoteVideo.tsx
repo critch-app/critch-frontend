@@ -1,11 +1,9 @@
 import React, { useEffect, useRef } from 'react'
 
 export default function PipRemoteVideo({
-  remoteStream,
-  key
+  remoteStream
 }: {
   remoteStream: MediaStream
-  key: string
 }): React.JSX.Element {
   const videoRef = useRef<HTMLVideoElement | null>(null)
 
@@ -22,8 +20,6 @@ export default function PipRemoteVideo({
 
   return (
     <video
-      key={key}
-      hidden={true}
       ref={videoRef}
       autoPlay
       playsInline

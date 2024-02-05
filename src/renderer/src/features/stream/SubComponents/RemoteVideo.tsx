@@ -1,11 +1,9 @@
 import React, { useEffect, useRef } from 'react'
 
 export default function RemoteVideo({
-  remoteStream,
-  k
+  remoteStream
 }: {
   remoteStream: MediaStream
-  k: string
 }): React.JSX.Element {
   const videoRef = useRef<HTMLVideoElement | null>(null)
 
@@ -21,10 +19,7 @@ export default function RemoteVideo({
   }, [])
 
   return (
-    <div
-      key={k}
-      className="to-soft-purbl m-2 w-80 rounded-xl border-4 border-solid border-soft-purble bg-gradient-to-br from-hard-purble shadow-sm"
-    >
+    <div className="to-soft-purbl m-2 w-80 rounded-xl border-4 border-solid border-soft-purble bg-gradient-to-br from-hard-purble shadow-sm">
       <video
         ref={videoRef}
         autoPlay

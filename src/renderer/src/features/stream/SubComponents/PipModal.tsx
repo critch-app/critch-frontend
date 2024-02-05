@@ -35,7 +35,11 @@ export default function PipModal(): React.JSX.Element {
     <div className="group relative overflow-hidden ">
       <PipSelfVideo />
       {remoteStreams.map((stream) => {
-        return <PipRemoteVideo remoteStream={stream} key={stream.id} />
+        return (
+          <div hidden={true} key={stream.id}>
+            <PipRemoteVideo remoteStream={stream} />
+          </div>
+        )
       })}
       <div
         className={`absolute -bottom-20 left-1/2 flex h-fit w-[calc(90%)] -translate-x-1/2 items-center justify-evenly rounded-lg bg-default-txt/75 py-2 duration-300 group-hover:bottom-4`}

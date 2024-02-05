@@ -92,7 +92,11 @@ export default function Stream(): React.JSX.Element {
       >
         <SelfVideo client={client} signal={signal} />
         {remoteStreams.map((stream) => {
-          return <RemoteVideo remoteStream={stream} k={stream.id} />
+          return (
+            <div key={stream.id}>
+              <RemoteVideo remoteStream={stream} />
+            </div>
+          )
         })}
       </div>
 
