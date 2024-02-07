@@ -3,8 +3,9 @@ import axios from 'axios'
 
 // Configure axios Instance
 const axiosInstance = axios.create({
-  baseURL: 'https://critch-api.onrender.com',
+  // baseURL: 'https://critch-api.onrender.com',
   //baseURL: 'http://localhost:8080',
+  baseURL: 'https://critch-api-8f3a37be7718.herokuapp.com',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
