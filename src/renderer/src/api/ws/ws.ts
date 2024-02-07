@@ -25,9 +25,6 @@ class WS {
     const handler = this.handlers.get(data.type)
     if (handler) {
       handler(event)
-    } else {
-      console.log(data)
-      console.warn('Unhandled event type:', data.type)
     }
   }
 
