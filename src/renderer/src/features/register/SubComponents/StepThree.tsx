@@ -89,7 +89,6 @@ export default function StepThree({
           id="photo"
           name="photo"
           value={url}
-          disabled={true}
           onBlur={(e: Event): void => {
             handleFieldBlur(e, 'photo')
           }}
@@ -111,7 +110,7 @@ export default function StepThree({
             Upload image
           </button>
           <button
-            disabled={errors.photo !== undefined}
+            disabled={errors.photo === undefined}
             type="submit"
             className={`m-0.5 rounded-md bg-soft-purble p-1.5 
           text-sm text-original-white hover:bg-soft-purble/80`}
