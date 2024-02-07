@@ -41,7 +41,7 @@ export default function UserBar(): React.JSX.Element {
   }
 
   // Handle loading state
-  if (query.status === 'pending') {
+  if (query.status === 'loading') {
     return (
       <div>
         <Loading size={170} />
@@ -50,69 +50,57 @@ export default function UserBar(): React.JSX.Element {
   }
 
   // Component
-  if (!query.isLoading && !query.isError && query.data && user) {
+  {
     return (
       <div
         className={`relative my-auto ml-1 h-[calc(100vh-1.3rem)] w-[calc(100vw/4.5)] 
         flex-col rounded-lg bg-gradient-to-br from-original-white to-hard-white`}
       >
         <div
-          className={`px-auto relative w-full -translate-y-16 flex-col items-center justify-center py-4`}
+          className={`m-2 flex h-[calc(98%)] w-56 items-center justify-center rounded-lg bg-gradient-to-tr from-soft-purble to-hard-purble`}
         >
-          <img
-            src={user.photo}
-            className={`relative z-40 h-32 w-32 translate-x-1/2 translate-y-1/2 rounded-full drop-shadow-2xl`}
-          />
-          <div
-            className={`m-2 h-80 w-56 rounded-lg bg-gradient-to-tr from-soft-purble to-hard-purble 
-            pt-16 text-original-white drop-shadow-2xl`}
-          >
-            <h1 className={`text-md p-1`}>
-              Name: {user.first_name} {user.last_name}
-            </h1>
-            <h2 className={`p-1 text-sm`}>
-              Email: {user.email}{' '}
-              <FontAwesomeIcon
-                icon={faCopy}
-                onClick={async (): Promise<void> => {
-                  await window.api.writeToClipboard(user.email)
-                  await window.api.showNotifications('Email copied to clipoard', user.email)
-                }}
-                className={`text-md cursor-pointer p-1 duration-150 hover:scale-150`}
-              />
-            </h2>
-            <h2 className={`p-1 text-sm`}>
-              Phone: {user.phone}{' '}
-              <FontAwesomeIcon
-                icon={faCopy}
-                onClick={async (): Promise<void> => {
-                  await window.api.writeToClipboard(user.phone)
-                  await window.api.showNotifications('Phone number copied to clipoard', user.phone)
-                }}
-                className={`text-md cursor-pointer p-1 duration-150 hover:scale-150`}
-              />
-            </h2>
-            <h2 className={`p-1 text-sm`}>Status: {user.status}</h2>
-            <h2 className={`h-6 w-full p-1 text-sm font-light`}>
-              ID: <span>{user?.id?.slice(1, 17)}...</span>
-              <FontAwesomeIcon
-                icon={faCopy}
-                onClick={async (): Promise<void> => {
-                  await window.api.writeToClipboard(user.id)
-                  await window.api.showNotifications('ID copied to clipoard', user.id)
-                }}
-                className={`text-md cursor-pointer p-1 duration-150 hover:scale-150`}
-              />
-            </h2>
+          <div className=" flex h-[calc(98%)]  w-52 flex-col items-center justify-start rounded-lg bg-soft-white p-2">
+            <div className="h-fit  w-fit rounded-full border-r-4 border-solid border-soft-purble p-2">
+              <div className="h-fit w-fit  rounded-full border-l-4 border-solid border-soft-purble  p-2">
+                <img src={user.photo} className={` h-24 w-24  rounded-full drop-shadow-2xl`} />
+              </div>
+            </div>
+            <div>
+              <p className={`p-1 text-lg`}>
+                {user.first_name} {user.last_name}
+              </p>
+              <div className="flex flex-col items-center">
+                <p className={`p-1 text-sm`}>
+                  Email: {user.email}{' '}
+                  <FontAwesomeIcon
+                    icon={faCopy}
+                    onClick={async (): Promise<void> => {
+                      await window.api.writeToClipboard(user.email)
+                      await window.api.showNotifications('Email copied to clipoard', user.email)
+                    }}
+                    className={`text-md cursor-pointer p-1 duration-150 hover:scale-150`}
+                  />
+                </p>
+                <p className={`p-1 text-sm`}>
+                  Phone: {user.phone}{' '}
+                  <FontAwesomeIcon
+                    icon={faCopy}
+                    onClick={async (): Promise<void> => {
+                      await window.api.writeToClipboard(user.phone)
+                      await window.api.showNotifications(
+                        'Phone number copied to clipoard',
+                        user.phone
+                      )
+                    }}
+                    className={`text-md cursor-pointer p-1 duration-150 hover:scale-150`}
+                  />
+                </p>
+                <p className={`p-1 text-sm`}>Status: {user.status}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     )
   }
-  return (
-    <div
-      className={`relative my-auto ml-1 flex h-[calc(100vh-1.3rem)]
-      w-[calc(100vw/4.5)] rounded-lg bg-soft-white`}
-    ></div>
-  )
 }

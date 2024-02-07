@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 export default function RemoteVideo({
   remoteStream
@@ -6,7 +6,7 @@ export default function RemoteVideo({
   remoteStream: MediaStream
 }): React.JSX.Element {
   const videoRef = useRef<HTMLVideoElement | null>(null)
-
+  const [isFocused, setIsFocused] = useState(false)
   useEffect(() => {
     ;(async () => {
       if (remoteStream && videoRef?.current) {
@@ -18,13 +18,22 @@ export default function RemoteVideo({
     })()
   }, [])
 
+  useEffect(() => {
+    console.log(isFocused)
+  }, [isFocused])
+
   return (
-    <div className="to-soft-purbl m-2 w-80 rounded-xl border-4 border-solid border-soft-purble bg-gradient-to-br from-hard-purble shadow-sm">
+    <div
+      className={`${isFocused ? 'mx-auto w-[calc(100%)]' : 'm-2  w-80'} cursor-pointer rounded-xl border-4 border-solid border-soft-purble bg-gradient-to-br from-hard-purble to-soft-purble shadow-sm`}
+    >
       <video
+        onClick={(): void => {
+          setIsFocused(!isFocused)
+        }}
         ref={videoRef}
         autoPlay
         playsInline
-        className={`w-80 rounded-lg bg-gradient-to-br from-hard-purble to-soft-purble duration-150`}
+        className={`w-full rounded-lg bg-gradient-to-br from-hard-purble to-soft-purble duration-150`}
       ></video>
     </div>
   )

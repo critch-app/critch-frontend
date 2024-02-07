@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@renderer/app/store'
 import { setActiveChannelId } from '../../../reducers/channelReducer'
 import Channel from './SubComponents/Channel'
-import ServerControl from './SubComponents/ChannelControl'
+import ChannelControl from './SubComponents/ChannelControl'
 import { getServerChannelsQuery } from '@renderer/api/query/channels'
 import { useInfiniteScroll } from '@renderer/hooks/useInfiniteScroll'
 import { useEffect, useState } from 'react'
@@ -11,6 +11,8 @@ import Loading from '@renderer/components/Loading/Loading'
 import Error from '@renderer/components/Error/Error'
 import { getUserByIdQuery } from '@renderer/api/query/user'
 import { togglePip } from '@renderer/reducers/meetingReducer'
+import ServerTitle from './SubComponents/ServerTitle'
+import { getServerByIDQuery } from '@renderer/api/query/server'
 
 export default function ChannelsBar(): React.JSX.Element {
   const activeChannelId = useSelector((state: RootState) => state.channel.id)
@@ -27,16 +29,24 @@ export default function ChannelsBar(): React.JSX.Element {
   const userQuery = getUserByIdQuery(userId as string)
   const channelQuery = getServerChannelsQuery(activeServerId as string, 0, 50)
   const { ref } = useInfiniteScroll(channelQuery)
+  const serverQuery = getServerByIDQuery(activeServerId as string)
+  const [serverName, setServerName] = useState('')
 
   useEffect(() => {
     try {
-      if (activeServerId && channelQuery.isSuccess && userQuery.isSuccess) {
+      if (
+        activeServerId &&
+        channelQuery.isSuccess &&
+        userQuery.isSuccess &&
+        serverQuery.isSuccess
+      ) {
         const newChannels: any = []
         channelQuery.data.pages.forEach((page) => {
           newChannels.push(...page.data)
         })
         setChannels(newChannels)
         setUser(userQuery.data.data)
+        setServerName(serverQuery.data.data.name)
       }
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.message) {
@@ -45,15 +55,23 @@ export default function ChannelsBar(): React.JSX.Element {
         setApiError('An unexpected error occurred')
       }
     }
-  }, [channelQuery.data, activeServerId, userQuery.data])
+  }, [channelQuery.data, activeServerId, userQuery.data, serverQuery.data])
 
   // Handle error state
-  if (channelQuery.status === 'error' || userQuery.status === 'error') {
+  if (
+    channelQuery.status === 'error' ||
+    userQuery.status === 'error' ||
+    serverQuery.status === 'error'
+  ) {
     return <Error error={apiError} reset={null} />
   }
 
   // Handle loading state
-  if (channelQuery.status === 'loading' || userQuery.status === 'loading') {
+  if (
+    channelQuery.status === 'loading' ||
+    userQuery.status === 'loading' ||
+    serverQuery.status === 'loading'
+  ) {
     return (
       <div>
         <Loading size={170} />
@@ -64,9 +82,10 @@ export default function ChannelsBar(): React.JSX.Element {
   return (
     <>
       <div
-        className={`relative mx-1 my-auto flex h-[calc(100vh-2rem)] w-[calc(100vw/5.5)] rounded-lg`}
+        className={`relative mx-1 my-auto flex h-[calc(100vh-2rem)] w-[calc(100vw/5.5)] flex-col rounded-lg`}
       >
-        <ServerControl />
+        <ServerTitle name={serverName} />
+        <ChannelControl />
         <div className={`h-[calc(85%)]`}>
           <div
             className={`critch-overflow-hidden-scroll h-[calc(95%)] w-[calc(100%)] overflow-y-scroll`}

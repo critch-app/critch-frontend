@@ -72,7 +72,7 @@ export default function ServerBar(): React.JSX.Element {
         </Modal>
       ) : null}
       <div
-        className={`mb-0.5 ml-0.5 mr-1 mt-0.5 h-[calc(100vh-1rem)] w-24 rounded-2xl bg-hard-white `}
+        className={`mb-0.5 ml-0.5 mr-1 mt-0.5 h-[calc(100vh-1rem)] w-24 rounded-lg bg-hard-white `}
       >
         <div
           className={`mx-auto w-[calc(100%)] duration-150 hover:scale-125`}

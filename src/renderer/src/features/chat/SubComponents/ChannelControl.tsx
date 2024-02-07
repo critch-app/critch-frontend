@@ -1,4 +1,4 @@
-import { faGear, faPhone, faCirclePlay } from '@fortawesome/free-solid-svg-icons'
+import { faGear, faPhone, faEarthAmerica } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { RootState } from '@renderer/app/store'
 import Divider from '@renderer/components/Divider//Divider'
@@ -19,7 +19,7 @@ export default function ChannelControl({
     <>
       <div className={`flex items-center justify-between`}>
         <h1 className={`p-3 text-xl text-default-txt/75`}>
-          <FontAwesomeIcon icon={faCirclePlay} className={`px-1`} />
+          <FontAwesomeIcon icon={faEarthAmerica} className={`px-1`} />
           {channelName}
         </h1>
 

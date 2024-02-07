@@ -60,7 +60,9 @@ export default function AddMembers(): React.JSX.Element {
   })
 
   return (
-    <div className={`h-[calc(100%)] w-[calc(78%)]  rounded-lg bg-original-white p-5`}>
+    <div
+      className={`h-[calc(100%)] min-w-[calc(78%)]  max-w-[calc(78%)] rounded-lg bg-original-white p-5`}
+    >
       <h1 className={`px-1 py-1 text-3xl`}>Add Members</h1>
       <div className={`text-sm`}>
         <p className={`px-2 py-1`}>
@@ -72,15 +74,14 @@ export default function AddMembers(): React.JSX.Element {
       <div className={`h-[calc(100%)]`}>
         <div className={``}>
           <h3
-            className={`mx-1 h-12 w-[calc(95%)] overflow-clip 
+            className={`mx-1 h-12 min-w-[calc(95%)] max-w-[calc(95%)] overflow-clip 
         overflow-ellipsis whitespace-nowrap rounded-md bg-soft-white p-2 text-default-txt`}
           >
             {invitation || '----'}
           </h3>
           <div className={`flex w-[calc(20%)] items-center`}>
             <button
-              className={`mx-auto my-1 rounded-md bg-soft-purble p-1.5 text-sm
-          text-original-white hover:bg-soft-purble/80`}
+              className={`critch-button`}
               onClick={async (): Promise<void> => {
                 if (!invitation) {
                   Promise.reject
@@ -98,8 +99,7 @@ export default function AddMembers(): React.JSX.Element {
               Copy
             </button>
             <button
-              className={`mx-auto my-1 rounded-md bg-soft-purble p-1.5 text-sm
-        text-original-white hover:bg-soft-purble/80`}
+              className={`critch-button`}
               onClick={async (): Promise<void> => {
                 await window.api.generateInvitation(activeServerId as string, selectedChannels)
                 setIsLinkReady(true)
@@ -138,7 +138,9 @@ export default function AddMembers(): React.JSX.Element {
               )
             })
           ) : (
-            <p>You need to add channels before generating invitations</p>
+            <div className="flex h-full w-full items-center justify-center ">
+              <p>You need to add channels before generating invitations</p>
+            </div>
           )}
           <div ref={ref}></div>
         </div>
