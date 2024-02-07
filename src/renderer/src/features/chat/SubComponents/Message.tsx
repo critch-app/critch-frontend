@@ -2,6 +2,9 @@ import { getUserByIdQuery } from '@renderer/api/query/user'
 import { useEffect, useState } from 'react'
 import Error from '@renderer/components/Error/Error'
 import Loading from '@renderer/components/Loading/Loading'
+import * as Yup from 'yup'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLink } from '@fortawesome/free-solid-svg-icons'
 export default function Message({
   senderId,
   content,
@@ -59,7 +62,7 @@ export default function Message({
           mine ? 'bg-soft-purble  text-soft-white' : 'bg-soft-white text-default-txt'
         }`}
       >
-        {content}
+        <RenderContent cn={content} />
       </div>
       <span
         className={`absolute -bottom-2  ${!mine ? 'left-48' : 'right-48'} text-xs text-secondry-gray`}
@@ -71,4 +74,33 @@ export default function Message({
       ) : null}
     </div>
   )
+}
+
+const RenderContent = ({ cn }: { cn: string }): React.JSX.Element => {
+  const invitationRegex = new RegExp(/^critch-invitation:\/\/.+/)
+  if (Yup.string().trim().url().isValidSync(cn)) {
+    return (
+      <a
+        href={cn}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`hover:text-original-white/50`}
+      >
+        Link <FontAwesomeIcon icon={faLink} />
+      </a>
+    )
+  } else if (invitationRegex.test(cn)) {
+    return (
+      <a
+        href={cn}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`hover:text-original-white/50`}
+      >
+        Invitation <FontAwesomeIcon icon={faLink} />
+      </a>
+    )
+  } else {
+    return <pre>{cn}</pre>
+  }
 }

@@ -15,23 +15,23 @@ export default function SendMessageForm(): React.JSX.Element {
   const socket = useContext(useWebSocketProvider())
   const [content, setContent] = useState('')
   const [emojiActive, setEmojiActive] = useState<boolean>(false)
+
   return (
     <>
       <div>
         <form>
-          <input
-            type="text"
+          <textarea
             name="message"
             id="message"
             placeholder="Send Message"
             value={content}
             onChange={(ev): void => setContent(ev.target.value)}
-            className={`absolute bottom-4 left-[calc(50%)] mx-auto h-10 w-[calc(100%-2rem)] 
-            translate-x-[calc(-50%)] rounded-lg border-2 border-solid border-hard-white/50 
-            bg-soft-white p-5 focus:outline-primary-gray/75`}
+            className={`focus:outline-primary-gray/7 critch-overflow-hidden-scroll absolute bottom-4 left-[calc(45%)] 
+            max-h-11 w-[calc(100%-5rem)] translate-x-[calc(-50%)] resize-none overflow-y-scroll 
+            rounded-lg border-2 border-solid border-hard-white/50 bg-soft-white p-2 focus:outline-none`}
           />
           <div
-            className={`absolute bottom-6 right-[calc(5%)] flex w-16 justify-between text-lg text-default-txt`}
+            className={`absolute bottom-6 right-[calc(1%)] flex w-16 justify-between text-lg text-default-txt`}
           >
             <button
               type="button"
