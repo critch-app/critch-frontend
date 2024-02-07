@@ -9,12 +9,14 @@ export default function Message({
   senderId,
   content,
   mine,
-  sentAt
+  sentAt,
+  attachment
 }: {
   senderId: string
   content: string
   mine: boolean
   sentAt: string
+  attachment: string
 }): React.JSX.Element {
   const query = getUserByIdQuery(senderId)
   const [user, setUser] = useState({}) as any
@@ -63,6 +65,7 @@ export default function Message({
         }`}
       >
         <RenderContent cn={content} />
+        {attachment && <img src={attachment} alt="Embeded img" className="w-44 rounded-lg" />}
       </div>
       <span
         className={`absolute -bottom-2  ${!mine ? 'left-48' : 'right-48'} text-xs text-secondry-gray`}

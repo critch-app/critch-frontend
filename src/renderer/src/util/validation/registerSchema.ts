@@ -27,9 +27,7 @@ const registerSchema = {
       return isValidPhoneNumber(val)
     }),
     status: string(),
-    photo: string()
-      .url('Invalid URL')
-      .matches(/\.(jpg|jpeg|png|gif|bmp)$/i, 'Invalid image URL'),
+    photo: string().url('Invalid URL').required('Image is required'),
     timezone: string().default(() => Intl.DateTimeFormat().resolvedOptions().timeZone)
   }),
 

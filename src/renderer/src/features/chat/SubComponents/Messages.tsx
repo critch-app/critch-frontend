@@ -80,6 +80,7 @@ export default function Messages(): React.JSX.Element {
             mine={message.sender_id == loggedInUserId}
             senderId={message.sender_id}
             content={message.content}
+            attachment={message.attachment}
           />
         )
       })}
