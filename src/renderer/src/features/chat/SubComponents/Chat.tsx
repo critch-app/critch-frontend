@@ -49,7 +49,7 @@ export default function Chat(): React.JSX.Element {
 
   return (
     <div
-      className={`relative m-1 min-h-[calc(100vh-2rem)] w-[calc(100%-30rem)] rounded-2xl bg-original-white`}
+      className={`relative m-1 min-h-[calc(100vh-2rem)] w-[calc(100%-30rem)] rounded-md bg-original-white`}
     >
       {channel && <ChannelControl channelName={channel.name} channelId={channel.id} />}
       <Messages />

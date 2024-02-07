@@ -55,10 +55,10 @@ export default function ServerControl(): React.JSX.Element {
           <AddChannelModal toggleModal={toggleAddChannelModal} />
         </Modal>
       ) : null}
-      <div className={`flex-col items-center justify-center`}>
+      <div className={`flex h-fit w-[clac(95%)] items-center justify-center`}>
         <div
           className={`m-1 cursor-pointer rounded-md bg-original-white px-2 py-1
-         text-default-txt duration-150 hover:bg-soft-purble hover:text-original-white`}
+         text-default-txt duration-200 hover:bg-soft-purble hover:text-original-white`}
           onClick={(): void => {
             dispatch(setActiveChannelId(null))
           }}
@@ -67,7 +67,7 @@ export default function ServerControl(): React.JSX.Element {
         </div>
         <div
           className={`m-1 cursor-pointer rounded-md bg-original-white px-2 py-1
-         text-default-txt duration-150 hover:bg-soft-purble hover:text-original-white`}
+         text-default-txt duration-200 hover:bg-soft-purble hover:text-original-white`}
         >
           <FontAwesomeIcon icon={faMagnifyingGlass} />
         </div>
@@ -77,7 +77,7 @@ export default function ServerControl(): React.JSX.Element {
               toggleAddChannelModal(true)
             }}
             className={`m-1 cursor-pointer rounded-md bg-original-white px-2 py-1
-         text-default-txt duration-150 hover:bg-soft-purble hover:text-original-white`}
+         text-default-txt duration-200 hover:bg-soft-purble hover:text-original-white`}
           >
             <FontAwesomeIcon icon={faPlus} />
           </div>

@@ -14,7 +14,7 @@ export default function Server(): React.JSX.Element {
       <ServerBar />
       <div
         className={`my-1 flex max-h-[calc(100%)] min-h-[calc(100%)] w-[calc(100vw)] 
-         justify-between rounded-2xl bg-soft-white`}
+         justify-between rounded-lg bg-soft-white`}
       >
         <ChannelsBar />
         {activeChannelId ? <Channel /> : <ServerInfo />}

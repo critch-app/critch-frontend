@@ -2,17 +2,14 @@ import { Link } from 'react-router-dom'
 
 export default function ServerIcon({ photo, name, active, clickHandler }: any): React.JSX.Element {
   return (
-    <div className={`relative`}>
+    <div className={`relative my-3 duration-200 hover:scale-125`}>
       {active && (
         <div
-          className={`absolute left-2 h-16 w-32 rounded-l-full bg-soft-purble shadow-md
-           shadow-extra-gray drop-shadow-2xl duration-150`}
+          className={`absolute right-2.5 top-0 h-16 w-16 rotate-45 rounded-3xl bg-soft-purble shadow-md shadow-extra-gray drop-shadow-2xl`}
         ></div>
       )}
       <div
-        className={`relative mx-auto my-0.5 flex h-16 w-16 
-      cursor-pointer items-center justify-center rounded-full bg-none p-0 duration-150
-      ${active ? '' : 'shadow-extra-gray hover:scale-125 hover:drop-shadow-2xl '}`}
+        className={`relative mx-auto my-0.5 flex h-16 w-16 cursor-pointer items-center justify-center ${active ? '' : 'shadow-extra-gray'}`}
         onClick={clickHandler}
       >
         <Link to={`/server`}>

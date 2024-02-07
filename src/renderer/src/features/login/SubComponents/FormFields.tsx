@@ -56,12 +56,8 @@ export default function FormFields(): React.JSX.Element {
       {fieldErrors.password && touched.password && errors.password && (
         <ErrorMessage name="password" component="div" className={`critch-error-message`} />
       )}
-      <div className={`flex justify-center`}>
-        <button
-          type="submit"
-          className={`m-0.5 rounded-md bg-soft-purble p-1.5 text-sm
-           text-original-white hover:bg-soft-purble/80`}
-        >
+      <div className={`flex h-36 items-center justify-center`}>
+        <button type="submit" className={'critch-button'}>
           Login
         </button>
       </div>

@@ -8,8 +8,9 @@ import { RootState } from '@renderer/app/store'
 import { useSelector } from 'react-redux'
 import Loading from '@renderer/components/Loading/Loading'
 import Error from '@renderer/components/Error/Error'
+import Divider from '@renderer/components/Divider/Divider'
 
-export default function ServerTitle({ name, cover }: any): React.JSX.Element {
+export default function ServerTitle({ name }: { name: string }): React.JSX.Element {
   const activeServerId = useSelector((state: RootState) => state.server.id)
   const userId = useSelector((state: RootState) => state.login.userId)
   const roleQuery = getUserRoleQuery(userId as string, activeServerId as string)
@@ -51,23 +52,22 @@ export default function ServerTitle({ name, cover }: any): React.JSX.Element {
           <ServerSettingsModal toggleModal={toggleSettingsModal} />
         </Modal>
       )}
-      <div className={`relative`}>
-        <img src={cover} alt="" className="p-2" />
+      <div className={`relative mx-auto w-60`}>
         <div
-          className={`absolute bottom-3 left-4 flex w-[calc(100%-2rem)] items-center justify-between 
-          rounded-lg bg-primary-gray/30 px-2 py-1 text-lg text-soft-white backdrop-blur-md`}
+          className={`text-default-text mx-auto flex w-full items-center justify-between  rounded-lg bg-none px-2 py-1 text-xl backdrop-blur-md`}
         >
-          <span>{name}</span>
+          <span className={`w-2/3 overflow-hidden overflow-ellipsis text-nowrap`}>{name}</span>
           {(role === 'owner' || role === 'admin') && (
             <FontAwesomeIcon
               icon={faGear}
-              className={`cursor-pointer text-xl duration-150 hover:rotate-90 hover:scale-125`}
+              className={`cursor-pointer text-xl duration-200 hover:rotate-90 hover:scale-125 hover:text-soft-purble`}
               onClick={(): void => {
                 toggleSettingsModal(true)
               }}
             />
           )}
         </div>
+        <Divider width="w-[calc(95%)]" bgColor="bg-primary-gray" />
       </div>
     </>
   )

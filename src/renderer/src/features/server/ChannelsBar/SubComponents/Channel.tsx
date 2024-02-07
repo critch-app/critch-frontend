@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCirclePlay } from '@fortawesome/free-regular-svg-icons'
 import { Link } from 'react-router-dom'
 import React from 'react'
+import { faEarthAmericas } from '@fortawesome/free-solid-svg-icons'
 
 export default function Channel({ id, name, active, clickHandler }: any): React.JSX.Element {
   return (
@@ -11,7 +11,7 @@ export default function Channel({ id, name, active, clickHandler }: any): React.
         onClick={clickHandler}
       >
         <FontAwesomeIcon
-          icon={faCirclePlay}
+          icon={faEarthAmericas}
           className={` px-2 ${active ? '-rotate-90 font-bold text-soft-purble' : ''}`}
         />
         {name}

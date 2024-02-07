@@ -61,7 +61,7 @@ export default function PipSelfVideo(): React.JSX.Element {
         <>
           <video ref={myVideoRef} autoPlay playsInline hidden={true} muted={true}></video>
           <div
-            className={`flex h-36 w-64 items-end justify-end rounded-lg bg-gradient-to-br from-hard-purble to-soft-purble p-2 backdrop-blur-md duration-150`}
+            className={`flex h-36  w-64 items-end justify-end rounded-lg bg-gradient-to-br from-hard-purble to-soft-purble p-2 backdrop-blur-md duration-150`}
           >
             {isAudio ? (
               <ScaleLoader color="#292929" height={25} width={3} />
@@ -75,7 +75,7 @@ export default function PipSelfVideo(): React.JSX.Element {
       {!isVideo && !isAudio && (
         <>
           <div
-            className={`flex h-full w-full items-end justify-end rounded-lg bg-gradient-to-br from-hard-purble to-soft-purble p-2 backdrop-blur-md duration-150`}
+            className={`flex h-full w-full  items-end justify-end rounded-lg bg-gradient-to-br from-hard-purble to-soft-purble p-2 backdrop-blur-md duration-150`}
           >
             {isAudio ? (
               <ScaleLoader color="#292929" height={25} width={3} />

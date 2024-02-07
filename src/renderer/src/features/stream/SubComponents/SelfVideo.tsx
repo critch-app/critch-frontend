@@ -21,6 +21,18 @@ export default function SelfVideo({
   const channelId = useSelector((state: RootState) => state.channel.id)
   const [myStream, setMyStream] = useState<LocalStream | null>(null)
   const { setMediaStream, setClient, setSignal } = useContext(useGlobalPipProvider())
+
+  useEffect(() => {
+    return () => {
+      if (myStream) {
+        myStream.getTracks().forEach((track) => track.stop())
+        myStream?.unpublish()
+        setMyStream(null)
+        setMediaStream(null)
+      }
+    }
+  }, [])
+
   useEffect(() => {
     if (client && signal) {
       ;(async () => {
@@ -101,25 +113,38 @@ export default function SelfVideo({
       }
     }
   }, [isAudio])
-
   return (
-    <div className=" m-2 w-fit rounded-xl border-4 border-solid border-soft-purble shadow-sm shadow-secondry-gray">
-      {((isVideo && isAudio) || (isVideo && !isAudio)) && (
+    <div className=" absolute bottom-2 left-2 m-2 w-fit rounded-xl border-4 border-solid border-soft-purble shadow-sm shadow-secondry-gray">
+      {isVideo && isAudio && (
         <video
           ref={myVideoRef}
           autoPlay
           playsInline
-          className={`w-80 rounded-lg bg-gradient-to-br from-hard-purble to-soft-purble duration-150`}
+          className={`w-36 rounded-lg bg-gradient-to-br from-hard-purble to-soft-purble duration-150`}
         ></video>
+      )}
+      {isVideo && !isAudio && (
+        <div className="relative">
+          <video
+            ref={myVideoRef}
+            autoPlay
+            playsInline
+            className={` w-36 rounded-lg bg-gradient-to-br from-hard-purble to-soft-purble duration-150`}
+          ></video>
+          <FontAwesomeIcon
+            icon={faMicrophoneSlash}
+            className={`absolute bottom-2 right-2 text-lg text-soft-purble`}
+          />
+        </div>
       )}
 
       {!isVideo && isAudio && (
         <>
           <video ref={myVideoRef} autoPlay playsInline hidden={true}></video>
           <div
-            className={`flex h-40 w-80 items-end justify-end rounded-lg bg-gradient-to-br from-hard-purble to-soft-purble p-2 backdrop-blur-md duration-150`}
+            className={` flex h-20 w-36  items-end justify-end rounded-lg bg-gradient-to-br from-hard-purble to-soft-purble p-2 backdrop-blur-md duration-150`}
           >
-            <ScaleLoader color="#292929" height={25} width={3} />
+            <ScaleLoader color="#292929" height={20} width={2} />
           </div>
         </>
       )}
@@ -127,9 +152,9 @@ export default function SelfVideo({
       {!isVideo && !isAudio && (
         <>
           <div
-            className={`flex h-40 w-80 items-end justify-end rounded-lg bg-gradient-to-br from-hard-purble to-soft-purble p-2 backdrop-blur-md duration-150`}
+            className={`flex h-20 w-36 items-end justify-end rounded-lg bg-gradient-to-br from-hard-purble to-soft-purble p-2 backdrop-blur-md duration-150`}
           >
-            <FontAwesomeIcon icon={faMicrophoneSlash} className={`text-xl text-default-txt`} />
+            <FontAwesomeIcon icon={faMicrophoneSlash} className={`text-lg text-default-txt`} />
           </div>
         </>
       )}

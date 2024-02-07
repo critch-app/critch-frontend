@@ -56,24 +56,29 @@ export default function Message({
   return (
     <div className={`relative m-4 flex p-2 ${mine ? 'justify-end' : ''}`}>
       {!mine ? (
-        <img src={user.photo} alt={`${user.first_name} Avatar`} className="mx-2 h-7 w-7" />
+        <img src={user.photo} alt={`${user.first_name} Avatar`} className="mx-2 h-8 w-8" />
       ) : null}
 
       <div
-        className={`w-80 overflow-hidden overflow-ellipsis rounded-md p-2 text-lg ${
+        className={`  relative  w-96 rounded-md p-2 text-lg ${
           mine ? 'bg-soft-purble  text-soft-white' : 'bg-soft-white text-default-txt'
         }`}
       >
         <RenderContent cn={content} />
         {attachment && <img src={attachment} alt="Embeded img" className="w-44 rounded-lg" />}
+        <span
+          className={`absolute -bottom-5  ${mine ? 'left-2' : 'right-2'} text-xs text-secondry-gray`}
+        >
+          {user.first_name} , {sentAt.split('.')[0]}
+        </span>
       </div>
-      <span
-        className={`absolute -bottom-2  ${!mine ? 'left-48' : 'right-48'} text-xs text-secondry-gray`}
-      >
-        {user.first_name} , {sentAt.split('.')[0]}
-      </span>
+
       {mine ? (
-        <img src={user.photo} alt={`${user.first_name} Avatar`} className={`mx-2 h-10 w-10`} />
+        <img
+          src={user.photo}
+          alt={`${user.first_name} Avatar`}
+          className={`mx-2 h-8 w-8 rounded-full`}
+        />
       ) : null}
     </div>
   )
@@ -104,6 +109,6 @@ const RenderContent = ({ cn }: { cn: string }): React.JSX.Element => {
       </a>
     )
   } else {
-    return <pre>{cn}</pre>
+    return <pre className=" text-wrap break-words">{cn}</pre>
   }
 }

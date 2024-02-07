@@ -9,7 +9,7 @@ export default function Bar({
 }): React.JSX.Element {
   useEffect(() => {}, [pageNumber])
   return (
-    <div>
+    <div className="w-1/4">
       <div
         onClick={(): void => {
           setPageNumber(1)

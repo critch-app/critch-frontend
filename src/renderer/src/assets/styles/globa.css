@@ -23,19 +23,20 @@ body {
     @apply sticky 
     m-2 
     flex 
-    w-48 
+    w-[calc(95%)] 
     cursor-pointer
     items-center
     rounded-md
     bg-hard-white 
     p-2
     text-sm 
+    font-semibold
     text-default-txt;
   }
   .critch-active-channel::before {
     content: '';
     @apply absolute
-    -right-[calc(1.7rem)]
+    -left-[calc(0.45rem)]
     m-2
     h-9
     w-1
@@ -50,7 +51,8 @@ body {
   .critch-inactive-channel {
     @apply m-2 
     flex 
-    w-48 cursor-pointer 
+    w-[calc(95%)] 
+     cursor-pointer 
     items-center 
     rounded-md
     bg-hard-white/25 
@@ -127,6 +129,10 @@ body {
   .critch-form-input {
     @apply rounded-md border-2 border-solid border-hard-white border-opacity-70 px-3 py-2 text-sm focus:outline-1 focus:outline-secondry-gray;
   }
+}
+
+.critch-button {
+  @apply m-2 flex h-8 min-w-24 cursor-pointer items-center justify-center rounded-md bg-soft-purble p-1.5 font-semibold text-original-white hover:bg-soft-purble/80 disabled:cursor-default disabled:bg-primary-gray disabled:text-default-txt/30;
 }
 
 /*

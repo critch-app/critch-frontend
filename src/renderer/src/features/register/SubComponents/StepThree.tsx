@@ -13,6 +13,7 @@ export default function StepThree({
   setIsStepContainError: React.Dispatch<React.SetStateAction<boolean>>
 }): React.JSX.Element {
   const API_KEY = useSelector((state: RootState) => state.fileStack.API_KEY)
+  const [showImagePreview, setShowImagePreview] = useState(false)
   const { errors, touched, handleBlur, validateField, values } =
     useFormikContext<RegisterStepThreeValues>()
 
@@ -21,7 +22,7 @@ export default function StepThree({
   })
 
   const [pickerState, setPickerState] = useState(false)
-  const [url, setUrl] = useState('')
+  const [url, setUrl] = useState<null | string>(null)
   /**
    * Override default formik onBlur Behaviour
    * @param {Event} e
@@ -56,7 +57,9 @@ export default function StepThree({
   }
 
   useEffect(() => {
-    values.photo = url
+    if (url) {
+      values.photo = url
+    }
   }, [url])
   return (
     <>
@@ -76,20 +79,30 @@ export default function StepThree({
             onUploadDone={(res: any) => {
               setUrl(res.filesUploaded[0].url)
               setPickerState(false)
+              setShowImagePreview(true)
             }}
           />
         </Modal>
       )}
       <div className={`w-[calc(30vw)] flex-col items-center justify-center text-default-txt`}>
         <h1 className={`p-4 text-center text-default-txt`}>Let People Know You</h1>
+        {showImagePreview && url && (
+          <div className=" relative mx-auto flex h-28 w-28 items-center justify-center rounded-lg  bg-hard-white">
+            <FontAwesomeIcon
+              icon={faXmark}
+              onClick={() => setUrl(null)}
+              className=" absolute right-0 top-0 cursor-pointer p-1"
+            />
+            <img src={url} alt="Uploaded" className="h-20 w-20 rounded-lg" />
+          </div>
+        )}
         <Field
           hidden={true}
           type="url"
           placeholder="Photo URL"
           id="photo"
           name="photo"
-          value={url}
-          disabled={true}
+          value={url || ''}
           onBlur={(e: Event): void => {
             handleFieldBlur(e, 'photo')
           }}
@@ -99,10 +112,9 @@ export default function StepThree({
           <ErrorMessage name="photo" component="div" className={`critch-error-message`} />
         )}
 
-        <div className={`flex justify-center`}>
+        <div className={`mx-auto flex w-fit flex-col justify-center`}>
           <button
-            className={`m-0.5 rounded-md bg-soft-purble p-1.5 
-          text-sm text-original-white hover:bg-soft-purble/80`}
+            className={`critch-button`}
             onClick={(ev): void => {
               ev.preventDefault()
               setPickerState(true)
@@ -110,12 +122,7 @@ export default function StepThree({
           >
             Upload image
           </button>
-          <button
-            disabled={errors.photo !== undefined}
-            type="submit"
-            className={`m-0.5 rounded-md bg-soft-purble p-1.5 
-          text-sm text-original-white hover:bg-soft-purble/80`}
-          >
+          <button disabled={errors.photo === undefined} type="submit" className={`critch-button`}>
             Signup
           </button>
         </div>

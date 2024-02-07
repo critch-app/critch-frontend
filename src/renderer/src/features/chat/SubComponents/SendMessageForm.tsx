@@ -20,6 +20,7 @@ export default function SendMessageForm(): React.JSX.Element {
   const [emojiActive, setEmojiActive] = useState<boolean>(false)
   const [pickerState, setPickerState] = useState(false)
   const [url, setUrl] = useState<string | null>(null)
+  const [showImagePreview, setShowImagePreview] = useState(false)
   const pickerOptions = {
     accept: ['image/*'],
     disableTransformer: true,
@@ -45,11 +46,22 @@ export default function SendMessageForm(): React.JSX.Element {
             onUploadDone={(res: any) => {
               setUrl(res.filesUploaded[0].url)
               setPickerState(false)
+              setShowImagePreview(true)
             }}
           />
         </Modal>
       )}
       <div>
+        {showImagePreview && url && (
+          <div className="absolute bottom-16 left-5 flex h-28 w-28 items-center justify-center rounded-lg  bg-hard-white">
+            <FontAwesomeIcon
+              icon={faXmark}
+              onClick={() => setUrl(null)}
+              className=" absolute right-0 top-0 cursor-pointer p-1"
+            />
+            <img src={url} alt="Uploaded" className="h-20 w-20 rounded-lg" />
+          </div>
+        )}
         <form>
           <textarea
             name="message"
@@ -98,7 +110,8 @@ export default function SendMessageForm(): React.JSX.Element {
               />
             </button>
             <button
-              disabled={!content}
+              type="submit"
+              disabled={!content && !url}
               onClick={(ev): void => {
                 ev.preventDefault()
                 if (socket) {
@@ -115,6 +128,7 @@ export default function SendMessageForm(): React.JSX.Element {
                   socket.sendMessage(message)
                 }
                 setContent('')
+                setUrl(null)
               }}
             >
               <FontAwesomeIcon
