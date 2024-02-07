@@ -1,23 +1,54 @@
 import { faPaperPlane, faFaceSmileBeam } from '@fortawesome/free-regular-svg-icons'
-import { faPaperclip } from '@fortawesome/free-solid-svg-icons'
+import { faPaperclip, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { RootState } from '@renderer/app/store'
+import Modal from '@renderer/components/Modal/Modal'
 import { EventType } from '@renderer/env.d'
 import { useWebSocketProvider } from '@renderer/hooks/useWebSocketProvider'
 import EmojiPicker, { EmojiClickData, EmojiStyle } from 'emoji-picker-react'
 import { useContext, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { PickerInline } from 'filestack-react'
 
 export default function SendMessageForm(): React.JSX.Element {
   const activeServerId = useSelector((state: RootState) => state.server.id)
   const userId = useSelector((state: RootState) => state.login.userId)
   const activeChannelId = useSelector((state: RootState) => state.channel.id)
+  const API_KEY = useSelector((state: RootState) => state.fileStack.API_KEY)
   const socket = useContext(useWebSocketProvider())
   const [content, setContent] = useState('')
   const [emojiActive, setEmojiActive] = useState<boolean>(false)
+  const [pickerState, setPickerState] = useState(false)
+  const [url, setUrl] = useState<string | null>(null)
+  const pickerOptions = {
+    accept: ['image/*'],
+    disableTransformer: true,
+    maxFiles: 1,
+    minFiles: 1
+  }
 
   return (
     <>
+      {pickerState && (
+        <Modal>
+          <button
+            onClick={(): void => {
+              setPickerState(false)
+            }}
+            className={`absolute right-96 top-20 rounded-lg bg-soft-white p-3 text-lg text-default-txt hover:text-soft-purble`}
+          >
+            <FontAwesomeIcon icon={faXmark} />
+          </button>
+          <PickerInline
+            apikey={API_KEY}
+            pickerOptions={pickerOptions}
+            onUploadDone={(res: any) => {
+              setUrl(res.filesUploaded[0].url)
+              setPickerState(false)
+            }}
+          />
+        </Modal>
+      )}
       <div>
         <form>
           <textarea
@@ -55,7 +86,12 @@ export default function SendMessageForm(): React.JSX.Element {
                 />
               </div>
             )}
-            <button type="button">
+            <button
+              type="button"
+              onClick={() => {
+                setPickerState(true)
+              }}
+            >
               <FontAwesomeIcon
                 icon={faPaperclip}
                 className={`duration-150 hover:text-soft-purble`}
@@ -72,7 +108,8 @@ export default function SendMessageForm(): React.JSX.Element {
                       sender_id: userId,
                       server_id: activeServerId,
                       channel_id: activeChannelId,
-                      content
+                      content,
+                      attachment: url
                     }
                   })
                   socket.sendMessage(message)
