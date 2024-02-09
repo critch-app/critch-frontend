@@ -5,6 +5,7 @@ import Loading from '@renderer/components/Loading/Loading'
 import * as Yup from 'yup'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLink } from '@fortawesome/free-solid-svg-icons'
+import Modal from '@renderer/components/Modal/Modal'
 export default function Message({
   senderId,
   content,
@@ -21,6 +22,7 @@ export default function Message({
   const query = getUserByIdQuery(senderId)
   const [user, setUser] = useState({}) as any
   const [apiError, setApiError] = useState('')
+  const [isImageModal, toggleImageModal] = useState(false)
 
   useEffect(() => {
     ;(async (): Promise<void> => {
@@ -54,39 +56,68 @@ export default function Message({
   }
 
   return (
-    <div className={`relative m-4 flex p-2 ${mine ? 'justify-end' : ''}`}>
-      {!mine ? (
-        <img src={user.photo} alt={`${user.first_name} Avatar`} className="mx-2 h-8 w-8" />
-      ) : null}
+    <>
+      {isImageModal && (
+        <Modal>
+          <img
+            src={attachment}
+            alt="Embeded img"
+            className="w-96 cursor-pointer rounded-lg"
+            onClick={() => {
+              toggleImageModal(false)
+            }}
+          />
+        </Modal>
+      )}
+      <div className={`relative m-4 flex p-2 ${mine ? 'justify-end' : ''}`}>
+        {!mine ? (
+          <img
+            src={user.photo}
+            alt={`${user.first_name} Avatar`}
+            className="mx-2 h-8 w-8 rounded-full"
+          />
+        ) : null}
 
-      <div
-        className={`  relative  w-96 rounded-md p-2 text-lg ${
-          mine ? 'bg-soft-purble  text-soft-white' : 'bg-soft-white text-default-txt'
-        }`}
-      >
-        <RenderContent cn={content} />
-        {attachment && <img src={attachment} alt="Embeded img" className="w-44 rounded-lg" />}
-        <span
-          className={`absolute -bottom-5  ${mine ? 'left-2' : 'right-2'} text-xs text-secondry-gray`}
+        <div
+          className={`  relative  w-96 rounded-md p-2 text-lg ${
+            mine ? 'bg-soft-purble  text-soft-white' : 'bg-soft-white text-default-txt'
+          }`}
         >
-          {user.first_name} , {sentAt.split('.')[0]}
-        </span>
-      </div>
+          <RenderContent cn={content} />
+          {attachment && (
+            <img
+              src={attachment}
+              alt="Embeded img"
+              className="w-44 cursor-pointer rounded-lg"
+              onClick={() => {
+                toggleImageModal(true)
+              }}
+            />
+          )}
+          <span
+            className={`absolute -bottom-5  ${mine ? 'left-2' : 'right-2'} text-xs text-secondry-gray`}
+          >
+            {user.first_name} , {sentAt.split('.')[0]}
+          </span>
+        </div>
 
-      {mine ? (
-        <img
-          src={user.photo}
-          alt={`${user.first_name} Avatar`}
-          className={`mx-2 h-8 w-8 rounded-full`}
-        />
-      ) : null}
-    </div>
+        {mine ? (
+          <img
+            src={user.photo}
+            alt={`${user.first_name} Avatar`}
+            className={`mx-2 h-8 w-8 rounded-full`}
+          />
+        ) : null}
+      </div>
+    </>
   )
 }
 
 const RenderContent = ({ cn }: { cn: string }): React.JSX.Element => {
   const invitationRegex = new RegExp(/^critch-invitation:\/\/.+/)
-  if (Yup.string().trim().url().isValidSync(cn)) {
+  if (!cn) {
+    return <span hidden={true}></span>
+  } else if (Yup.string().trim().url().isValidSync(cn)) {
     return (
       <a
         href={cn}
