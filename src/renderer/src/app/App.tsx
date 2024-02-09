@@ -4,8 +4,6 @@ import Server from '@renderer/views/Server'
 import Home from '@renderer/views/Home'
 import Register from '@renderer/views/Register'
 import Login from '@renderer/views/Login'
-import { useGlobalEventListeners } from '@renderer/hooks/useGlobalEventListners'
-import Error from '@renderer/components/Error/Error'
 import { useConnectionState } from '@renderer/hooks/useConnectionState'
 import UnrecoveredError from '@renderer/views/UnrecoveredError'
 import { useEffect, useState } from 'react'
@@ -19,12 +17,11 @@ import PipModal from '@renderer/features/stream/SubComponents/PipModal'
 import { useGlobalPipProvider } from '@renderer/hooks/useGlobalPipProvider'
 import { Client, RemoteStream } from 'ion-sdk-js'
 import { IonSFUJSONRPCSignal } from 'ion-sdk-js/lib/signal/json-rpc-impl'
-
+import GlobalEventsWrapper from '@renderer/components/Helper/GlobalEventWrappers'
 function App(): React.JSX.Element {
   const userToken = useSelector((state: RootState) => state.login.userToken)
   const joinedChannel = useSelector((state: RootState) => state.meeting.joinedChannel)
   const pip = useSelector((state: RootState) => state.meeting.pip)
-  const { isError, error } = useGlobalEventListeners()
   const { isConnectionError, connectionError } = useConnectionState()
   const navigate = useNavigate()
   const { isWsConnectionError, ws } = useWebSocket(userToken)
@@ -54,34 +51,35 @@ function App(): React.JSX.Element {
   return (
     <ErrorBoundary>
       <WSProvider.Provider value={ws}>
-        <GlopalPipProvider.Provider
-          value={{
-            mediaStream,
-            setMediaStream,
-            remoteStreams,
-            setRemoteStreams,
-            client,
-            setClient,
-            signal,
-            setSignal
-          }}
-        >
-          <div className={`mt-1 flex`}>
-            {isError && <Error error={error} reset={null} />}
-            {joinedChannel && pip && (
-              <Pip>
-                <PipModal />
-              </Pip>
-            )}
-            <Routes>
-              <Route path="/register" element={<Register />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/*" element={<Home />} />
-              <Route path="/server/*" element={<Server />} />
-              <Route path="/un-recovered-error" element={<UnrecoveredError />} />
-            </Routes>
-          </div>
-        </GlopalPipProvider.Provider>
+        <GlobalEventsWrapper>
+          <GlopalPipProvider.Provider
+            value={{
+              mediaStream,
+              setMediaStream,
+              remoteStreams,
+              setRemoteStreams,
+              client,
+              setClient,
+              signal,
+              setSignal
+            }}
+          >
+            <div className={`mt-1 flex`}>
+              {joinedChannel && pip && (
+                <Pip>
+                  <PipModal />
+                </Pip>
+              )}
+              <Routes>
+                <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/*" element={<Home />} />
+                <Route path="/server/*" element={<Server />} />
+                <Route path="/un-recovered-error" element={<UnrecoveredError />} />
+              </Routes>
+            </div>
+          </GlopalPipProvider.Provider>
+        </GlobalEventsWrapper>
       </WSProvider.Provider>
     </ErrorBoundary>
   )

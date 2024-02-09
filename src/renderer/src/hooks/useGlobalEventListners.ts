@@ -6,6 +6,7 @@ import { putChannelMemberMut } from '@renderer/api/query/channels'
 import { useWebSocketProvider } from './useWebSocketProvider'
 import { EventType } from '@renderer/env.d'
 import { InvalidateQueryFilters, useQueryClient } from '@tanstack/react-query'
+
 export function useGlobalEventListeners(): { isError: boolean; error: string } {
   const [isError, setIsError] = useState(false)
   const [error, setError] = useState('')
@@ -16,9 +17,8 @@ export function useGlobalEventListeners(): { isError: boolean; error: string } {
   const channelMemberMut = putChannelMemberMut(() => {})
   const socket = useContext(useWebSocketProvider())
   const queryClient = useQueryClient()
-
   useEffect(() => {
-    if (userId && userToken && !isEventRegisterd) {
+    if (userId && userToken && socket && !isEventRegisterd) {
       window.electron.ipcRenderer.on('add-me-to-server', async (_event, serverId, channels) => {
         setIsError(false)
         setError('')
@@ -42,19 +42,16 @@ export function useGlobalEventListeners(): { isError: boolean; error: string } {
 
           await Promise.allSettled(channelPromises)
 
-          const succsesChannelAdditions = channelPromises.filter((p) => p.status !== 'rejected')
-
-          socket?.sendMessage(
-            JSON.stringify({
-              type: EventType.JOIN_CHANNEL,
-              data: {
-                server_id: serverId,
-                channels: succsesChannelAdditions
-              }
-            })
-          )
-
+          const notification = JSON.stringify({
+            type: EventType.JOIN_CHANNEL,
+            data: {
+              server_id: serverId,
+              channels: channels
+            }
+          })
+          socket.sendMessage(notification)
           const failedChannelAdditions = channelPromises.filter((p) => p.status === 'rejected')
+
           if (failedChannelAdditions.length === channels.length) {
             setIsError(true)
             setError('Failed to add user to the server or the channels')
@@ -66,7 +63,7 @@ export function useGlobalEventListeners(): { isError: boolean; error: string } {
       })
       setIsEventRegisterd(true)
     }
-  }, [userId, userToken])
+  }, [userId, userToken, socket])
 
   useEffect(() => {
     socket?.onMessage((event: MessageEvent) => {

@@ -18,10 +18,6 @@ export default function RemoteVideo({
     })()
   }, [])
 
-  useEffect(() => {
-    console.log(isFocused)
-  }, [isFocused])
-
   return (
     <div
       className={`${isFocused ? 'mx-auto w-[calc(100%)]' : 'm-2  w-80'} cursor-pointer rounded-xl border-4 border-solid border-soft-purble bg-gradient-to-br from-hard-purble to-soft-purble shadow-sm`}

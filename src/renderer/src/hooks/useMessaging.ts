@@ -16,7 +16,7 @@ export function useMessaging(setMessages: React.Dispatch<any> | null): void {
   useEffect((): void | (() => void) => {
     if (userId && userToken) {
       socket?.onMessage((event: MessageEvent): void => {
-        const data = JSON.parse(event.data)
+        const data = JSON.parse(event.data).data
         if (activeChannelId && data.channel_id === activeChannelId && setMessages) {
           setMessages((msgs: any) => [...msgs, data])
         } else {
