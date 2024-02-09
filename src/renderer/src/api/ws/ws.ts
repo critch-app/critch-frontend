@@ -5,7 +5,7 @@ class WS {
   private socket: WebSocket
   private token: string
   private url(token: string): string {
-    return `wss://critch-api-8f3a37be7718.herokuapp.com/v1/messaging-service?token=${token}`
+    return `wss://critch-api.onrender.com/v1/messaging-service?token=${token}`
   }
   // ws://localhost:8080/v1/messaging-service?token=${this.token}`
 
