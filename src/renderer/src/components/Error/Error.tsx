@@ -15,13 +15,13 @@ export default function Error({
     return (
       <Modal>
         <div
-          className={`flex h-[calc(90%)] w-[calc(90%)] items-center justify-center rounded-lg
+          className={`flex h-[calc(90%)] w-[calc(90%)] flex-col items-center justify-center rounded-lg
            bg-soft-white text-default-txt`}
         >
-          <div className="justfy-center flex-col items-center">
+          <div className="justfy-center flex flex-col items-center">
             <FontAwesomeIcon
               icon={faCircleExclamation}
-              className={` animate-bounce py-5 text-8xl text-soft-purble`}
+              className={`animate-bounce py-5 text-8xl text-soft-purble`}
             />
             <h1 className={`text-2xl`}>{error}</h1>
             <button
@@ -31,8 +31,7 @@ export default function Error({
                   reset()
                 }
               }}
-              className={`my-5 rounded-md bg-soft-purble p-2 text-sm
-              text-original-white hover:bg-soft-purble/80`}
+              className={`critch-button`}
             >
               Go Back
             </button>
