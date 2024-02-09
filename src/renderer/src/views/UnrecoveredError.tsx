@@ -10,7 +10,7 @@ export default function UnrecoveredError(): React.JSX.Element {
       className={`flex h-[calc(95vh)] w-[calc(100vw)] translate-x-2 translate-y-2 items-center
            justify-center rounded-lg bg-soft-white text-default-txt`}
     >
-      <div className="flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center">
         <FontAwesomeIcon
           icon={faCircleExclamation}
           className={`animate-bounce py-5 text-8xl text-soft-purble`}
