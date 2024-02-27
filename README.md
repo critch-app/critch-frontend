@@ -110,38 +110,3 @@ Note that the server-side code is deployed using the [Render](https://render.com
 # License
 
 This project is open-source and available under the [MIT](https://opensource.org/license/mit) License. You can find the license details in the LICENSE file included in this repository.
-
-# Team Members
-
-## Abdullah Muhammed
-
-- **Role:** Fullstack Developer
-- **Responsibilities:**
-    - Managed the frontend design and implementation
-    - Shared in the whole system design and stack choices
-- **Links:**
-    - [GitHub](https://github.com/abdullah-muhammedd)
-    - [LinkedIn](https://www.linkedin.com/in/abdullah-muhammed120/)
-    - Email: [dev.abdullah.muhammed@gmail.com](mailto:dev.abdullah.muhammed@gmail.com)
-
-## Muhammed Sawy
-
-- **Role:** Backend Developer
-- **Responsibilities:**
-    - Managed the backend design and implementation
-    - Shared in the whole system design and stack choices
-- **Links:**
-    - [GitHub](https://github.com/Mohamed-Sawy)
-    - [LinkedIn](https://www.linkedin.com/in/mohamed-sawy77/)
-    - Email: [Mohamedsawy1022@gmail.com](mailto:Mohamedsawy1022@gmail.com)
-
-## Hussain Abd-Elkader
-
-- **Role:** Backend Developer
-- **Responsibilities:**
-    - Shared in backend implementation
-    - Shared in the whole system design and stack choices
-- **Links:**
-    - [GitHub](https://github.com/Hussein119)
-    - [LinkedIn](https://www.linkedin.com/in/husseinabdelkader/)
-    - Email: [hussein.abdalkader96@gmail.com](mailto:hussein.abdalkader96@gmail.com)
